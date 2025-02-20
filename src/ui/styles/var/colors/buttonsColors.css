@@ -1,0 +1,10 @@
+:root {
+    --button-primary: rgb(92, 190, 231); /* Голубая кнопка */
+    --button-secondary: rgb(4, 46, 125); /* Тёмно-синяя кнопка */
+    --button-accent: rgb(3, 30, 91); /* Глубокий синий */
+    --button-dark-orange: rgb(204, 85, 0); /* Тёмно-оранжевая кнопка */
+    --button-deep-purple: rgb(128, 0, 128); /* Фиолетовая кнопка */
+    --button-gradient-blue-purple: linear-gradient(135deg, rgb(3, 30, 91), rgb(128, 0, 128));
+    --button-gradient-orange-blue: linear-gradient(135deg, rgb(204, 85, 0), rgb(92, 190, 231));
+    --button-gradient-dark-light: linear-gradient(135deg, rgb(2, 2, 2), rgb(255, 255, 255));
+}

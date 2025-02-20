@@ -1,0 +1,38 @@
+/* src/app/components/solid-button/solid-button.component.css */
+
+/* Общие стили для кнопки */
+.solid-button {
+    font-size: 16px; /* Размер шрифта */
+    font-weight: bold; /* Жирный шрифт */
+    color: white; /* Цвет текста */
+    border: none; /* Убираем границу */
+    border-radius: 5px; /* Скругленные углы */
+    cursor: pointer; /* Курсор в виде указателя */
+    display: inline-block; /* Элемент внутри строки */
+    transition: all 0.3s ease; /* Плавные переходы */
+    padding: 10px 20px; /* Отступы внутри кнопки */
+}
+
+/* Состояние наведения (hover) */
+.solid-button:hover {
+    opacity: 0.8; /* Уменьшаем непрозрачность */
+    transform: translateY(-2px); /* Поднимаем кнопку при наведении */
+}
+
+/* Состояние активной кнопки */
+.solid-button:active {
+    opacity: 0.6; /* Еще больше уменьшаем непрозрачность при клике */
+    transform: translateY(0); /* Вернуть на место при клике */
+}
+
+/* Стили для кнопки с градиентом */
+.solid-button[style*="gradient"] {
+    color: white; /* Белый цвет текста на градиентных кнопках */
+    background: linear-gradient(to right, #ff7e5f, #feb47b); /* Пример градиентного фона */
+}
+
+/* Стили для кнопки с фоном */
+.solid-button[style*="background"] {
+    color: white; /* Белый цвет текста на фоновых кнопках */
+    background-color: var(--primary-color); /* Используем цвет из переменных */
+}

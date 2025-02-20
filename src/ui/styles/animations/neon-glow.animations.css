@@ -1,0 +1,45 @@
+@keyframes neon-glow-blue {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgb(92, 190, 231), 0 0 10px rgb(92, 190, 231), 0 0 15px rgb(92, 190, 231), 0 0 20px rgb(92, 190, 231);
+    }
+    50% {
+        transform: scale(1.01); /* увеличиваем логотип для эффекта "распада" */
+        box-shadow: 0 0 10px rgb(92, 190, 231), 0 0 40px rgb(92, 190, 231), 0 0 60px rgb(92, 190, 231), 0 0 80px rgb(92, 190, 231); /* усиливаем свечение */
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgb(92, 190, 231), 0 0 10px rgb(92, 190, 231), 0 0 15px rgb(92, 190, 231), 0 0 20px rgb(92, 190, 231);
+    }
+}
+
+
+@keyframes neon-glow-dark-orange {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgb(204, 85, 0), 0 0 10px rgb(204, 85, 0), 0 0 15px rgb(204, 85, 0), 0 0 20px rgb(204, 85, 0);
+    }
+    50% {
+        transform: scale(1.01); /* увеличиваем логотип для эффекта "распада" */
+        box-shadow: 0 0 10px rgb(204, 85, 0), 0 0 40px rgb(204, 85, 0), 0 0 60px rgb(204, 85, 0), 0 0 80px rgb(204, 85, 0); /* усиливаем свечение */
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgb(204, 85, 0), 0 0 10px rgb(204, 85, 0), 0 0 15px rgb(204, 85, 0), 0 0 20px rgb(204, 85, 0);
+    }
+}
+
+@keyframes neon-glow-deep-purple {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgb(128, 0, 128), 0 0 10px rgb(128, 0, 128), 0 0 15px rgb(128, 0, 128), 0 0 20px rgb(128, 0, 128);
+    }
+    50% {
+        transform: scale(1.01); /* увеличиваем логотип для эффекта "распада" */
+        box-shadow: 0 0 10px rgb(128, 0, 128), 0 0 40px rgb(128, 0, 128), 0 0 60px rgb(128, 0, 128), 0 0 80px rgb(128, 0, 128); /* усиливаем свечение */
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgb(128, 0, 128), 0 0 10px rgb(128, 0, 128), 0 0 15px rgb(128, 0, 128), 0 0 20px rgb(128, 0, 128);
+    }
+}

@@ -1,0 +1,22 @@
+export const ThemeColors = {
+    Primary: getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim() || 'rgb(92, 190, 231)',
+    Secondary: getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim() || 'rgb(4, 46, 125)',
+    Accent: getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || 'rgb(3, 30, 91)',
+    BackgroundLight: getComputedStyle(document.documentElement).getPropertyValue('--background-light').trim() || 'rgb(255, 255, 255)',
+    BackgroundDark: getComputedStyle(document.documentElement).getPropertyValue('--background-dark').trim() || 'rgb(2, 2, 2)',
+    TextLight: getComputedStyle(document.documentElement).getPropertyValue('--text-light').trim() || 'rgb(0, 0, 0)',
+    TextDark: getComputedStyle(document.documentElement).getPropertyValue('--text-dark').trim() || 'rgb(255, 255, 255)',
+    ButtonLight: getComputedStyle(document.documentElement).getPropertyValue('--button-light').trim() || 'rgb(92, 190, 231)',
+    ButtonDark: getComputedStyle(document.documentElement).getPropertyValue('--button-dark').trim() || 'rgb(4, 46, 125)',
+    HoverLight: getComputedStyle(document.documentElement).getPropertyValue('--hover-light').trim() || 'rgb(44, 44, 44)',
+    HoverDark: getComputedStyle(document.documentElement).getPropertyValue('--hover-dark').trim() || 'rgb(92, 190, 231)',
+    DarkOrange: getComputedStyle(document.documentElement).getPropertyValue('--dark-orange').trim() || 'rgb(204, 85, 0)',
+    DeepPurple: getComputedStyle(document.documentElement).getPropertyValue('--deep-purple').trim() || 'rgb(128, 0, 128)',
+    BackgroundBlue: getComputedStyle(document.documentElement).getPropertyValue('--background-blue').trim() || 'rgb(3, 30, 91)',
+    BackgroundCyan: getComputedStyle(document.documentElement).getPropertyValue('--background-cyan').trim() || 'rgb(92, 190, 231)',
+    BackgroundOrange: getComputedStyle(document.documentElement).getPropertyValue('--background-orange').trim() || 'rgb(204, 85, 0)',
+    BackgroundPurple: getComputedStyle(document.documentElement).getPropertyValue('--background-purple').trim() || 'rgb(128, 0, 128)',
+    GradientBluePurple: getComputedStyle(document.documentElement).getPropertyValue('--gradient-blue-purple').trim() || 'linear-gradient(135deg, rgb(3, 30, 91), rgb(128, 0, 128))',
+    GradientOrangeBlue: getComputedStyle(document.documentElement).getPropertyValue('--gradient-orange-blue').trim() || 'linear-gradient(135deg, rgb(204, 85, 0), rgb(92, 190, 231))',
+    GradientDarkLight: getComputedStyle(document.documentElement).getPropertyValue('--gradient-dark-light').trim() || 'linear-gradient(135deg, rgb(2, 2, 2), rgb(255, 255, 255))'
+};

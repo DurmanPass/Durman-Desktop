@@ -1,0 +1,50 @@
+@import "../../styles/animations/neon-glow.animations.css";
+.start-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    gap: 20px;
+}
+
+.start-page-action-btns{
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.logo{
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    animation: neon-glow-blue 2.5s ease-in-out infinite;
+    box-shadow: 0 0 5px rgb(92, 190, 231), 0 0 10px rgb(92, 190, 231), 0 0 15px rgb(92, 190, 231), 0 0 20px rgb(92, 190, 231);
+}
+
+.github-icon {
+    position: absolute;
+    bottom: 7px;
+    right: 7px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.github-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.github-icon:hover img {
+    transform: scale(1.05);
+}

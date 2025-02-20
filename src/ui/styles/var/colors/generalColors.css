@@ -1,0 +1,22 @@
+:root{
+    --primary-color: rgb(92, 190, 231); /* Основной цвет, голубой */
+    --secondary-color: rgb(4, 46, 125); /* Дополнительный тёмно-синий */
+    --accent-color: rgb(3, 30, 91); /* Акцентный цвет, глубокий синий */
+    --background-light: rgb(255, 255, 255); /* Фон для светлой темы */
+    --background-dark: rgb(2, 2, 2); /* Фон для тёмной темы */
+    --text-light: rgb(0, 0, 0); /* Основной текст в светлой теме */
+    --text-dark: rgb(255, 255, 255); /* Основной текст в тёмной теме */
+    --button-light: rgb(92, 190, 231); /* Кнопки в светлой теме */
+    --button-dark: rgb(4, 46, 125); /* Кнопки в тёмной теме */
+    --hover-light: rgb(44, 44, 44); /* Цвет наведения в светлой теме */
+    --hover-dark: rgb(92, 190, 231); /* Цвет наведения в тёмной теме */
+    --dark-orange: rgb(204, 85, 0); /* Тёмно-оранжевый цвет */
+    --deep-purple: rgb(128, 0, 128); /* Глубокий фиолетовый цвет */
+    --background-blue: rgb(3, 30, 91); /* Фон синий */
+    --background-cyan: rgb(92, 190, 231); /* Фон голубой */
+    --background-orange: rgb(204, 85, 0); /* Фон тёмно-оранжевый */
+    --background-purple: rgb(128, 0, 128); /* Фон фиолетовый */
+    --gradient-blue-purple: linear-gradient(135deg, rgb(3, 30, 91), rgb(128, 0, 128));
+    --gradient-orange-blue: linear-gradient(135deg, rgb(204, 85, 0), rgb(92, 190, 231));
+    --gradient-dark-light: linear-gradient(135deg, rgb(2, 2, 2), rgb(255, 255, 255));
+}
