@@ -1,0 +1,12 @@
+<label *ngIf="label" [style.color]="borderColor ? ThemeColors[borderColor] : 'inherit'">
+    {{ label }}
+</label>
+<input
+        [type]="type"
+        [placeholder]="placeholder"
+        [style.border]="borderColor ? '1px solid ' + ThemeColors[borderColor] : 'none'"
+        [style.backgroundColor]="backgroundColor ? ThemeColors[backgroundColor] : 'transparent'"
+        (input)="onInputChange($event)"
+        [style.width]="InputSizes[size].width"
+        [style.height]="InputSizes[size].height"
+/>

@@ -1,0 +1,6 @@
+<a class="text-link-a" *ngIf="href; else noHref" [href]="href" [ngStyle]="{ color: color }">
+    {{ text }}
+</a>
+<ng-template #noHref>
+    <span class="text-link-a" [ngStyle]="{ color: color }">{{ text }}</span>
+</ng-template>

@@ -1,0 +1,32 @@
+.input-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.label-Top {
+    flex-direction: column;
+}
+
+.label-Bottom {
+    flex-direction: column-reverse;
+}
+
+.label-Right {
+    flex-direction: row-reverse;
+}
+
+.label-Left {
+    flex-direction: row;
+}
+
+input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    outline: none;
+}
+
+input:focus {
+    border-width: 2px;
+}

@@ -1,0 +1,15 @@
+<div class="login-page">
+    <!-- Компонент шагов -->
+    <app-step [steps]="LoginSteps" (stepChanged)="onStepChanged($event)" lineColorStep="Primary" borderColorStep="Primary" bgColorStep="Transparent"></app-step>
+
+    <!-- Контент для текущего шага -->
+    <div class="step-content">
+        <ng-container *ngIf="currentStepId === LoginStepsId.EmailStepId">
+            <p>EMAIL!</p>
+        </ng-container>
+
+        <ng-container *ngIf="currentStepId === LoginStepsId.PasswordStepId">
+            <p>Password</p>
+        </ng-container>
+    </div>
+</div>

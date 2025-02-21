@@ -1,11 +1,21 @@
 <div class="start-page-container" [style.background]="ThemeColors.GradientBluePurple">
-    <img class="logo" src="assets/icons/general/logo/logo_transparent.png" alt="Логотип"/>
-    <div class="start-page-action-btns">
-        <app-solid-button text="Создать новый аккаунт" size="Long" bgColor="DeepPurple"></app-solid-button>
-        <app-solid-button text="Войти в свой аккаунт" size="Long"></app-solid-button>
-    </div>
+    <ng-container *ngIf="mode === AuthModes.START">
+        <img class="logo" src="assets/icons/general/logo/logo_transparent.png" alt="Логотип"/>
+        <div class="start-page-action-btns">
+            <app-solid-button (click)="onCreateAccountPage()" text="Создать новый аккаунт" size="Long" bgColor="DeepPurple"></app-solid-button>
+            <app-solid-button (click)="onLoginAccountPage()" text="Войти в свой аккаунт" size="Long"></app-solid-button>
+        </div>
 
-    <a [href]="SocialLinks.GitHub" target="_blank" class="github-icon">
-        <img src="assets/icons/social/github.svg" alt="GitHub" />
-    </a>
+        <a [href]="SocialLinks.GitHub" target="_blank" class="github-icon">
+            <img src="assets/icons/social/github.svg" alt="GitHub" />
+        </a>
+    </ng-container>
+
+    <ng-container *ngIf="mode === AuthModes.LOGIN">
+        <app-login-page/>
+    </ng-container>
+
+    <ng-container *ngIf="mode === AuthModes.REGISTER">
+        <app-register-page/>
+    </ng-container>
 </div>

@@ -1,0 +1,17 @@
+<div class="steps-container">
+    <div class="navigation-left">
+        <app-text-link *ngIf="currentStep > 0" (click)="previousStep()" text="Назад" [color]="ThemeColors.Primary"/>
+        <app-text-link *ngIf="steps[currentStep]?.skip" (click)="skipStep()" text="Пропустить" [color]="ThemeColors.Primary"/>
+    </div>
+    <!-- Шаги -->
+    <div class="steps-progress">
+        <div *ngFor="let step of steps; let i = index" class="step" [class.completed]="i < currentStep">
+            <div [style.border-color]="borderColorStep" [style.background-color]="bgColorStep" class="circle">{{ i + 1 }}</div>
+            <div [style.background-color]="lineColorStep" class="line" *ngIf="i < steps.length - 1"></div>
+        </div>
+    </div>
+    <div class="navigation-right">
+        <app-text-link *ngIf="currentStep < steps.length - 1" (click)="nextStep()" text="Далее" [color]="ThemeColors.DarkGreen"/>
+        <app-text-link *ngIf="currentStep === steps.length - 1" (click)="finish()" text="Продолжить" [color]="ThemeColors.DarkGreen"/>
+    </div>
+</div>

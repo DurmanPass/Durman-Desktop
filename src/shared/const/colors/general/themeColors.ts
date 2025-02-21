@@ -12,11 +12,13 @@ export const ThemeColors = {
     HoverDark: getComputedStyle(document.documentElement).getPropertyValue('--hover-dark').trim() || 'rgb(92, 190, 231)',
     DarkOrange: getComputedStyle(document.documentElement).getPropertyValue('--dark-orange').trim() || 'rgb(204, 85, 0)',
     DeepPurple: getComputedStyle(document.documentElement).getPropertyValue('--deep-purple').trim() || 'rgb(128, 0, 128)',
+    DarkGreen: 'rgb(15,198,15)',
     BackgroundBlue: getComputedStyle(document.documentElement).getPropertyValue('--background-blue').trim() || 'rgb(3, 30, 91)',
     BackgroundCyan: getComputedStyle(document.documentElement).getPropertyValue('--background-cyan').trim() || 'rgb(92, 190, 231)',
     BackgroundOrange: getComputedStyle(document.documentElement).getPropertyValue('--background-orange').trim() || 'rgb(204, 85, 0)',
     BackgroundPurple: getComputedStyle(document.documentElement).getPropertyValue('--background-purple').trim() || 'rgb(128, 0, 128)',
     GradientBluePurple: getComputedStyle(document.documentElement).getPropertyValue('--gradient-blue-purple').trim() || 'linear-gradient(135deg, rgb(3, 30, 91), rgb(128, 0, 128))',
     GradientOrangeBlue: getComputedStyle(document.documentElement).getPropertyValue('--gradient-orange-blue').trim() || 'linear-gradient(135deg, rgb(204, 85, 0), rgb(92, 190, 231))',
-    GradientDarkLight: getComputedStyle(document.documentElement).getPropertyValue('--gradient-dark-light').trim() || 'linear-gradient(135deg, rgb(2, 2, 2), rgb(255, 255, 255))'
+    GradientDarkLight: getComputedStyle(document.documentElement).getPropertyValue('--gradient-dark-light').trim() || 'linear-gradient(135deg, rgb(2, 2, 2), rgb(255, 255, 255))',
+    Transparent: 'transparent'
 };
