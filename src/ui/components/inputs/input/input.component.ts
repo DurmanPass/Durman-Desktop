@@ -16,6 +16,7 @@ import {NgIf} from "@angular/common";
 export class InputComponent {
   @Input() type: string = 'text'; // Тип инпута (по умолчанию text)
   @Input() size: InputSizesType = DefaultInputSize; // Размер инпута
+  @Input() color: keyof typeof ThemeColors = "White";
   @Input() borderColor?: keyof typeof ThemeColors; // Цвет границы
   @Input() backgroundColor?: keyof typeof ThemeColors; // Цвет фона
   @Input() placeholder: string = ''; // Плейсхолдер

@@ -1,6 +1,6 @@
 import {Step} from "../../../interfaces/components/steps/login-steps.interface";
 
-export const LoginStepsId = {
+export const RegisterStepsId = {
     EmailStepId: "EmailStepId",
     ConfirmEmailStepId: "ConfirmEmailStepId",
     PasswordStepId: "PasswordStepId",
@@ -8,30 +8,30 @@ export const LoginStepsId = {
     TwoFactorStepId: "TwoFactorStepId"
 }
 
-export const LoginSteps: Step[] = [
+export const RegisterSteps: Step[] = [
     {
         id: "One",
         skip: false,
-        contentId: LoginStepsId.EmailStepId
+        contentId: RegisterStepsId.EmailStepId
     },
     {
         id: "Two",
         skip: false,
-        contentId: LoginStepsId.ConfirmEmailStepId
+        contentId: RegisterStepsId.ConfirmEmailStepId
     },
     {
         id: "Three",
         skip: false,
-        contentId: LoginStepsId.PasswordStepId
+        contentId: RegisterStepsId.PasswordStepId
     },
     {
         id: "Four",
         skip: false,
-        contentId: LoginStepsId.HintPasswordStepId
+        contentId: RegisterStepsId.HintPasswordStepId
     },
     {
         id: "Five",
         skip: true,
-        contentId: LoginStepsId.TwoFactorStepId
+        contentId: RegisterStepsId.TwoFactorStepId
     },
 ];

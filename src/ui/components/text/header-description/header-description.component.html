@@ -1,0 +1,15 @@
+<div class="header-description-container">
+    <ng-container *ngIf="title">
+        <ng-container [ngSwitch]="titleType">
+            <h1 *ngSwitchCase="'h1'" [style.color]="titleColor">{{ title }}</h1>
+            <h2 *ngSwitchCase="'h2'" [style.color]="titleColor">{{ title }}</h2>
+            <h3 *ngSwitchCase="'h3'" [style.color]="titleColor">{{ title }}</h3>
+            <h4 *ngSwitchCase="'h4'" [style.color]="titleColor">{{ title }}</h4>
+            <h5 *ngSwitchCase="'h5'" [style.color]="titleColor">{{ title }}</h5>
+            <h6 *ngSwitchCase="'h6'" [style.color]="titleColor">{{ title }}</h6>
+            <h2 *ngSwitchDefault [style.color]="titleColor">{{ title }}</h2>
+        </ng-container>
+    </ng-container>
+
+    <p *ngIf="description" [style.color]="descriptionColor">{{ description }}</p>
+</div>

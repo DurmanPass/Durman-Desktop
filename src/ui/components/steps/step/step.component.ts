@@ -53,7 +53,7 @@ export class StepComponent {
 
   // Метод для передачи текущего шага в родительский компонент
   emitStepChange() {
-    this.stepChanged.emit(this.steps[this.currentStep].id); // Отправляем id текущего шага
+    this.stepChanged.emit(this.steps[this.currentStep].contentId); // Отправляем id текущего шага
   }
 
   // Завершение процесса (вызывает переданную функцию onFinish)

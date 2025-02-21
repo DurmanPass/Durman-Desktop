@@ -1,1 +1,78 @@
-<p>register-page works!</p>
+<div class="register-page">
+    <!-- Компонент шагов -->
+    <app-step [steps]="RegisterSteps" (stepChanged)="onStepChanged($event)" lineColorStep="Primary" borderColorStep="Primary" bgColorStep="Transparent"></app-step>
+
+    <!-- Контент для текущего шага -->
+    <div class="step-content">
+        <ng-container *ngIf="currentStepId === RegisterStepsId.EmailStepId">
+            <app-header-description
+                    title="Введите вашу электронную почту"
+                    description="Укажите действующий адрес электронной почты. Он будет использоваться для входа в систему и восстановления доступа в случае необходимости."
+            />
+            <app-input
+                    type="email"
+                    borderColor="White"
+                    backgroundColor="Transparent"
+                    placeholder="Введите электронную почту"
+                    size="Long"
+                    (valueChange)="onEmailChange($event)">
+            </app-input>
+        </ng-container>
+        <ng-container *ngIf="currentStepId === RegisterStepsId.ConfirmEmailStepId">
+            <app-header-description
+                    title="Подтвердите вашу электронную почту"
+                    description="Введите код подтверждения, отправленный на вашу электронную почту. Если письмо не пришло, проверьте папку 'Спам'."
+            />
+            <app-input
+                    type="number"
+                    borderColor="White"
+                    backgroundColor="Transparent"
+                    placeholder="Введите код подтверждения"
+                    size="Long"
+                    (valueChange)="onConfirmEmailCodeChange($event)">
+            </app-input>
+        </ng-container>
+        <ng-container *ngIf="currentStepId === RegisterStepsId.PasswordStepId">
+            <app-header-description
+                    title="Установите мастер-пароль"
+                    description="Введите мастер-пароль, который будет использоваться для доступа к менеджеру паролей. Подтвердите его, чтобы убедиться, что вы не допустили ошибку при вводе."
+            />
+            <app-input
+                    type="password"
+                    borderColor="White"
+                    backgroundColor="Transparent"
+                    placeholder="Введите мастер-пароль"
+                    size="Long"
+                    (valueChange)="onPasswordChange($event)">
+            </app-input>
+            <app-input
+                    type="password"
+                    borderColor="White"
+                    backgroundColor="Transparent"
+                    placeholder="Подтвердите мастер-пароль"
+                    size="Long"
+                    (valueChange)="onConfirmPasswordChange($event)">
+            </app-input>
+        </ng-container>
+        <ng-container *ngIf="currentStepId === RegisterStepsId.HintPasswordStepId">
+            <app-header-description
+                    title="Создайте подсказку для пароля"
+                    description="Введите подсказку, которая поможет вам вспомнить мастер-пароль в случае его потери. Убедитесь, что подсказка не слишком очевидна, чтобы сохранить безопасность вашего аккаунта."
+            />
+            <app-input
+                    type="password"
+                    borderColor="White"
+                    backgroundColor="Transparent"
+                    placeholder="Подсказка для мастер-пароля"
+                    size="Long"
+                    (valueChange)="onHintChange($event)">
+            </app-input>
+        </ng-container>
+        <ng-container *ngIf="currentStepId === RegisterStepsId.TwoFactorStepId">
+            <app-header-description
+                    title="Настройка двухфакторной аутентификации"
+                    description="Для дополнительной безопасности активируйте двухфакторную аутентификацию. Используя приложение для генерации одноразовых кодов, например, Google Authenticator, вы сможете защитить свой аккаунт от несанкционированного доступа."
+            />
+        </ng-container>
+    </div>
+</div>

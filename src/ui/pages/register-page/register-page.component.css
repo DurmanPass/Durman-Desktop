@@ -1,0 +1,9 @@
+.register-page{
+    margin-top: 10px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}

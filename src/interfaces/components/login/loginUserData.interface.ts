@@ -2,6 +2,6 @@ export interface LoginUserData {
     email: string;
     confirmEmailCode: string;
     masterPassword: string;
-    confirmPassword: string;
+    confirmMasterPassword: string;
     hintPassword: string;
 }

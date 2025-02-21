@@ -4,6 +4,8 @@ import {StepComponent} from "../../components/steps/step/step.component";
 import {NgComponentOutlet, NgIf} from "@angular/common";
 import {LoginUserData} from "../../../interfaces/components/login/loginUserData.interface";
 import {ThemeColors} from "../../../shared/const/colors/general/themeColors";
+import {HeaderDescriptionComponent} from "../../components/text/header-description/header-description.component";
+import {InputComponent} from "../../components/inputs/input/input.component";
 
 @Component({
   selector: 'app-login-page',
@@ -11,7 +13,9 @@ import {ThemeColors} from "../../../shared/const/colors/general/themeColors";
   imports: [
     StepComponent,
     NgComponentOutlet,
-    NgIf
+    NgIf,
+    HeaderDescriptionComponent,
+    InputComponent
   ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
@@ -22,7 +26,7 @@ export class LoginPageComponent {
     email: '',
     confirmEmailCode: '',
     masterPassword: '',
-    confirmPassword: '',
+    confirmMasterPassword: '',
     hintPassword: ''
   };
 
@@ -30,6 +34,27 @@ export class LoginPageComponent {
   onStepChanged(stepId: string) {
     this.currentStepId = stepId; // Обновляем текущий шаг
   }
+
+  onEmailChange(email: string){
+    this.loginUserData.email = email;
+  }
+
+  onConfirmEmailCodeChange(code: string){
+    this.loginUserData.confirmEmailCode = code;
+  }
+
+  onPasswordChange(password: string){
+    this.loginUserData.masterPassword = password;
+  }
+
+  onConfirmPasswordChange(confirmPassword: string){
+    this.loginUserData.confirmMasterPassword = confirmPassword;
+  }
+
+  onHintChange(hint: string){
+    this.loginUserData.hintPassword = hint;
+  }
+
 
   protected readonly LoginSteps = LoginSteps;
   protected readonly LoginStepsId = LoginStepsId;
