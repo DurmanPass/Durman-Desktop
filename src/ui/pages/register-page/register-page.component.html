@@ -37,21 +37,27 @@
                     title="Установите мастер-пароль"
                     description="Введите мастер-пароль, который будет использоваться для доступа к менеджеру паролей. Подтвердите его, чтобы убедиться, что вы не допустили ошибку при вводе."
             />
-            <app-input
-                    type="password"
-                    borderColor="White"
-                    backgroundColor="Transparent"
-                    placeholder="Введите мастер-пароль"
-                    size="Long"
-                    (valueChange)="onPasswordChange($event)">
-            </app-input>
+            <div class="master-password-container">
+                <app-input
+                        type="password"
+                        borderColor="White"
+                        backgroundColor="Transparent"
+                        placeholder="Введите мастер-пароль"
+                        size="Long"
+                        (valueChange)="onPasswordChange($event)">
+                </app-input>
+                <span>очков регистр: {{passwordStrength}}</span>
+                <app-password-strength-bar id="register-password-strength" *ngIf="loginUserData.masterPassword.length != 0" [password]="loginUserData.masterPassword" (strengthChanged)="updateStrength($event)"/>
+            </div>
             <app-input
                     type="password"
                     borderColor="White"
                     backgroundColor="Transparent"
                     placeholder="Подтвердите мастер-пароль"
                     size="Long"
-                    (valueChange)="onConfirmPasswordChange($event)">
+                    (valueChange)="onConfirmPasswordChange($event)"
+                    *ngIf="passwordStrength >=3"
+            >
             </app-input>
         </ng-container>
         <ng-container *ngIf="currentStepId === RegisterStepsId.HintPasswordStepId">
