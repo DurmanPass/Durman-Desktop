@@ -1,4 +1,5 @@
 import {Step} from "../../../interfaces/components/steps/login-steps.interface";
+import {StepValidation} from "../../../interfaces/components/steps/stepValidation.interface";
 
 export const RegisterStepsId = {
     EmailStepId: "EmailStepId",
@@ -10,28 +11,28 @@ export const RegisterStepsId = {
 
 export const RegisterSteps: Step[] = [
     {
-        id: "One",
+        id: "step_1",
         skip: false,
         contentId: RegisterStepsId.EmailStepId
     },
     {
-        id: "Two",
+        id: "step_2",
         skip: false,
         contentId: RegisterStepsId.ConfirmEmailStepId
     },
     {
-        id: "Three",
+        id: "step_3",
         skip: false,
         contentId: RegisterStepsId.PasswordStepId
     },
     {
-        id: "Four",
+        id: "step_4",
         skip: false,
         contentId: RegisterStepsId.HintPasswordStepId
     },
-    {
-        id: "Five",
-        skip: true,
-        contentId: RegisterStepsId.TwoFactorStepId
-    },
+    // {
+    //     id: "Five",
+    //     skip: true,
+    //     contentId: RegisterStepsId.TwoFactorStepId
+    // },
 ];

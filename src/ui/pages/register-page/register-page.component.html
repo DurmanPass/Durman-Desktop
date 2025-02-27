@@ -1,6 +1,10 @@
 <div class="register-page">
     <!-- Компонент шагов -->
-    <app-step [steps]="RegisterSteps" (stepChanged)="onStepChanged($event)" lineColorStep="Primary" borderColorStep="Primary" bgColorStep="Transparent"></app-step>
+    <app-step [steps]="RegisterSteps" (stepChanged)="onStepChanged($event)" lineColorStep="Primary" borderColorStep="Primary" bgColorStep="Transparent"
+    activeBorderColorStep="DarkOrange"
+              lineColorStepActive="DarkGreen"
+              [validateSteps]="validateLoginData"
+    ></app-step>
 
     <!-- Контент для текущего шага -->
     <div class="step-content">
@@ -11,25 +15,29 @@
             />
             <app-input
                     type="email"
-                    borderColor="White"
+                    [borderColor]="validateLoginData['step_1']['isEmailValid'] ? 'DarkGreen' : 'White'"
                     backgroundColor="Transparent"
                     placeholder="Введите электронную почту"
                     size="Long"
-                    (valueChange)="onEmailChange($event)">
+                    (valueChange)="onEmailChange($event)"
+                    [value]="loginUserData.email"
+            >
             </app-input>
         </ng-container>
         <ng-container *ngIf="currentStepId === RegisterStepsId.ConfirmEmailStepId">
             <app-header-description
                     title="Подтвердите вашу электронную почту"
-                    description="Введите код подтверждения, отправленный на вашу электронную почту. Если письмо не пришло, проверьте папку 'Спам'."
+                    [description]="'Введите код подтверждения, отправленный на вашу электронную почту: ' + loginUserData.email + '. Если письмо не пришло, проверьте папку Спам.'"
             />
             <app-input
                     type="number"
-                    borderColor="White"
+                    [borderColor]="validateLoginData['step_2']['isEmailCodeValid'] ? 'DarkGreen' : 'White'"
                     backgroundColor="Transparent"
                     placeholder="Введите код подтверждения"
                     size="Long"
-                    (valueChange)="onConfirmEmailCodeChange($event)">
+                    (valueChange)="onConfirmEmailCodeChange($event)"
+                    [value]="loginUserData.confirmEmailCode"
+            >
             </app-input>
         </ng-container>
         <ng-container *ngIf="currentStepId === RegisterStepsId.PasswordStepId">
@@ -40,23 +48,25 @@
             <div class="master-password-container">
                 <app-input
                         type="password"
-                        borderColor="White"
+                        [borderColor]="validateLoginData['step_3']['isPasswordValid'] && passwordStrength >= 3 ? 'DarkGreen' : 'White'"
                         backgroundColor="Transparent"
                         placeholder="Введите мастер-пароль"
                         size="Long"
-                        (valueChange)="onPasswordChange($event)">
+                        (valueChange)="onPasswordChange($event)"
+                        [value]="loginUserData.masterPassword"
+                >
                 </app-input>
-                <span>очков регистр: {{passwordStrength}}</span>
                 <app-password-strength-bar id="register-password-strength" *ngIf="loginUserData.masterPassword.length != 0" [password]="loginUserData.masterPassword" (strengthChanged)="updateStrength($event)"/>
             </div>
             <app-input
                     type="password"
-                    borderColor="White"
+                    [borderColor]="validateLoginData['step_3']['isPasswordsMatch'] ? 'DarkGreen' : 'White'"
                     backgroundColor="Transparent"
                     placeholder="Подтвердите мастер-пароль"
                     size="Long"
                     (valueChange)="onConfirmPasswordChange($event)"
                     *ngIf="passwordStrength >=3"
+                    [value]="loginUserData.confirmMasterPassword"
             >
             </app-input>
         </ng-container>
@@ -67,18 +77,20 @@
             />
             <app-input
                     type="password"
-                    borderColor="White"
+                    [borderColor]="validateLoginData['isPasswordHintValid'] ? 'DarkGreen' : 'White'"
                     backgroundColor="Transparent"
                     placeholder="Подсказка для мастер-пароля"
                     size="Long"
-                    (valueChange)="onHintChange($event)">
+                    (valueChange)="onHintChange($event)"
+                    [value]="loginUserData.hintPassword"
+            >
             </app-input>
         </ng-container>
-        <ng-container *ngIf="currentStepId === RegisterStepsId.TwoFactorStepId">
-            <app-header-description
-                    title="Настройка двухфакторной аутентификации"
-                    description="Для дополнительной безопасности активируйте двухфакторную аутентификацию. Используя приложение для генерации одноразовых кодов, например, Google Authenticator, вы сможете защитить свой аккаунт от несанкционированного доступа."
-            />
-        </ng-container>
+<!--        <ng-container *ngIf="currentStepId === RegisterStepsId.TwoFactorStepId">-->
+<!--            <app-header-description-->
+<!--                    title="Настройка двухфакторной аутентификации"-->
+<!--                    description="Для дополнительной безопасности активируйте двухфакторную аутентификацию. Используя приложение для генерации одноразовых кодов, например, Google Authenticator, вы сможете защитить свой аккаунт от несанкционированного доступа."-->
+<!--            />-->
+<!--        </ng-container>-->
     </div>
 </div>

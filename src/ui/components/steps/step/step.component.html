@@ -1,17 +1,24 @@
 <div class="steps-container">
     <div class="navigation-left">
-        <app-text-link *ngIf="currentStep > 0" (click)="previousStep()" text="Назад" [color]="ThemeColors.Primary"/>
-        <app-text-link *ngIf="steps[currentStep]?.skip" (click)="skipStep()" text="Пропустить" [color]="ThemeColors.Primary"/>
+        <app-solid-button text="Назад" *ngIf="currentStep > 0" (click)="previousStep()" bgColor="DarkOrange"/>
+        <app-solid-button text="Пропустить" *ngIf="steps[currentStep]?.skip" (click)="skipStep()" bgColor="DarkGreen" />
+<!--        <app-text-link *ngIf="currentStep > 0" (click)="previousStep()" text="Назад" [color]="ThemeColors.Primary"/>-->
+<!--        <app-text-link *ngIf="steps[currentStep]?.skip" (click)="skipStep()" text="Пропустить" [color]="ThemeColors.Primary"/>-->
     </div>
     <!-- Шаги -->
     <div class="steps-progress">
         <div *ngFor="let step of steps; let i = index" class="step" [class.completed]="i < currentStep">
-            <div [style.border-color]="borderColorStep" [style.background-color]="bgColorStep" class="circle">{{ i + 1 }}</div>
-            <div [style.background-color]="lineColorStep" class="line" *ngIf="i < steps.length - 1"></div>
+            <div     [style.border-color]="i === currentStep ? activeBorderColorStep : (i < currentStep ? completedBorderColorStep : borderColorStep)"
+                     [style.background-color]="bgColorStep" class="circle"
+            >{{ i + 1 }}</div>
+            <div [style.background-color]="i < currentStep ? lineColorStepActive : lineColorStep" class="line" *ngIf="i < steps.length - 1"></div>
         </div>
     </div>
     <div class="navigation-right">
-        <app-text-link *ngIf="currentStep < steps.length - 1" (click)="nextStep()" text="Далее" [color]="ThemeColors.DarkGreen"/>
-        <app-text-link *ngIf="currentStep === steps.length - 1" (click)="finish()" text="Продолжить" [color]="ThemeColors.DarkGreen"/>
+        <app-solid-button text="Далее" *ngIf="currentStep < steps.length - 1 && isStepValid(steps[currentStep].id)" (click)="nextStep()" bgColor="DarkGreen"/>
+        <app-solid-button text="Продолжить" *ngIf="currentStep === steps.length - 1 && isStepValid(steps[currentStep].id)" (click)="finish()" bgColor="DarkGreen"/>
+
+<!--        <app-text-link *ngIf="currentStep < steps.length - 1 && isStepValid(steps[currentStep].id)" (click)="nextStep()" text="Далее" [color]="ThemeColors.DarkGreen"/>-->
+<!--        <app-text-link *ngIf="currentStep === steps.length - 1 && isStepValid(steps[currentStep].id)" (click)="finish()" text="Продолжить" [color]="ThemeColors.DarkGreen"/>-->
     </div>
 </div>

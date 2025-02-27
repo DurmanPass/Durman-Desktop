@@ -27,13 +27,6 @@ export class PasswordStrengthBarComponent {
 
   constructor(private passwordStrengthService: PasswordStrengthService) {}
 
-  // ngOnChanges() {
-  //   const result = this.passwordStrengthService.evaluatePassword(this.password);
-  //   this.strength = result.score;
-  //   this.feedback = result.feedback;
-  //   this.strengthChanged.emit(this.strength);
-  // }
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['password']) {
       this.evaluateStrength();

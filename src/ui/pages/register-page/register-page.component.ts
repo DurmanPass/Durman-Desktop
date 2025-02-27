@@ -11,6 +11,9 @@ import {
   PasswordStrengthBarComponent
 } from "../../components/bars/password-strength-bar/password-strength-bar.component";
 import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
+import {LoginValidationResult} from "../../../interfaces/data/loginValidation.interface";
+import {ValidateService} from "../../../services/validate.service";
+import {StepValidation} from "../../../interfaces/components/steps/stepValidation.interface";
 
 @Component({
   selector: 'app-register-page',
@@ -27,7 +30,8 @@ import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
   styleUrl: './register-page.component.css'
 })
 export class RegisterPageComponent {
-  currentStepId: string = RegisterSteps[0].contentId; // Начальный шаг
+  currentStepId: string = RegisterSteps[0].contentId;
+  passwordStrength: number = 0;
   loginUserData: LoginUserData = {
     email: '',
     confirmEmailCode: '',
@@ -35,8 +39,27 @@ export class RegisterPageComponent {
     confirmMasterPassword: '',
     hintPassword: ''
   };
+  validateLoginData: StepValidation = {
+    step_1: {
+      isEmailValid: false
+    },
+    step_2: {
+      isEmailCodeValid: false
+    },
+    step_3: {
+      // isValid: false,
+      // hasMinLength: false,
+      // hasMaxLength: true,
+      // hasUpperCase: false,
+      // hasSpecialChar: false,
+      isPasswordValid: false,
+      isPasswordsMatch: false
+    },
+    step_4:{
+      isPasswordHintValid: false
+    },
+  };
 
-  passwordStrength: number = 0;
 
   updateStrength(strength: number) {
     this.passwordStrength = strength;
@@ -50,22 +73,27 @@ export class RegisterPageComponent {
 
   onEmailChange(email: string){
     this.loginUserData.email = email;
+    ValidateService.validateEmail(this.loginUserData.email) ? this.validateLoginData['step_1']['isEmailValid'] = true : this.validateLoginData['step_1']['isEmailValid'] = false;
   }
 
   onConfirmEmailCodeChange(code: string){
     this.loginUserData.confirmEmailCode = code;
+    ValidateService.validateEmailCode(this.loginUserData.confirmEmailCode) ? this.validateLoginData['step_2']['isEmailCodeValid'] = true : this.validateLoginData['step_2']['isEmailCodeValid'] = false;
   }
 
   onPasswordChange(password: string){
     this.loginUserData.masterPassword = password;
+    ValidateService.validatePassword(this.loginUserData.masterPassword).isValid ? this.validateLoginData['step_3']['isPasswordValid'] = true : this.validateLoginData['step_3']['isPasswordValid'] = false;
   }
 
   onConfirmPasswordChange(confirmPassword: string){
     this.loginUserData.confirmMasterPassword = confirmPassword;
+    ValidateService.validatePassword(this.loginUserData.confirmMasterPassword) ? this.validateLoginData['step_3']['isPasswordsMatch'] = true : this.validateLoginData['step_3']['isPasswordsMatch'] = false;
   }
 
   onHintChange(hint: string){
     this.loginUserData.hintPassword = hint;
+    ValidateService.validatePasswordHint(this.loginUserData.hintPassword) ? this.validateLoginData['step_4']['isPasswordHintValid'] = true : this.validateLoginData['step_4']['isPasswordHintValid'] = false;
   }
 
 

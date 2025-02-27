@@ -22,6 +22,7 @@ export class InputComponent {
   @Input() placeholder: string = ''; // Плейсхолдер
   @Input() label?: string; // Текст label
   @Input() labelSide: LabelSideType = DefaultLabelSide; // Расположение label
+  @Input() value: string = '';
   @Output() valueChange = new EventEmitter<string>(); // Отправляем значение при изменении
 
   inputValue: string = '';
