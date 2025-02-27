@@ -1,8 +1,38 @@
 <div class="login-page">
-    <!-- Компонент шагов -->
-    <app-step [steps]="LoginSteps" (stepChanged)="onStepChanged($event)" lineColorStep="Primary" borderColorStep="Primary" bgColorStep="Transparent"></app-step>
+    <app-round-button
+            (click)="backToStartPage()"
+            icon="../../../assets/icons/controls/buttons/left-arrow-back.svg"
+            id="back-btn-login"
+    ></app-round-button>
+    <div class="login-content">
+        <app-header-description
+                title="Войти"
+                description="Пожалуйста, введите свои учетные данные для входа в аккаунт. Если у вас нет аккаунта, зарегистрируйтесь."
+        />
 
-    <!-- Контент для текущего шага -->
-    <div class="step-content">
+        <div class="login-content-inputs">
+            <app-input
+                    type="email"
+                    backgroundColor="Transparent"
+                    placeholder="Введите электронную почту"
+                    size="Long"
+                    [borderColor]="validateLoginData.isEmailValid ? 'DarkGreen' : 'White'"
+                    (valueChange)="onEmailChange($event)"
+                    [value]="loginUserData.email"
+            />
+
+            <app-input
+                    type="password"
+                    [borderColor]="validateLoginData.isPasswordValid ? 'DarkGreen' : 'White'"
+                    backgroundColor="Transparent"
+                    placeholder="Введите мастер-пароль"
+                    size="Long"
+                    (valueChange)="onPasswordChange($event)"
+                    [value]="loginUserData.masterPassword"
+            >
+            </app-input>
+        </div>
+
+        <app-solid-button text="Продолжить" *ngIf="validateLoginData.isPasswordValid && validateLoginData.isEmailValid" bgColor="DarkGreen" size="Long"/>
     </div>
 </div>

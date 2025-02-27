@@ -12,10 +12,10 @@
     </ng-container>
 
     <ng-container *ngIf="mode === AuthModes.LOGIN">
-        <app-login-page/>
+        <app-login-page (changeMode)="changeMode($event)"/>
     </ng-container>
 
     <ng-container *ngIf="mode === AuthModes.REGISTER">
-        <app-register-page/>
+        <app-register-page (changeMode)="changeMode($event)"/>
     </ng-container>
 </div>

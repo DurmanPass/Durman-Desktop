@@ -7,3 +7,9 @@
     flex-direction: column;
     text-align: center;
 }
+
+#back-btn-login{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}

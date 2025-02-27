@@ -45,6 +45,10 @@ export class StartPageComponent {
     this.mode = AuthModes.LOGIN;
   }
 
+  changeMode(mode: AuthModes){
+    this.mode = mode;
+  }
+
   protected readonly ThemeColors = ThemeColors;
   protected readonly SocialLinks = SocialLinks;
   protected readonly LoginSteps = LoginSteps;

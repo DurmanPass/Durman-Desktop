@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {LoginUserData} from "../../../interfaces/components/login/loginUserData.interface";
 import {HeaderDescriptionComponent} from "../../components/text/header-description/header-description.component";
 import {InputComponent} from "../../components/inputs/input/input.component";
@@ -6,15 +6,14 @@ import {NgForOf, NgIf} from "@angular/common";
 import {StepComponent} from "../../components/steps/step/step.component";
 import {RegisterSteps, RegisterStepsId} from "../../../shared/const/steps/register.steps";
 import {ThemeColors} from "../../../shared/const/colors/general/themeColors";
-import {PasswordStrengthService} from "../../../services/password/password-strength.service";
 import {
   PasswordStrengthBarComponent
 } from "../../components/bars/password-strength-bar/password-strength-bar.component";
-import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
-import {LoginValidationResult} from "../../../interfaces/data/loginValidation.interface";
 import {ValidateService} from "../../../services/validate.service";
 import {StepValidation} from "../../../interfaces/components/steps/stepValidation.interface";
 import {RoundButtonComponent} from "../../components/buttons/round-button/round-button.component";
+import {AuthModes} from "../../../shared/enums/modes/auth-modes.enum";
+import {TextLinkComponent} from "../../components/links/text-link/text-link.component";
 
 @Component({
   selector: 'app-register-page',
@@ -26,12 +25,14 @@ import {RoundButtonComponent} from "../../components/buttons/round-button/round-
     StepComponent,
     NgForOf,
     PasswordStrengthBarComponent,
-    RoundButtonComponent
+    RoundButtonComponent,
+    TextLinkComponent
   ],
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.css'
 })
 export class RegisterPageComponent {
+  @Output() changeMode = new EventEmitter<AuthModes>();
   currentStepId: string = RegisterSteps[0].contentId;
   passwordStrength: number = 0;
   loginUserData: LoginUserData = {
@@ -96,6 +97,10 @@ export class RegisterPageComponent {
   onHintChange(hint: string){
     this.loginUserData.hintPassword = hint;
     ValidateService.validatePasswordHint(this.loginUserData.hintPassword) ? this.validateLoginData['step_4']['isPasswordHintValid'] = true : this.validateLoginData['step_4']['isPasswordHintValid'] = false;
+  }
+
+  backToStartPage(){
+    this.changeMode.emit(AuthModes.START);
   }
 
 

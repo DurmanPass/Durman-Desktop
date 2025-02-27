@@ -3,7 +3,7 @@ export const ButtonSizes = {
     Medium: { width: '120px', height: '40px' },
     Large: { width: '160px', height: '50px' },
     Long: {width: '400px', height: '60px'},
-    RoundSmall: {width: '30px', height: '30px'}
+    RoundSmall: {width: '25px', height: '25px'}
 };
 
 export type ButtonsSizesType = keyof typeof ButtonSizes;

@@ -56,6 +56,7 @@
                         [value]="loginUserData.masterPassword"
                 >
                 </app-input>
+                <app-text-link *ngIf="loginUserData.masterPassword.length === 0" text="Сгенерировать пароль"/>
                 <app-password-strength-bar id="register-password-strength" *ngIf="loginUserData.masterPassword.length != 0" [password]="loginUserData.masterPassword" (strengthChanged)="updateStrength($event)"/>
             </div>
             <app-input
@@ -92,6 +93,11 @@
 <!--                    description="Для дополнительной безопасности активируйте двухфакторную аутентификацию. Используя приложение для генерации одноразовых кодов, например, Google Authenticator, вы сможете защитить свой аккаунт от несанкционированного доступа."-->
 <!--            />-->
 <!--        </ng-container>-->
-
+        <!-- Использование компонента -->
+        <app-round-button
+                (click)="backToStartPage()"
+                icon="../../../assets/icons/controls/buttons/left-arrow-back.svg"
+                id="back-btn-register"
+        ></app-round-button>
     </div>
 </div>
