@@ -14,6 +14,7 @@ import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
 import {LoginValidationResult} from "../../../interfaces/data/loginValidation.interface";
 import {ValidateService} from "../../../services/validate.service";
 import {StepValidation} from "../../../interfaces/components/steps/stepValidation.interface";
+import {RoundButtonComponent} from "../../components/buttons/round-button/round-button.component";
 
 @Component({
   selector: 'app-register-page',
@@ -24,7 +25,8 @@ import {StepValidation} from "../../../interfaces/components/steps/stepValidatio
     NgIf,
     StepComponent,
     NgForOf,
-    PasswordStrengthBarComponent
+    PasswordStrengthBarComponent,
+    RoundButtonComponent
   ],
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.css'
@@ -100,4 +102,5 @@ export class RegisterPageComponent {
   protected readonly RegisterSteps = RegisterSteps;
   protected readonly RegisterStepsId = RegisterStepsId;
   protected readonly ThemeColors = ThemeColors;
+  protected readonly history = history;
 }

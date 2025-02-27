@@ -1,0 +1,20 @@
+<!-- round-button.component.html -->
+<button
+        class="round-button"
+        [ngStyle]="{
+    'background-color': backgroundColor,
+    'border-color': borderColor
+  }"
+        [style.width]="ButtonSizes[size].width"
+        [style.height]="ButtonSizes[size].height"
+>
+    <ng-container *ngIf="icon">
+        <img [src]="icon" class="button-icon"
+             [style.width]="getWidthButtonSize(size)/2 + 'px'"
+             [style.height]="getHeightButtonSize(size)/2 + 'px'"
+        />
+    </ng-container>
+    <ng-container *ngIf="text">
+        <span class="button-text">{{ text }}</span>
+    </ng-container>
+</button>

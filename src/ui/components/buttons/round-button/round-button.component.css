@@ -1,0 +1,51 @@
+/* round-button.component.css */
+.round-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    outline: none;
+}
+
+.round-button .button-icon {
+    font-size: 24px; /* Размер иконки */
+}
+
+.round-button .button-text {
+    font-size: 12px;
+    margin-left: 5px;
+    color: white;
+}
+
+.round-button:hover {
+    transform: scale(1.1);
+    background-color: #2980b9;
+    border-color: #3498db;
+}
+
+.round-button:active {
+    transform: scale(0.95);
+    background-color: #1abc9c;
+    border-color: #16a085;
+}
+
+.round-button:focus {
+    outline: none;
+}
+
+.round-button .button-text,
+.round-button .button-icon {
+    transition: opacity 0.3s ease;
+}
+
+.round-button:hover .button-text,
+.round-button:hover .button-icon {
+    opacity: 0.8;
+}
