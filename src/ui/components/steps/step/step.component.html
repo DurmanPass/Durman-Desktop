@@ -9,7 +9,7 @@
     <div class="steps-progress">
         <div *ngFor="let step of steps; let i = index" class="step" [class.completed]="i < currentStep">
             <div     [style.border-color]="i === currentStep ? activeBorderColorStep : (i < currentStep ? completedBorderColorStep : borderColorStep)"
-                     [style.background-color]="bgColorStep" class="circle"
+                     [style.background-color]="currentStep === steps.length - 1 && isStepValid(steps[currentStep].id) ? ThemeColors.DarkGreen : bgColorStep" class="circle"
             >{{ i + 1 }}</div>
             <div [style.background-color]="i < currentStep ? lineColorStepActive : lineColorStep" class="line" *ngIf="i < steps.length - 1"></div>
         </div>

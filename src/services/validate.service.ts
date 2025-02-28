@@ -12,19 +12,26 @@ export class ValidateService {
 
     static validatePassword(password: string): PasswordValidationResult {
         const minLength = 8;
-        const maxLength = 50;
+        const maxLength = 128;
         const hasMinLength = password.length >= minLength;
         const hasMaxLength = password.length <= maxLength;
-        const hasUpperCase = /[A-Z]/.test(password);
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
         return {
-            isValid: hasMinLength && hasMaxLength && hasUpperCase && hasSpecialChar,
+            isValid: hasMinLength && hasMaxLength,
             hasMinLength,
-            hasMaxLength,
-            hasUpperCase,
-            hasSpecialChar
+            hasMaxLength
         };
+
+        // const hasUpperCase = /[A-Z]/.test(password);
+        // const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+        // return {
+        //     isValid: hasMinLength && hasMaxLength && hasUpperCase && hasSpecialChar,
+        //     hasMinLength,
+        //     hasMaxLength,
+        //     hasUpperCase,
+        //     hasSpecialChar
+        // };
     }
 
     static validateEmailCode(code: string): boolean {

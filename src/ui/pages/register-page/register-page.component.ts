@@ -15,6 +15,7 @@ import {RoundButtonComponent} from "../../components/buttons/round-button/round-
 import {AuthModes} from "../../../shared/enums/modes/auth-modes.enum";
 import {TextLinkComponent} from "../../components/links/text-link/text-link.component";
 import {WindowService} from "../../../services/window.service";
+import {PasswordStrengthService} from "../../../services/password/password-strength.service";
 
 @Component({
   selector: 'app-register-page',
@@ -60,15 +61,37 @@ export class RegisterPageComponent {
       isPasswordsMatch: false
     },
     step_4:{
-      isPasswordHintValid: false
+      isPasswordHintValid: true
     },
   };
 
-
-  updateStrength(strength: number) {
-    this.passwordStrength = strength;
-    return strength;
+  inputLimits = {
+    email: {
+      maxLength: 200
+    },
+    emailCode: {
+      maxLength: 5,
+      max: 99999
+    },
+    password: {
+      minLength: 8,
+      maxLength: 128
+    },
+    hint: {
+      maxLength: 16
+    }
   }
+
+  private passwordStrengthService = new PasswordStrengthService();
+
+  onStrengthChange(value: string){
+    this.passwordStrength = Number(this.passwordStrengthService.getPasswordScore(value));
+  }
+
+  // updateStrength(strength: number) {
+  //   this.passwordStrength = strength;
+  //   return strength;
+  // }
 
   // Обрабатываем изменение шага
   onStepChanged(stepId: string) {
@@ -87,12 +110,13 @@ export class RegisterPageComponent {
 
   onPasswordChange(password: string){
     this.loginUserData.masterPassword = password;
+    this.onStrengthChange(password);
     ValidateService.validatePassword(this.loginUserData.masterPassword).isValid ? this.validateLoginData['step_3']['isPasswordValid'] = true : this.validateLoginData['step_3']['isPasswordValid'] = false;
   }
 
   onConfirmPasswordChange(confirmPassword: string){
     this.loginUserData.confirmMasterPassword = confirmPassword;
-    ValidateService.validatePassword(this.loginUserData.confirmMasterPassword) ? this.validateLoginData['step_3']['isPasswordsMatch'] = true : this.validateLoginData['step_3']['isPasswordsMatch'] = false;
+    this.loginUserData.masterPassword === this.loginUserData.confirmMasterPassword ? this.validateLoginData['step_3']['isPasswordsMatch'] = true : this.validateLoginData['step_3']['isPasswordsMatch'] = false
   }
 
   onHintChange(hint: string){
@@ -108,6 +132,5 @@ export class RegisterPageComponent {
   protected readonly RegisterSteps = RegisterSteps;
   protected readonly RegisterStepsId = RegisterStepsId;
   protected readonly ThemeColors = ThemeColors;
-  protected readonly history = history;
-    protected readonly WindowService = WindowService;
+  protected readonly WindowService = WindowService;
 }

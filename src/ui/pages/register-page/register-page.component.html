@@ -21,6 +21,7 @@
                     size="Long"
                     (valueChange)="onEmailChange($event)"
                     [value]="loginUserData.email"
+                    [maxLength]="inputLimits.email.maxLength"
             >
             </app-input>
         </ng-container>
@@ -37,6 +38,8 @@
                     size="Long"
                     (valueChange)="onConfirmEmailCodeChange($event)"
                     [value]="loginUserData.confirmEmailCode"
+                    [maxLength]="inputLimits.emailCode.maxLength"
+                    [maxValue]="inputLimits.emailCode.max"
             >
             </app-input>
         </ng-container>
@@ -54,10 +57,12 @@
                         size="Long"
                         (valueChange)="onPasswordChange($event)"
                         [value]="loginUserData.masterPassword"
+                        [minLength]="inputLimits.password.minLength"
+                        [maxLength]="inputLimits.password.maxLength"
                 >
                 </app-input>
                 <app-text-link (click)="WindowService.openPasswordGenerateWindow()" *ngIf="loginUserData.masterPassword.length === 0" text="Сгенерировать пароль"/>
-                <app-password-strength-bar id="register-password-strength" *ngIf="loginUserData.masterPassword.length != 0" [password]="loginUserData.masterPassword" (strengthChanged)="updateStrength($event)"/>
+                <app-password-strength-bar id="register-password-strength" *ngIf="loginUserData.masterPassword.length != 0" [password]="loginUserData.masterPassword"/>
             </div>
             <app-input
                     type="password"
@@ -68,6 +73,8 @@
                     (valueChange)="onConfirmPasswordChange($event)"
                     *ngIf="passwordStrength >=3"
                     [value]="loginUserData.confirmMasterPassword"
+                    [minLength]="inputLimits.password.minLength"
+                    [maxLength]="inputLimits.password.maxLength"
             >
             </app-input>
         </ng-container>
@@ -84,6 +91,7 @@
                     size="Long"
                     (valueChange)="onHintChange($event)"
                     [value]="loginUserData.hintPassword"
+                    [maxLength]="inputLimits.hint.maxLength"
             >
             </app-input>
         </ng-container>

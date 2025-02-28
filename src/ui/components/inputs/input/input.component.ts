@@ -25,6 +25,7 @@ export class InputComponent {
   @Input() labelSide: LabelSideType = DefaultLabelSide; // Расположение label
   @Input() value: string = '';
   @Input() isEditable: boolean = true;
+  @Input() minLength: number = 0;
   @Input() maxLength: number = 300;
   @Input() maxValue: number = 0;
   @Input() minValue: number = 0;

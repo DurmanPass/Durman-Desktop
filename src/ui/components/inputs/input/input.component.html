@@ -13,6 +13,7 @@
             [style.height]="InputSizes[size].height"
             [value]="value"
             [readonly]="!isEditable"
+            [minLength]="minLength != 0 ? minLength : null"
             [maxLength]="maxLength"
             [max]="maxValue != 0 ? maxValue : null"
             [min]="minValue != 0 ? minValue: null"
