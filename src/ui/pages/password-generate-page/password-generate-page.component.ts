@@ -5,6 +5,7 @@ import {HeaderDescriptionComponent} from "../../components/text/header-descripti
 import {InputComponent} from "../../components/inputs/input/input.component";
 import {SolidButtonComponent} from "../../components/buttons/solid-button/solid-button.component";
 import {copyToClipboard} from "../../../utils/clipboard.utils";
+import {CheckboxComponent} from "../../components/controls/checkbox/checkbox.component";
 
 @Component({
   selector: 'app-password-generate-page',
@@ -12,7 +13,8 @@ import {copyToClipboard} from "../../../utils/clipboard.utils";
   imports: [
     HeaderDescriptionComponent,
     InputComponent,
-    SolidButtonComponent
+    SolidButtonComponent,
+    CheckboxComponent
   ],
   templateUrl: './password-generate-page.component.html',
   styleUrl: './password-generate-page.component.css'
