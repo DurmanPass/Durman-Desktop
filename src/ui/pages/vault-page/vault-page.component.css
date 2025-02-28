@@ -1,0 +1,76 @@
+.vault-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 15vw;
+    height: 100vh;
+    background-color: #2c2c2c;
+    color: white;
+    /*padding: 20px;*/
+    transition: width 0.3s ease-in-out;
+}
+
+.sidebar.closed {
+    width: 0;
+    padding: 0;
+}
+
+.sidebar.closed .content{
+    width: 100vw;
+    padding-left: 100px;
+}
+
+.content {
+    flex-grow: 1;
+    height: 100vh;
+    width: 80vw;
+    padding: 20px;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+.toggle-btn {
+    position: absolute;
+    left: 12vw;
+    top: 10px;
+    background: #2c2c2c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: left 0.3s ease-in-out;
+}
+
+.sidebar.closed + .content .toggle-btn {
+    left: 10px;
+}
+
+.tabs {
+    display: flex;
+    flex-direction: column;
+    padding: 50px 0;
+    width: 100%;
+}
+
+.tabs div {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 20px 30px;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 16px;
+    width: 100%;
+}
+
+.tabs div:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.tabs div.active {
+    background: rgba(255, 255, 255, 0.3);
+    font-weight: bold;
+}

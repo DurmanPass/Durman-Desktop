@@ -13,6 +13,7 @@ export const ThemeColors = {
     DarkOrange: getComputedStyle(document.documentElement).getPropertyValue('--dark-orange').trim() || 'rgb(204, 85, 0)',
     DeepPurple: getComputedStyle(document.documentElement).getPropertyValue('--deep-purple').trim() || 'rgb(128, 0, 128)',
     DarkGreen: 'rgb(15,198,15)',
+    DarkPurple: 'rgb(53,1,53)',
     BackgroundBlue: getComputedStyle(document.documentElement).getPropertyValue('--background-blue').trim() || 'rgb(3, 30, 91)',
     BackgroundCyan: getComputedStyle(document.documentElement).getPropertyValue('--background-cyan').trim() || 'rgb(92, 190, 231)',
     BackgroundOrange: getComputedStyle(document.documentElement).getPropertyValue('--background-orange').trim() || 'rgb(204, 85, 0)',
@@ -24,4 +25,5 @@ export const ThemeColors = {
     Transparent: 'transparent',
     White: 'rgb(255, 255, 255)',
     Grey: 'rgb(169, 169, 169)',
+    GradientPurple: 'linear-gradient(135deg, rgb(20, 10, 50), rgb(60, 0, 90))',
 };

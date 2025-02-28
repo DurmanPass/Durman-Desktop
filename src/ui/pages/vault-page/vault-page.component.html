@@ -1,1 +1,21 @@
-<p>МЕНЕДЖЕР ПАРОЛЕЙ</p>
+<div class="vault-container">
+    <aside class="sidebar" [class.closed]="isSidebarClosed" [style.background]="ThemeColors.GradientPurple">
+        <div class="tabs">
+            <div
+                    *ngFor="let tab of tabs"
+                    (click)="selectTab(tab)"
+                    [class.active]="tab === selectedTab">
+                {{ tab.title }}
+            </div>
+        </div>
+    </aside>
+    <main class="content" [style.background]="ThemeColors.GradientBluePurple">
+        <button class="toggle-btn" (click)="toggleSidebar()">
+            {{ isSidebarClosed ? '➤' : '❮' }}
+        </button>
+
+        <ng-container *ngIf="selectedTab">
+            <ng-container *ngComponentOutlet="selectedTab.content"></ng-container>
+        </ng-container>
+    </main>
+</div>
