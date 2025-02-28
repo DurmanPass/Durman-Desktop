@@ -17,4 +17,11 @@ export class WindowService {
         } catch (error) {
         }
     }
+
+    static async openVaultWindow(){
+        try {
+            await invoke('create_vault_window');
+        } catch (error) {
+        }
+    }
 }
