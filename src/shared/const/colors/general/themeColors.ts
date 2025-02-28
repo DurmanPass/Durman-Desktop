@@ -20,6 +20,7 @@ export const ThemeColors = {
     GradientBluePurple: getComputedStyle(document.documentElement).getPropertyValue('--gradient-blue-purple').trim() || 'linear-gradient(135deg, rgb(3, 30, 91), rgb(128, 0, 128))',
     GradientOrangeBlue: getComputedStyle(document.documentElement).getPropertyValue('--gradient-orange-blue').trim() || 'linear-gradient(135deg, rgb(204, 85, 0), rgb(92, 190, 231))',
     GradientDarkLight: getComputedStyle(document.documentElement).getPropertyValue('--gradient-dark-light').trim() || 'linear-gradient(135deg, rgb(2, 2, 2), rgb(255, 255, 255))',
+    GradientDarkPurple: 'linear-gradient(135deg, rgb(50, 0, 90), rgb(120, 0, 180))',
     Transparent: 'transparent',
     White: 'rgb(255, 255, 255)',
     Grey: 'rgb(169, 169, 169)',

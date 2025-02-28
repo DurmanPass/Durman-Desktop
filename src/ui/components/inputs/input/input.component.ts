@@ -23,6 +23,7 @@ export class InputComponent {
   @Input() label?: string; // Текст label
   @Input() labelSide: LabelSideType = DefaultLabelSide; // Расположение label
   @Input() value: string = '';
+  @Input() isEditable: boolean = true;
   @Output() valueChange = new EventEmitter<string>(); // Отправляем значение при изменении
 
   inputValue: string = '';

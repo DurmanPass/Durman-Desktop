@@ -19,7 +19,7 @@ async fn create_password_generate_window(handle: AppHandle) {
     )
         .title("Генерация надежного пароля")
         .resizable(false)
-        .inner_size(500.0, 300.0)
+        .inner_size(600.0, 400.0)
         .fullscreen(false)
         .maximized(false)
         .maximizable(false)
