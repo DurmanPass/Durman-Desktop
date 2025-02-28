@@ -20,6 +20,7 @@ import {
 export class PasswordStrengthBarComponent {
   @Input() password: string = '';
   @Input() size: PasswordStrengthSizesType = DefaultPasswordStrengthSize;
+  @Input() showHints: boolean = true;
   @Output() strengthChanged = new EventEmitter<number>();
 
   strength: number = 0;

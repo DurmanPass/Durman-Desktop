@@ -7,6 +7,11 @@ import {SolidButtonComponent} from "../../components/buttons/solid-button/solid-
 import {copyToClipboard} from "../../../utils/clipboard.utils";
 import {CheckboxComponent} from "../../components/controls/checkbox/checkbox.component";
 import {PasswordGenerator} from "../../../services/password/password-generate.service";
+import {
+  PasswordStrengthBarComponent
+} from "../../components/bars/password-strength-bar/password-strength-bar.component";
+import {NgIf} from "@angular/common";
+import {PasswordStrengthService} from "../../../services/password/password-strength.service";
 
 @Component({
   selector: 'app-password-generate-page',
@@ -15,14 +20,20 @@ import {PasswordGenerator} from "../../../services/password/password-generate.se
     HeaderDescriptionComponent,
     InputComponent,
     SolidButtonComponent,
-    CheckboxComponent
+    CheckboxComponent,
+    PasswordStrengthBarComponent,
+    NgIf
   ],
   templateUrl: './password-generate-page.component.html',
   styleUrl: './password-generate-page.component.css'
 })
 export class PasswordGeneratePageComponent {
   password: string = '';
+  passwordStrength: number = 0;
   lengthPassword: number = 12;
+  minLengthPassword: number = 8;
+  maxLengthPassword: number = 128;
+  maxCountNumbersAndSymbols: number = 50;
   generateOptions = {
     useUpperLetters: true,
     useLowerLetters: true,
@@ -32,6 +43,11 @@ export class PasswordGeneratePageComponent {
     minSymbols: 0
   }
   private passwordGenerator = new PasswordGenerator();
+  private passwordStrengthService = new PasswordStrengthService();
+
+  onPasswordChange(value: string){
+    this.onStrengthChange(value);
+  }
 
   onCheckboxUpperChange(value: boolean) {
     this.generateOptions.useUpperLetters = value;
@@ -61,12 +77,17 @@ export class PasswordGeneratePageComponent {
     this.generateOptions.minSymbols = Number(value);
   }
 
+  onStrengthChange(value: string){
+    this.passwordStrength = Number(this.passwordStrengthService.getPasswordScore(value));
+  }
+
   ngOnInit(){
     deleteOverflowWindow();
   }
 
   generate() {
     this.password = this.passwordGenerator.generatePassword(this.lengthPassword, this.generateOptions);
+    this.onPasswordChange(this.password);
   }
 
   protected readonly ThemeColors = ThemeColors;

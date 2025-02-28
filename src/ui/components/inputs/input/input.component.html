@@ -13,5 +13,8 @@
             [style.height]="InputSizes[size].height"
             [value]="value"
             [readonly]="!isEditable"
+            [maxLength]="maxLength"
+            [max]="maxValue != 0 ? maxValue : null"
+            [min]="minValue != 0 ? minValue: null"
     />
 </div>
