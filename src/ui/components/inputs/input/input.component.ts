@@ -2,13 +2,14 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ThemeColors} from "../../../../shared/const/colors/general/themeColors";
 import {DefaultInputSize, InputSizes, InputSizesType} from "../../../../shared/const/components/sizes/inputSizes";
 import {DefaultLabelSide, LabelSideType} from "../../../../shared/const/components/labels/label.side";
-import {NgIf} from "@angular/common";
+import {NgClass, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-input',
   standalone: true,
   imports: [
-    NgIf
+    NgIf,
+    NgClass
   ],
   templateUrl: './input.component.html',
   styleUrl: './input.component.css'

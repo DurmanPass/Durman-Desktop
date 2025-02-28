@@ -6,6 +6,7 @@ import {InputComponent} from "../../components/inputs/input/input.component";
 import {SolidButtonComponent} from "../../components/buttons/solid-button/solid-button.component";
 import {copyToClipboard} from "../../../utils/clipboard.utils";
 import {CheckboxComponent} from "../../components/controls/checkbox/checkbox.component";
+import {PasswordGenerator} from "../../../services/password/password-generate.service";
 
 @Component({
   selector: 'app-password-generate-page',
@@ -20,7 +21,8 @@ import {CheckboxComponent} from "../../components/controls/checkbox/checkbox.com
   styleUrl: './password-generate-page.component.css'
 })
 export class PasswordGeneratePageComponent {
-  password: string = 'мума';
+  password: string = '';
+  lengthPassword: number = 12;
   generateOptions = {
     useUpperLetters: true,
     useLowerLetters: true,
@@ -29,9 +31,42 @@ export class PasswordGeneratePageComponent {
     minNumbers: 1,
     minSymbols: 0
   }
+  private passwordGenerator = new PasswordGenerator();
+
+  onCheckboxUpperChange(value: boolean) {
+    this.generateOptions.useUpperLetters = value;
+  }
+
+  onCheckboxLowerChange(value: boolean) {
+    this.generateOptions.useLowerLetters = value;
+  }
+
+  onCheckboxNumbersChange(value: boolean) {
+    this.generateOptions.useNumbers = value;
+  }
+
+  onCheckboxSymbolsChange(value: boolean) {
+    this.generateOptions.useSpecialSymbols = value;
+  }
+
+  onInputLengthChange(value: string){
+    this.lengthPassword = Number(value);
+  }
+
+  onInputMinNumbersChange(value: string){
+    this.generateOptions.minNumbers = Number(value);
+  }
+
+  onInputMinSymbolsChange(value: string){
+    this.generateOptions.minSymbols = Number(value);
+  }
 
   ngOnInit(){
     deleteOverflowWindow();
+  }
+
+  generate() {
+    this.password = this.passwordGenerator.generatePassword(this.lengthPassword, this.generateOptions);
   }
 
   protected readonly ThemeColors = ThemeColors;
