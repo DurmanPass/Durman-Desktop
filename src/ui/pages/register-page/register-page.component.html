@@ -56,7 +56,7 @@
                         [value]="loginUserData.masterPassword"
                 >
                 </app-input>
-                <app-text-link *ngIf="loginUserData.masterPassword.length === 0" text="Сгенерировать пароль"/>
+                <app-text-link (click)="WindowService.openPasswordGenerateWindow()" *ngIf="loginUserData.masterPassword.length === 0" text="Сгенерировать пароль"/>
                 <app-password-strength-bar id="register-password-strength" *ngIf="loginUserData.masterPassword.length != 0" [password]="loginUserData.masterPassword" (strengthChanged)="updateStrength($event)"/>
             </div>
             <app-input

@@ -14,6 +14,7 @@ import {StepValidation} from "../../../interfaces/components/steps/stepValidatio
 import {RoundButtonComponent} from "../../components/buttons/round-button/round-button.component";
 import {AuthModes} from "../../../shared/enums/modes/auth-modes.enum";
 import {TextLinkComponent} from "../../components/links/text-link/text-link.component";
+import {WindowService} from "../../../services/window.service";
 
 @Component({
   selector: 'app-register-page',
@@ -108,4 +109,5 @@ export class RegisterPageComponent {
   protected readonly RegisterStepsId = RegisterStepsId;
   protected readonly ThemeColors = ThemeColors;
   protected readonly history = history;
+    protected readonly WindowService = WindowService;
 }
