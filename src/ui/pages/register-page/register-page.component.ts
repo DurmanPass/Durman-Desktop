@@ -128,6 +128,11 @@ export class RegisterPageComponent {
     this.changeMode.emit(AuthModes.START);
   }
 
+  onFinish(){
+    WindowService.openVaultWindow().then();
+    // WindowService.closeAllWindowsExVault();
+  }
+
 
   protected readonly RegisterSteps = RegisterSteps;
   protected readonly RegisterStepsId = RegisterStepsId;

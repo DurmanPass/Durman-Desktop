@@ -1,6 +1,6 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-use tauri::Builder;
+use tauri::{Builder, Manager};
 
 use tauri::{AppHandle, WebviewWindowBuilder};
 
@@ -37,7 +37,7 @@ async fn create_vault_window(handle: AppHandle) {
         "vault-window",
         WebviewUrl::App("index.html".into()),
     )
-        .title("Генерация надежного пароля")
+        .title("DurmanPass - Менеджер паролей")
         .inner_size(800.0, 800.0)
         .always_on_top(true)
         .build()
@@ -45,13 +45,28 @@ async fn create_vault_window(handle: AppHandle) {
 
     new_window.show().unwrap();
 }
+
+#[tauri::command]
+fn close_all_except_vault_window(app: AppHandle) {
+    let windows = app.windows(); // Получаем все окна приложения
+
+    for (label, window) in windows {
+        if label != "vault-window" {
+            window.close().unwrap_or_else(|err| {
+                eprintln!("Ошибка при закрытии окна {}: {:?}", label, err);
+            });
+        }
+    }
+}
+
 fn main() {
 
     Builder::default()
         .invoke_handler(tauri::generate_handler![
             create_password_generate_window,
             get_window_label,
-            create_vault_window
+            create_vault_window,
+            close_all_except_vault_window
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

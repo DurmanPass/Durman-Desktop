@@ -24,4 +24,8 @@ export class WindowService {
         } catch (error) {
         }
     }
+
+    static async closeAllWindowsExVault(){
+        await invoke('close_all_except_vault_window');
+    }
 }
