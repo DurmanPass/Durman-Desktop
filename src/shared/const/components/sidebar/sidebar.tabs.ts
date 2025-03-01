@@ -11,10 +11,14 @@ import {
 import {
     AccountTabContentComponent
 } from "../../../../ui/pages/vault-page/tabs-content/account-tab-content/account-tab-content.component";
+import {
+    ReportsTabContentComponent
+} from "../../../../ui/pages/vault-page/tabs-content/reports-tab-content/reports-tab-content.component";
 
 export const SidebarTabs: SidebarTab[] = [
     { id: "tab1", title: "Главная", content: HomeTabContentComponent },
     { id: "tab2", title: "Пароли", content: PasswordTabContentComponent },
-    { id: "tab3", title: "Настройки", content: SettingsTabContentComponent },
-    { id: "tab4", title: "Аккаунт", content: AccountTabContentComponent },
+    { id: "tab3", title: "Отчёты", content: ReportsTabContentComponent },
+    { id: "tab4", title: "Настройки", content: SettingsTabContentComponent },
+    { id: "tab5", title: "Аккаунт", content: AccountTabContentComponent },
 ];

@@ -26,4 +26,7 @@ export const ThemeColors = {
     White: 'rgb(255, 255, 255)',
     Grey: 'rgb(169, 169, 169)',
     GradientPurple: 'linear-gradient(135deg, rgb(20, 10, 50), rgb(60, 0, 90))',
+    DarkRed: 'rgb(158,0,0)',
+    DarkYellow: 'rgb(244,237,142)',
+    LightGreen: 'rgb(47,225,0)'
 };

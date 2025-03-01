@@ -16,8 +16,12 @@ import {ThemeColors} from "../../../../shared/const/colors/general/themeColors";
 })
 export class HeaderDescriptionComponent {
   @Input() titleType: string = 'h2'; // по умолчанию h2
+  @Input() titleSuffix: string = ''
   @Input() title: string = ''; // текст заголовка
+  @Input() titleSecondLevel?: string = '';
+  @Input() titleSecondType: string = 'h3';
   @Input() description: string = ''; // текст описания
   @Input() titleColor: keyof typeof ThemeColors = "White"; // цвет заголовка по умолчанию
+  @Input() titleSecondColor: keyof typeof ThemeColors = "White"; // цвет заголовка по умолчанию
   @Input() descriptionColor: keyof typeof ThemeColors = "Grey"; // цвет описания по умолчанию
 }
