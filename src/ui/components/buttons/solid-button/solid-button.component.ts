@@ -4,6 +4,7 @@ import {
   ButtonsColorsType, DefaultButtonColor,
 } from "../../../../shared/const/colors/buttons/buttonsColors";
 import {ButtonSizes, ButtonsSizesType, DefaultButtonSize} from "../../../../shared/const/components/sizes/buttonsSizes";
+import {ThemeColors} from "../../../../shared/const/colors/general/themeColors";
 
 @Component({
   selector: 'app-solid-button',
@@ -16,6 +17,7 @@ export class SolidButtonComponent {
   @Input() bgColor: ButtonsColorsType = DefaultButtonColor;
   @Input() size: ButtonsSizesType = DefaultButtonSize;
   @Input() text: string = '';
+  @Input() textColor: keyof typeof ThemeColors = 'White';
 
   get bgButtonColor() {
     return ButtonsColors[this.bgColor] || ButtonsColors[DefaultButtonColor];

@@ -1,0 +1,22 @@
+<div class="widget-container" [ngStyle]="widgetStyles">
+    <div *ngIf="icon" class="widget-icon">
+        <img [src]="icon" alt="icon">
+    </div>
+
+    <app-header-description
+    *ngIf="title || titleSecond || description"
+    [title]="title"
+    [titleSecondLevel]="titleSecond"
+    [description]="description"
+    [style.text-align]="textAlign"
+    />
+
+    <app-solid-button
+            *ngIf="button"
+            [text]="buttonText"
+            (click)="onButtonClick()"
+            [bgColor]="buttonColor"
+            [size]="buttonSize"
+            [textColor]="buttonTextColor"
+    />
+</div>

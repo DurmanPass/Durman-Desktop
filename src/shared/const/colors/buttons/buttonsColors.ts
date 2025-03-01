@@ -8,6 +8,7 @@ export const ButtonsColors = {
     GradientOrangeBlue: getComputedStyle(document.documentElement).getPropertyValue('--button-gradient-orange-blue').trim() || 'linear-gradient(135deg, rgb(204, 85, 0), rgb(92, 190, 231))',
     GradientDarkLight: getComputedStyle(document.documentElement).getPropertyValue('--button-gradient-dark-light').trim() || 'linear-gradient(135deg, rgb(2, 2, 2), rgb(255, 255, 255))',
     DarkGreen: 'rgb(15,198,15)',
+    White: 'rgb(255,255,255)'
 };
 export type ButtonsColorsType = keyof typeof ButtonsColors;
 export const DefaultButtonColor = "Primary";

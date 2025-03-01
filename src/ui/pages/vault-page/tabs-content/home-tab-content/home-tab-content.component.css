@@ -5,3 +5,9 @@
     align-content: center;
     flex-direction: column;
 }
+
+.home-tab-top-widgets{
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}

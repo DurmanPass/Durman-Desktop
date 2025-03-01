@@ -1,3 +1,16 @@
 <div class="home-tab-content">
-    <app-flower-strength-widget [securityLevel]="securityLevel"/>
+    <div class="home-tab-top-widgets">
+        <app-flower-strength-widget [securityLevel]="securityLevel"/>
+        <app-widget-base
+                [title]="getRandomPasswordText().title"
+                [description]="getRandomPasswordText().description"
+                [button]="true"
+                [buttonText]="'Новый пароль'"
+                [borderRadius]="'15px'"
+                [size]="'Medium'"
+                textAlign="Center"
+                buttonColor="White"
+                buttonTextColor="DarkGreen"
+        />
+    </div>
 </div>
