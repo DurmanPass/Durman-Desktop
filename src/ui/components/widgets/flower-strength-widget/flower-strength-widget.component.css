@@ -1,0 +1,22 @@
+.flower-widget {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 700px;
+    padding: 10px;
+    margin-left: 30px;
+    border-radius: 10px;
+}
+
+.security-level{
+    position: absolute;
+    top: 47%;
+    right: 45%;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.flower-widget-info{
+    margin-left: 20px;
+}
