@@ -1,5 +1,6 @@
 export const WidgetSizes = {
-    Small: { width: '100px', height: '300px' },
+    Small: { width: '100px', height: '100px' },
+    MediumMinHeight: { width: '450px', height: '100px' },
     Medium: { width: '450px', height: '140px' },
     Large: { width: '400px', height: '300px' },
     Long: {width: '500px', height: '300px'}

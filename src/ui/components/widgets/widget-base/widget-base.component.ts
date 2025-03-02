@@ -27,6 +27,7 @@ export class WidgetBaseComponent {
   @Input() titleSecond: string='';
   @Input() titleSecondColor?: keyof typeof ThemeColors ='White';
   @Input() description: string='';
+  @Input() descriptionColor: keyof typeof ThemeColors ='Grey';
   @Input() button: boolean = true;
   @Input() buttonText: string = 'Подробнее';
   @Input() buttonColor: keyof typeof ButtonsColors ='Primary';

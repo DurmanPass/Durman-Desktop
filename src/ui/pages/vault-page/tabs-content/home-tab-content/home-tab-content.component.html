@@ -13,4 +13,27 @@
                 buttonTextColor="DarkGreen"
         />
     </div>
+
+    <div class="home-tab-middle-widgets">
+        <app-header-description
+                [title]="greeting.title"
+                [description]="greeting.description"
+                titleType="h1"
+        />
+
+        <div class="home-tab-middle-panel">
+            <ng-container *ngFor="let widget of PasswordsInfoWidgets; let i = index">
+                <app-widget-base
+                        [title]="widget.title + ': ' + getScoreByIndex(i)"
+                        [description]="widget.description"
+                        [descriptionColor]="'White'"
+                        [borderRadius]="'30px'"
+                        [size]="'MediumMinHeight'"
+                        textAlign="Center"
+                        [button]="false"
+                        [backgroundColor]="passwordsInfo[i].color"
+                />
+            </ng-container>
+        </div>
+    </div>
 </div>
