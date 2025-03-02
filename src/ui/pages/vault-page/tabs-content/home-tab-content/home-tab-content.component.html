@@ -36,4 +36,17 @@
             </ng-container>
         </div>
     </div>
+
+    <div class="home-tab-bottom-widgets">
+        <app-widget-base
+                [title]="'Создай пароль'"
+                [description]="'Генерируй надёжные пароли за секунду!'"
+                [borderRadius]="'30px'"
+                [size]="'LongMinHeight'"
+                textAlign="Center"
+                buttonText="Открыть"
+                buttonColor="DarkGreen"
+                (buttonClick)="WindowService.openPasswordGenerateWindow()"
+        />
+    </div>
 </div>

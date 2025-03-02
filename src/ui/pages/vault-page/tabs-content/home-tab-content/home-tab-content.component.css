@@ -37,3 +37,13 @@
     gap: 30px;
     flex-wrap: wrap;
 }
+
+.home-tab-bottom-widgets{
+    margin-top: 80px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    gap: 30px;
+}

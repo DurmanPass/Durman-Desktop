@@ -10,6 +10,7 @@ import {NgForOf} from "@angular/common";
 import {PasswordsInfoWidgets} from "../../../../../shared/const/components/widgets/passwords-info.widget";
 import {ThemeColors} from "../../../../../shared/const/colors/general/themeColors";
 import {PasswordInfo} from "../../../../../interfaces/data/passwordsInfo.interface";
+import {WindowService} from "../../../../../services/window.service";
 
 @Component({
   selector: 'app-home-tab-content',
@@ -58,4 +59,5 @@ export class HomeTabContentComponent {
 
     protected readonly getRandomPasswordText = getRandomPasswordText;
     protected readonly PasswordsInfoWidgets = PasswordsInfoWidgets;
+    protected readonly WindowService = WindowService;
 }
