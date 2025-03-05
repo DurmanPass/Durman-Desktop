@@ -138,3 +138,5 @@ const newEntry: PasswordEntryInterface = {
         sensitive: false
     }
 };
+
+PasswordManagerService.addEntry(newEntry);
