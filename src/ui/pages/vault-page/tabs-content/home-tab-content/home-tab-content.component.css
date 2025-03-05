@@ -5,6 +5,7 @@
     align-content: center;
     flex-direction: column;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .home-tab-top-widgets{
@@ -15,6 +16,7 @@
     align-content: center;
     justify-content: center;
     gap: 30px;
+    flex-wrap: initial;
 }
 
 .home-tab-middle-widgets{
@@ -26,6 +28,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+    flex-wrap: wrap;
 }
 
 .home-tab-middle-panel{

@@ -38,8 +38,7 @@ async fn create_vault_window(handle: AppHandle) {
         WebviewUrl::App("index.html".into()),
     )
         .title("DurmanPass - Менеджер паролей")
-        .inner_size(800.0, 800.0)
-        .min_inner_size(800.0, 800.0)
+        .maximized(true)
         .build()
         .expect("Ошибка при создании окна");
 
