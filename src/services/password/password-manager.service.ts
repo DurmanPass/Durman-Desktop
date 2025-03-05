@@ -2,6 +2,11 @@ import {PasswordEntryInterface} from "../../interfaces/data/passwordEntry.interf
 export class PasswordManagerService {
     private static entries: PasswordEntryInterface[] = [];
 
+    // Получение количества записей
+    public static getEntriesCount(): number {
+        return this.entries.length;
+    }
+
     // Добавление новой записи
     public static addEntry(entry: PasswordEntryInterface): void {
         if (!entry.id) {

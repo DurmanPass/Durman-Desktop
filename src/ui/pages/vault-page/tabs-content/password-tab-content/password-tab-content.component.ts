@@ -10,6 +10,7 @@ import {PasswordManagerService} from "../../../../../services/password/password-
 import {PasswordManagerStats} from "../../../../../interfaces/data/passwordManagerStats";
 import {SolidButtonComponent} from "../../../../components/buttons/solid-button/solid-button.component";
 import {copyToClipboard} from "../../../../../utils/clipboard.utils";
+import {HeaderDescriptionComponent} from "../../../../components/text/header-description/header-description.component";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -18,7 +19,8 @@ import {copyToClipboard} from "../../../../../utils/clipboard.utils";
     InputComponent,
     NgIf,
     NgForOf,
-    SolidButtonComponent
+    SolidButtonComponent,
+    HeaderDescriptionComponent
   ],
   templateUrl: './password-tab-content.component.html',
   styleUrl: './password-tab-content.component.css'
@@ -40,6 +42,9 @@ export class PasswordTabContentComponent {
 
   onSearchQueryChange(query: string){
     this.PasswordManagerState.searchQuery = query;
+    this.updateCategories();
+    this.updateEntries();
+    this.updateStats();
   }
 
   selectCategory(category: string): void {
@@ -120,4 +125,5 @@ export class PasswordTabContentComponent {
 
   protected readonly VIEW_MANAGER_MODES = VIEW_MANAGER_MODES;
   protected readonly ThemeColors = ThemeColors;
+  protected readonly PasswordManagerService = PasswordManagerService;
 }
