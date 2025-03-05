@@ -2,7 +2,7 @@
 
 /* Общие стили для кнопки */
 .solid-button {
-    font-size: 16px; /* Размер шрифта */
+    /*font-size: 16px; !* Размер шрифта *!*/
     font-weight: bold; /* Жирный шрифт */
     color: white; /* Цвет текста */
     border: none; /* Убираем границу */

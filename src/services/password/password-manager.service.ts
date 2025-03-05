@@ -139,4 +139,27 @@ const newEntry: PasswordEntryInterface = {
     }
 };
 
+
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
 PasswordManagerService.addEntry(newEntry);

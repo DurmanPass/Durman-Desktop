@@ -8,6 +8,8 @@ import {ThemeColors} from "../../../../../shared/const/colors/general/themeColor
 import {PasswordEntryInterface} from "../../../../../interfaces/data/passwordEntry.interface";
 import {PasswordManagerService} from "../../../../../services/password/password-manager.service";
 import {PasswordManagerStats} from "../../../../../interfaces/data/passwordManagerStats";
+import {SolidButtonComponent} from "../../../../components/buttons/solid-button/solid-button.component";
+import {copyToClipboard} from "../../../../../utils/clipboard.utils";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -15,7 +17,8 @@ import {PasswordManagerStats} from "../../../../../interfaces/data/passwordManag
   imports: [
     InputComponent,
     NgIf,
-    NgForOf
+    NgForOf,
+    SolidButtonComponent
   ],
   templateUrl: './password-tab-content.component.html',
   styleUrl: './password-tab-content.component.css'
@@ -75,6 +78,13 @@ export class PasswordTabContentComponent {
   editEntry(id: string): void {
     console.log(`Редактировать запись с ID: ${id}`);
     // Здесь можно открыть модальное окно для редактирования
+  }
+
+  copyEntry(id: string): void {
+    const entry = PasswordManagerService.getEntryById(id);
+    if (entry && entry.credentials.password) {
+      copyToClipboard(entry.credentials.password);
+    }
   }
 
   deleteEntry(id: string): void {
