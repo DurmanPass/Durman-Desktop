@@ -35,7 +35,25 @@ export class PasswordTabContentComponent {
   filteredEntries: PasswordEntryInterface[] = [];
   stats: PasswordManagerStats = { total: 0, favorites: 0, weak: 0, frequent: 0 };
 
+  categories: string[] = []; // Список уникальных категорий
+  selectedCategory: string = 'All'; // Текущая выбранная категория
+
+  onSearchQueryChange(query: string){
+    this.PasswordManagerState.searchQuery = query;
+  }
+
+  selectCategory(category: string): void {
+    this.selectedCategory = category;
+    this.updateEntries();
+  }
+
+  private updateCategories(): void {
+    const allEntries = PasswordManagerService.getAllEntries();
+    this.categories = [...new Set(allEntries.map(entry => entry.metadata.category).filter(category => category))];
+  }
+
   ngOnInit(): void {
+    this.updateCategories();
     this.updateEntries();
     this.updateStats();
   }
@@ -50,6 +68,12 @@ export class PasswordTabContentComponent {
   private updateEntries(): void {
     let entries = PasswordManagerService.getEntriesSortedBy(this.PasswordManagerState.sortCriterion, this.PasswordManagerState.sortOrder);
 
+    // Фильтрация по категории
+    if (this.selectedCategory !== 'All') {
+      entries = entries.filter(entry => entry.metadata.category === this.selectedCategory);
+    }
+
+    // Фильтрация по поисковому запросу
     if (this.PasswordManagerState.searchQuery) {
       entries = entries.filter(entry =>
           entry.name.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
@@ -91,6 +115,7 @@ export class PasswordTabContentComponent {
     PasswordManagerService.removeEntry(id);
     this.updateEntries();
     this.updateStats();
+    this.updateCategories();
   }
 
   protected readonly VIEW_MANAGER_MODES = VIEW_MANAGER_MODES;

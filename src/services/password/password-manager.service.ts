@@ -138,13 +138,40 @@ const newEntry: PasswordEntryInterface = {
         sensitive: false
     }
 };
+const newEntry2: PasswordEntryInterface = {
+    id: '',
+    name: 'GitHub',
+    description: 'My GitHub account',
+    favicon: 'https://github.com/favicon.ico',
+    credentials: {
+        username: 'user123',
+        email: 'user@example.com',
+        password: 'securePass123!',
+        passwordStrength: 4,
+        pin: '',
+        twoFactorCode: '',
+        recoveryCodes: ['abc123', 'xyz789']
+    },
+    location: {
+        url: 'https://github.com/login',
+        domain: 'github.com'
+    },
+    metadata: {
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        lastUsed: '',
+        usageCount: 0,
+        tags: ['work', 'dev'],
+        category: 'Lol'
+    },
+    security: {
+        isFavorite: true,
+        requires2FA: true,
+        sensitive: false
+    }
+};
 
 
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
 
 PasswordManagerService.addEntry(newEntry);
 PasswordManagerService.addEntry(newEntry);
@@ -163,3 +190,10 @@ PasswordManagerService.addEntry(newEntry);
 PasswordManagerService.addEntry(newEntry);
 PasswordManagerService.addEntry(newEntry);
 PasswordManagerService.addEntry(newEntry);
+
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry);
+PasswordManagerService.addEntry(newEntry2);
