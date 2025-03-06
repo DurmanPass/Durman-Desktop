@@ -11,6 +11,7 @@ import {PasswordManagerStats} from "../../../../../interfaces/data/passwordManag
 import {SolidButtonComponent} from "../../../../components/buttons/solid-button/solid-button.component";
 import {copyToClipboard} from "../../../../../utils/clipboard.utils";
 import {HeaderDescriptionComponent} from "../../../../components/text/header-description/header-description.component";
+import {PasswordExportService} from "../../../../../services/password/password-export.service";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -121,6 +122,35 @@ export class PasswordTabContentComponent {
     this.updateEntries();
     this.updateStats();
     this.updateCategories();
+  }
+
+  onExportChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const format = target.value as 'xlsx' | 'html' | 'pdf' | 'zip' | '';
+    if (format) {
+      this.exportPasswords(format);
+    }
+  }
+
+  exportPasswords(format: 'xlsx' | 'html' | 'pdf' | 'zip'): void {
+    switch (format) {
+      case 'xlsx':
+        PasswordExportService.exportToXlsx('my_passwords.xlsx');
+        break;
+      case 'html':
+        PasswordExportService.exportToHtml('my_passwords.html');
+        break;
+      case 'pdf':
+        PasswordExportService.exportToPdf('my_passwords.pdf');
+        break;
+      case 'zip':
+        const password = prompt('Введите пароль для ZIP-архива:');
+        if (password) {
+          PasswordExportService.exportToZip(password, 'my_passwords.zip')
+              .catch(err => console.error('Ошибка экспорта в ZIP:', err));
+        }
+        break;
+    }
   }
 
   protected readonly VIEW_MANAGER_MODES = VIEW_MANAGER_MODES;
