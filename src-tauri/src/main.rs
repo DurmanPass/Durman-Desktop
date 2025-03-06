@@ -93,6 +93,7 @@ fn export_to_encrypted_zip(data: String, password: String, file_name: String) ->
 fn main() {
 
     Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![
             create_password_generate_window,
             get_window_label,
