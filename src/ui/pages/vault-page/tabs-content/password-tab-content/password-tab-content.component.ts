@@ -86,7 +86,9 @@ export class PasswordTabContentComponent {
     if (this.PasswordManagerState.searchQuery) {
       entries = entries.filter(entry =>
           entry.name.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
-          entry.metadata.category.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase())
+          entry.metadata.category.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
+          entry.credentials.username.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
+          entry.location.domain.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase())
       );
     }
 
@@ -158,9 +160,6 @@ export class PasswordTabContentComponent {
       case 'html':
         PasswordExportService.exportToHtml(path,'my_passwords.html');
         break;
-      // case 'pdf':
-      //   PasswordExportService.exportToPdf(path,'my_passwords.pdf');
-      //   break;
       case 'zip':
         const password = prompt('Введите пароль для ZIP-архива:');
         if (password) {
