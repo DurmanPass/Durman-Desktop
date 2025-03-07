@@ -13,6 +13,7 @@ import {copyToClipboard} from "../../../../../utils/clipboard.utils";
 import {HeaderDescriptionComponent} from "../../../../components/text/header-description/header-description.component";
 import {PasswordExportService} from "../../../../../services/password/password-export.service";
 import {DialogService} from "../../../../../services/filesystem/dialog.service";
+import {EXPORT_PASSWORDS_TYPES} from "../../../../../shared/enums/export/passwords/export-passwords.enum";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -106,12 +107,10 @@ export class PasswordTabContentComponent {
   }
 
   addEntry(): void {
-    console.log('Открыть форму добавления записи');
     // Здесь можно открыть модальное окно для добавления
   }
 
   editEntry(id: string): void {
-    console.log(`Редактировать запись с ID: ${id}`);
     // Здесь можно открыть модальное окно для редактирования
   }
 
@@ -138,7 +137,7 @@ export class PasswordTabContentComponent {
     }
 
     const target = event.target as HTMLSelectElement;
-    const format = target.value as 'xlsx' | 'html' | 'pdf' | 'zip' | '';
+    const format = target.value as EXPORT_PASSWORDS_TYPES | '';
     if (format) {
       this.exportPasswords(format, this.exportPath);
     }
