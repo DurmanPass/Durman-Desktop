@@ -15,6 +15,7 @@ import {PasswordExportService} from "../../../../../services/password/password-e
 import {DialogService} from "../../../../../services/filesystem/dialog.service";
 import {EXPORT_PASSWORDS_TYPES} from "../../../../../shared/enums/export/passwords/export-passwords.enum";
 import {ChipsComponent} from "../../../../components/controls/chips/chips.component";
+import {SelectComponent} from "../../../../components/controls/select/select.component";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -25,7 +26,8 @@ import {ChipsComponent} from "../../../../components/controls/chips/chips.compon
     NgForOf,
     SolidButtonComponent,
     HeaderDescriptionComponent,
-    ChipsComponent
+    ChipsComponent,
+    SelectComponent
   ],
   templateUrl: './password-tab-content.component.html',
   styleUrl: './password-tab-content.component.css'
@@ -46,6 +48,13 @@ export class PasswordTabContentComponent {
   selectedCategory: string = 'All'; // Текущая выбранная категория
 
   exportPath: string = ''
+
+  // Опции для экспорта
+  exportOptions = [
+    { value: EXPORT_PASSWORDS_TYPES.XLSX, label: 'XLSX' },
+    { value: EXPORT_PASSWORDS_TYPES.HTML, label: 'HTML' },
+    { value: EXPORT_PASSWORDS_TYPES.ZIP, label: 'ZIP (защищённый паролем)' }
+  ];
 
   onSearchQueryChange(query: string){
     this.PasswordManagerState.searchQuery = query;
@@ -134,20 +143,33 @@ export class PasswordTabContentComponent {
     this.updateCategories();
   }
 
-  async onExportChange(event: Event) {
+  // async onExportChange(event: Event) {
+  //
+  //   await this.selectExportPath();
+  //
+  //   if(this.exportPath === ''){
+  //     return;
+  //   }
+  //
+  //   const target = event.target as HTMLSelectElement;
+  //   const format = target.value as EXPORT_PASSWORDS_TYPES | '';
+  //   if (format) {
+  //     this.exportPasswords(format, this.exportPath);
+  //   }
+  //   target.value = '';
+  // }
 
+  async onExportChange(value: string) {
     await this.selectExportPath();
 
-    if(this.exportPath === ''){
+    if (this.exportPath === '') {
       return;
     }
 
-    const target = event.target as HTMLSelectElement;
-    const format = target.value as EXPORT_PASSWORDS_TYPES | '';
+    const format = value as EXPORT_PASSWORDS_TYPES;
     if (format) {
       this.exportPasswords(format, this.exportPath);
     }
-    target.value = '';
   }
 
   async selectExportPath() {
@@ -159,13 +181,13 @@ export class PasswordTabContentComponent {
 
   exportPasswords(format: EXPORT_PASSWORDS_TYPES, path: string): void {
     switch (format) {
-      case 'xlsx':
+      case EXPORT_PASSWORDS_TYPES.XLSX:
         PasswordExportService.exportToXlsx(path);
         break;
-      case 'html':
+      case EXPORT_PASSWORDS_TYPES.HTML:
         PasswordExportService.exportToHtml(path);
         break;
-      case 'zip':
+      case EXPORT_PASSWORDS_TYPES.ZIP:
         const password = prompt('Введите пароль для ZIP-архива:');
         if (password) {
           PasswordExportService.exportToZip(path,password)

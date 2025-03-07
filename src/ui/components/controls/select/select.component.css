@@ -1,0 +1,27 @@
+select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+select:hover {
+    border-color: #aaa;
+}
+
+select:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    select {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}
