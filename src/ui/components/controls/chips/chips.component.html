@@ -1,0 +1,18 @@
+<div class="category-chips">
+  <span
+          class="chip"
+          [class.active]="selectedChips === 'All'"
+          (click)="selectChip('All')"
+  >
+    Все
+  </span>
+    <span
+            class="chip"
+            *ngFor="let chip of chips"
+            [class.active]="selectedChips === chip"
+            (click)="selectChip(chip)"
+    >
+    {{ chip }}
+  </span>
+    <span class="chip chip-add" (click)="onClickAddChip()">+</span>
+</div>

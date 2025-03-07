@@ -14,6 +14,7 @@ import {HeaderDescriptionComponent} from "../../../../components/text/header-des
 import {PasswordExportService} from "../../../../../services/password/password-export.service";
 import {DialogService} from "../../../../../services/filesystem/dialog.service";
 import {EXPORT_PASSWORDS_TYPES} from "../../../../../shared/enums/export/passwords/export-passwords.enum";
+import {ChipsComponent} from "../../../../components/controls/chips/chips.component";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -23,7 +24,8 @@ import {EXPORT_PASSWORDS_TYPES} from "../../../../../shared/enums/export/passwor
     NgIf,
     NgForOf,
     SolidButtonComponent,
-    HeaderDescriptionComponent
+    HeaderDescriptionComponent,
+    ChipsComponent
   ],
   templateUrl: './password-tab-content.component.html',
   styleUrl: './password-tab-content.component.css'
@@ -107,11 +109,15 @@ export class PasswordTabContentComponent {
   }
 
   addEntry(): void {
-    // Здесь можно открыть модальное окно для добавления
+    //TODO Открыть модальное окно для добавления новой записи
   }
 
   editEntry(id: string): void {
-    // Здесь можно открыть модальное окно для редактирования
+    //TODO Открыть модальное окно для редактирования записи
+  }
+
+  createNewCategory(){
+    //TODO Открыть модальное окно для добавления категории
   }
 
   copyEntry(id: string): void {
@@ -151,18 +157,18 @@ export class PasswordTabContentComponent {
     }
   }
 
-  exportPasswords(format: 'xlsx' | 'html' | 'pdf' | 'zip', path: string): void {
+  exportPasswords(format: EXPORT_PASSWORDS_TYPES, path: string): void {
     switch (format) {
       case 'xlsx':
-        PasswordExportService.exportToXlsx(path,'my_passwords.xlsx');
+        PasswordExportService.exportToXlsx(path);
         break;
       case 'html':
-        PasswordExportService.exportToHtml(path,'my_passwords.html');
+        PasswordExportService.exportToHtml(path);
         break;
       case 'zip':
         const password = prompt('Введите пароль для ZIP-архива:');
         if (password) {
-          PasswordExportService.exportToZip(path,password, 'my_passwords.zip')
+          PasswordExportService.exportToZip(path,password)
               .catch(err => console.error('Ошибка экспорта в ZIP:', err));
         }
         break;
