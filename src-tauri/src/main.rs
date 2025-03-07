@@ -17,15 +17,15 @@ async fn create_password_generate_window(handle: AppHandle) {
         "password-generate-window",
         WebviewUrl::App("index.html".into()),
     )
-        .title("Генерация надежного пароля")
-        .resizable(false)
-        .inner_size(450.0, 660.0)
-        .fullscreen(false)
-        .maximized(false)
-        .maximizable(false)
-        .always_on_top(true)
-        .build()
-        .expect("Ошибка при создании окна");
+    .title("Генерация надежного пароля")
+    .resizable(false)
+    .inner_size(450.0, 660.0)
+    .fullscreen(false)
+    .maximized(false)
+    .maximizable(false)
+    .always_on_top(true)
+    .build()
+    .expect("Ошибка при создании окна");
 
     new_window.show().unwrap();
 }
@@ -37,10 +37,10 @@ async fn create_vault_window(handle: AppHandle) {
         "vault-window",
         WebviewUrl::App("index.html".into()),
     )
-        .title("DurmanPass - Менеджер паролей")
-        .maximized(true)
-        .build()
-        .expect("Ошибка при создании окна");
+    .title("DurmanPass - Менеджер паролей")
+    .maximized(true)
+    .build()
+    .expect("Ошибка при создании окна");
 
     new_window.show().unwrap();
 }
@@ -58,48 +58,85 @@ fn close_all_except_vault_window(app: AppHandle) {
     }
 }
 
+use std::fs::File;
+use std::io::{Cursor, Write};
+use std::path::Path;
 use zip::write::{FileOptions, ZipWriter};
 use zip::AesMode::Aes256;
-use std::fs::File;
-use std::io::{Write, Cursor};
-use std::path::Path;
 
+// #[tauri::command]
+// fn export_to_encrypted_zip(data: String, password: String, file_name: String) -> Result<String, String> {
+//     // Создаём временный буфер для ZIP
+//     let mut buffer = Vec::new();
+//     let mut zip = ZipWriter::new(Cursor::new(&mut buffer));
+//
+//     let options: FileOptions<()> = FileOptions::default()
+//         .compression_method(zip::CompressionMethod::Deflated)
+//         .with_aes_encryption(Aes256, &password);
+//     // Добавляем JSON-файл в архив
+//     zip.start_file("passwords.json", options).map_err(|e| e.to_string())?;
+//     zip.write_all(data.as_bytes()).map_err(|e| e.to_string())?;
+//
+//     // Завершаем архив
+//     let cursor = zip.finish().map_err(|e| e.to_string())?;
+//     let zip_data = cursor.into_inner();
+//
+//     // Сохраняем файл в домашнюю директорию (или другую)
+//     let home_dir = dirs::home_dir().ok_or("Не удалось найти домашнюю директорию")?;
+//     let file_path = home_dir.join(file_name);
+//     let mut file = File::create(&file_path).map_err(|e| e.to_string())?;
+//     file.write_all(&zip_data).map_err(|e| e.to_string())?;
+//
+//     Ok(file_path.to_string_lossy().into_owned())
+// }
+
+// Команда для сохранения обычных файлов
 #[tauri::command]
-fn export_to_encrypted_zip(data: String, password: String, file_name: String) -> Result<String, String> {
-    // Создаём временный буфер для ZIP
+fn save_file(data: Vec<u8>, file_path: String) -> Result<String, String> {
+    let path = Path::new(&file_path);
+    let mut file = File::create(&path).map_err(|e| e.to_string())?;
+    file.write_all(&data).map_err(|e| e.to_string())?;
+    Ok(file_path)
+}
+
+// Команда для создания защищённого ZIP
+#[tauri::command]
+fn export_to_encrypted_zip(
+    data: String,
+    password: String,
+    file_name: String,
+) -> Result<String, String> {
     let mut buffer = Vec::new();
     let mut zip = ZipWriter::new(Cursor::new(&mut buffer));
 
     let options: FileOptions<()> = FileOptions::default()
         .compression_method(zip::CompressionMethod::Deflated)
         .with_aes_encryption(Aes256, &password);
-    // Добавляем JSON-файл в архив
-    zip.start_file("passwords.json", options).map_err(|e| e.to_string())?;
+    zip.start_file("passwords.json", options)
+        .map_err(|e| e.to_string())?;
     zip.write_all(data.as_bytes()).map_err(|e| e.to_string())?;
 
-    // Завершаем архив
     let cursor = zip.finish().map_err(|e| e.to_string())?;
     let zip_data = cursor.into_inner();
 
-    // Сохраняем файл в домашнюю директорию (или другую)
-    let home_dir = dirs::home_dir().ok_or("Не удалось найти домашнюю директорию")?;
-    let file_path = home_dir.join(file_name);
+    let file_path = Path::new(&file_name);
     let mut file = File::create(&file_path).map_err(|e| e.to_string())?;
     file.write_all(&zip_data).map_err(|e| e.to_string())?;
 
-    Ok(file_path.to_string_lossy().into_owned())
+    Ok(file_name)
 }
 
 fn main() {
-
     Builder::default()
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_fs::init())
         .invoke_handler(tauri::generate_handler![
             create_password_generate_window,
             get_window_label,
             create_vault_window,
             close_all_except_vault_window,
-            export_to_encrypted_zip
+            export_to_encrypted_zip,
+            save_file
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

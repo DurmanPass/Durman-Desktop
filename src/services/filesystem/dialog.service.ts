@@ -5,7 +5,7 @@ import {open} from "@tauri-apps/plugin-dialog";
     providedIn: 'root'
 })
 export class DialogService {
-    async selectPath(directory: boolean = true, multiple: boolean = false): Promise<string | string[] | null> {
+    static async selectPath(directory: boolean = true, multiple: boolean = false): Promise<string | string[] | null> {
         try {
             const selectedPath = await open({
                 directory,

@@ -12,6 +12,7 @@ import {SolidButtonComponent} from "../../../../components/buttons/solid-button/
 import {copyToClipboard} from "../../../../../utils/clipboard.utils";
 import {HeaderDescriptionComponent} from "../../../../components/text/header-description/header-description.component";
 import {PasswordExportService} from "../../../../../services/password/password-export.service";
+import {DialogService} from "../../../../../services/filesystem/dialog.service";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -40,6 +41,8 @@ export class PasswordTabContentComponent {
 
   categories: string[] = []; // Список уникальных категорий
   selectedCategory: string = 'All'; // Текущая выбранная категория
+
+  exportPath: string = ''
 
   onSearchQueryChange(query: string){
     this.PasswordManagerState.searchQuery = query;
@@ -124,29 +127,44 @@ export class PasswordTabContentComponent {
     this.updateCategories();
   }
 
-  onExportChange(event: Event): void {
+  async onExportChange(event: Event) {
+
+    await this.selectExportPath();
+
+    if(this.exportPath === ''){
+      return;
+    }
+
     const target = event.target as HTMLSelectElement;
     const format = target.value as 'xlsx' | 'html' | 'pdf' | 'zip' | '';
     if (format) {
-      this.exportPasswords(format);
+      this.exportPasswords(format, this.exportPath);
+    }
+    target.value = '';
+  }
+
+  async selectExportPath() {
+    const selectedPath = await DialogService.selectPath();
+    if (selectedPath) {
+      this.exportPath = selectedPath as string;
     }
   }
 
-  exportPasswords(format: 'xlsx' | 'html' | 'pdf' | 'zip'): void {
+  exportPasswords(format: 'xlsx' | 'html' | 'pdf' | 'zip', path: string): void {
     switch (format) {
       case 'xlsx':
-        PasswordExportService.exportToXlsx('my_passwords.xlsx');
+        PasswordExportService.exportToXlsx(path,'my_passwords.xlsx');
         break;
       case 'html':
-        PasswordExportService.exportToHtml('my_passwords.html');
+        PasswordExportService.exportToHtml(path,'my_passwords.html');
         break;
-      case 'pdf':
-        PasswordExportService.exportToPdf('my_passwords.pdf');
-        break;
+      // case 'pdf':
+      //   PasswordExportService.exportToPdf(path,'my_passwords.pdf');
+      //   break;
       case 'zip':
         const password = prompt('Введите пароль для ZIP-архива:');
         if (password) {
-          PasswordExportService.exportToZip(password, 'my_passwords.zip')
+          PasswordExportService.exportToZip(path,password, 'my_passwords.zip')
               .catch(err => console.error('Ошибка экспорта в ZIP:', err));
         }
         break;
