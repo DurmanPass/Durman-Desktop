@@ -16,6 +16,7 @@ import {DialogService} from "../../../../../services/filesystem/dialog.service";
 import {EXPORT_PASSWORDS_TYPES} from "../../../../../shared/enums/export/passwords/export-passwords.enum";
 import {ChipsComponent} from "../../../../components/controls/chips/chips.component";
 import {SelectComponent} from "../../../../components/controls/select/select.component";
+import {ModalBaseComponent} from "../../../../components/modals/modal-base/modal-base.component";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -27,7 +28,8 @@ import {SelectComponent} from "../../../../components/controls/select/select.com
     SolidButtonComponent,
     HeaderDescriptionComponent,
     ChipsComponent,
-    SelectComponent
+    SelectComponent,
+    ModalBaseComponent
   ],
   templateUrl: './password-tab-content.component.html',
   styleUrl: './password-tab-content.component.css'
@@ -40,6 +42,13 @@ export class PasswordTabContentComponent {
     sortOrder: SORT_ORDER_ENTRY.ASC
   };
 
+  modalsControls = {
+    isAddCategoryModalOpen: false
+  }
+
+  closeAddCategoryModal(): void {
+    this.modalsControls.isAddCategoryModalOpen = false;
+  }
 
   filteredEntries: PasswordEntryInterface[] = [];
   stats: PasswordManagerStats = { total: 0, favorites: 0, weak: 0, frequent: 0 };
@@ -55,6 +64,7 @@ export class PasswordTabContentComponent {
     { value: EXPORT_PASSWORDS_TYPES.HTML, label: 'HTML' },
     { value: EXPORT_PASSWORDS_TYPES.ZIP, label: 'ZIP (защищённый паролем)' }
   ];
+
 
   onSearchQueryChange(query: string){
     this.PasswordManagerState.searchQuery = query;
@@ -119,6 +129,7 @@ export class PasswordTabContentComponent {
 
   addEntry(): void {
     //TODO Открыть модальное окно для добавления новой записи
+    this.modalsControls.isAddCategoryModalOpen = true;
   }
 
   editEntry(id: string): void {

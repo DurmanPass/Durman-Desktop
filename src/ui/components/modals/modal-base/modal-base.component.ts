@@ -14,7 +14,7 @@ import {ThemeColors} from "../../../../shared/const/colors/general/themeColors";
 export class ModalBaseComponent {
   @Input() isOpen: boolean = false;
   @Input() closeOnOverlayClick: boolean = true;
-  @Input() contentBackgroundColor: keyof typeof ThemeColors = 'DarkPurple';
+  @Input() contentBackgroundColor: string | keyof typeof ThemeColors = '#424242';
   @Input() contentBorderRadius: string = '8px';
   @Output() closed = new EventEmitter<void>();
 
