@@ -1,0 +1,6 @@
+<div class="modal-overlay" *ngIf="isOpen" (click)="onOverlayClick($event)">
+    <div class="modal-content" [style.background]="contentBackgroundColor" [style.borderRadius]="contentBorderRadius">
+        <button class="close-button" (click)="closeModal()">✕</button>
+        <ng-content></ng-content>
+    </div>
+</div>

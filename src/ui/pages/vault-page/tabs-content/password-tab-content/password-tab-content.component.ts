@@ -143,22 +143,6 @@ export class PasswordTabContentComponent {
     this.updateCategories();
   }
 
-  // async onExportChange(event: Event) {
-  //
-  //   await this.selectExportPath();
-  //
-  //   if(this.exportPath === ''){
-  //     return;
-  //   }
-  //
-  //   const target = event.target as HTMLSelectElement;
-  //   const format = target.value as EXPORT_PASSWORDS_TYPES | '';
-  //   if (format) {
-  //     this.exportPasswords(format, this.exportPath);
-  //   }
-  //   target.value = '';
-  // }
-
   async onExportChange(value: string) {
     await this.selectExportPath();
 

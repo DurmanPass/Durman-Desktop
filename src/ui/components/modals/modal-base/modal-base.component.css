@@ -1,0 +1,54 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачная подложка */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Выше остального контента */
+}
+
+.modal-content {
+    position: relative;
+    padding: 20px;
+    min-width: 300px; /* Минимальная ширина, размер зависит от контента */
+    max-width: 90vw; /* Ограничение по ширине */
+    max-height: 90vh; /* Ограничение по высоте */
+    overflow-y: auto; /* Скролл, если контент не помещается */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Тень для объёма */
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-button:hover {
+    color: #ff0000; /* Красный при наведении */
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .modal-content {
+        min-width: 250px;
+        padding: 15px;
+    }
+
+    .close-button {
+        font-size: 16px;
+        top: 8px;
+        right: 8px;
+    }
+}
