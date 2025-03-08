@@ -26,6 +26,7 @@ export class PasswordDetailsModalComponent {
   @Input() headerBackground: string = 'rgb(34,34,35)'; // Базовый цвет для градиента
   @Output() editRequested = new EventEmitter<string>(); // Запрос на редактирование
   localEntry: PasswordEntryInterface;
+  idEditLocalEntry: boolean = false;
 
   constructor() {
     this.localEntry = this.createEmptyEntry();
@@ -35,6 +36,7 @@ export class PasswordDetailsModalComponent {
     // Если передан passwordEntry, используем его, иначе создаём пустой объект в режиме CREATE
     if (this.mode === PasswordDetailsModalModes.CREATE) {
       this.localEntry = this.createEmptyEntry();
+      this.idEditLocalEntry = true;
     } else if (this.passwordEntry) {
       this.localEntry = { ...this.passwordEntry }; // Копируем, чтобы не мутировать исходный объект
     }
