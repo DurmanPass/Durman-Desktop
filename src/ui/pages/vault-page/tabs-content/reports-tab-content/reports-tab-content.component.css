@@ -1,0 +1,25 @@
+.reports-page{
+    width: 100%;
+    margin-left: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+.report-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.reports-page-header{
+    width: 100%;
+    text-align: center;
+}
+
+.reports-page-main-content{
+    width: 100%;
+}

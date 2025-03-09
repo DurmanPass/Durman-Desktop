@@ -1,1 +1,13 @@
-<p>report-card works!</p>
+<div class="report-card" *ngIf="reportCard" [style.background]="mainBgColor" [style.border-color]="borderColor" [style.border]="'2px solid'">
+    <div class="report-card-header" [style.background]="headerBgColor">
+        <img [src]="reportCard.icon" alt="Icon" class="report-icon">
+    </div>
+    <h4>{{ reportCard.title }}</h4>
+    <p>{{ reportCard.description }}</p>
+    <app-solid-button
+            [text]="'Сгенерировать'"
+            [bgColor]="'DarkGreen'"
+            [size]="'MediumLong'"
+            (click)="reportCard.action()"
+    />
+</div>

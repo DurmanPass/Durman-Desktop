@@ -1,1 +1,20 @@
-<p>reports-tab-content works!</p>
+<div class="reports-page">
+    <header class="reports-page-header">
+        <app-header-description
+                title="Отчёты по безопасности"
+                description="Анализируйте состояние ваших паролей и сайтов. Получайте детальные отчёты для повышения защиты ваших данных."
+        />
+    </header>
+
+    <main class="reports-page-main-content">
+        <div class="report-cards">
+            <div class="report-card-container" *ngFor="let report of reportCards">
+                <app-report-card [reportCard]="report"/>
+            </div>
+        </div>
+    </main>
+
+    <footer class="reports-page-footer">
+
+    </footer>
+</div>
