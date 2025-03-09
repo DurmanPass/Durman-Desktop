@@ -122,7 +122,7 @@ const newEntry: PasswordEntryInterface = {
         password: 'securePass123!',
         phoneNumber: '+79528893456',
         passwordStrength: 4,
-        pin: '',
+        pin: '2345',
         twoFactorCode: '',
         recoveryCodes: ['abc123', 'xyz789']
     },

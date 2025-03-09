@@ -15,6 +15,7 @@ export class CheckboxComponent {
   @Input() checked: boolean = false;
   @Input() label: string = '';
   @Input() checkedColor: keyof typeof ThemeColors = 'DarkGreen';
+  @Input() disabled: boolean = false;
   @Output() checkedChange = new EventEmitter<boolean>();
 
   toggleChecked() {

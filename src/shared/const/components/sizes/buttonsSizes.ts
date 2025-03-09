@@ -2,6 +2,7 @@ export const ButtonSizes = {
     Small: { width: '80px', height: '30px' },
     SmallLong: {width: '130px', height: '30px'},
     Medium: { width: '150px', height: '40px' },
+    MediumLong: { width: '250px', height: '40px' },
     Large: { width: '160px', height: '50px' },
     Long: {width: '400px', height: '60px'},
     RoundSmall: {width: '25px', height: '25px'}

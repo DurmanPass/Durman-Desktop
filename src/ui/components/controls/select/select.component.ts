@@ -14,6 +14,7 @@ export class SelectComponent {
   @Input() options: { value: string; label: string }[] = [];
   @Input() placeholder: string = 'Выберите...';
   @Input() resetToDefault: boolean = false;
+  @Input() disabled: boolean = false;
   @Output() optionSelected = new EventEmitter<string>();
 
   onChange(event: Event): void {

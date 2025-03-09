@@ -9,6 +9,7 @@ import {PasswordDetailsModalModes} from "../../../../shared/enums/modes/modals/p
 import {SelectComponent} from "../../controls/select/select.component";
 import {CategoryManagerService} from "../../../../services/password/category-manager.service";
 import {CheckboxComponent} from "../../controls/checkbox/checkbox.component";
+import {PasswordStrengthService} from "../../../../services/password/password-strength.service";
 
 @Component({
   selector: 'app-password-details-modal',
@@ -31,22 +32,35 @@ export class PasswordDetailsModalComponent {
   @Input() headerBackground: string = 'rgb(34,34,35)'; // Базовый цвет для градиента
   @Output() editRequested = new EventEmitter<string>(); // Запрос на редактирование
   localEntry: PasswordEntryInterface;
-  idEditLocalEntry: boolean = false;
+  isEditLocalEntry: boolean = false;
   categoryOptions: { value: string, label: string }[] = [];
   categories: string[] = [];
   constructor() {
     this.localEntry = this.createEmptyEntry();
     this.updateCategories();
   }
+  private passwordStrengthService = new PasswordStrengthService();
 
   ngOnChanges(): void {
     // Если передан passwordEntry, используем его, иначе создаём пустой объект в режиме CREATE
     if (this.mode === PasswordDetailsModalModes.CREATE) {
+      this.isEditLocalEntry = false;
       this.localEntry = this.createEmptyEntry();
-      this.idEditLocalEntry = true;
+      this.isEditLocalEntry = true;
     } else if (this.passwordEntry) {
+      this.isEditLocalEntry = false;
       this.localEntry = { ...this.passwordEntry }; // Копируем, чтобы не мутировать исходный объект
     }
+  }
+
+  ngOnDestroy(){
+    this.passwordEntry = null;
+    this.localEntry = this.createEmptyEntry();
+    this.isEditLocalEntry = false;
+  }
+
+  onEditLocalEntry(){
+    this.isEditLocalEntry = !this.isEditLocalEntry;
   }
 
   private updateCategories(): void {
@@ -111,7 +125,41 @@ export class PasswordDetailsModalComponent {
   editEntry(): void {
     if (this.passwordEntry?.id) {
       this.editRequested.emit(this.passwordEntry.id);
+      this.onEditLocalEntry();
     }
+  }
+
+  // Обновление полей при изменении значений в input
+  updateField(field: keyof PasswordEntryInterface | string, value: string): void {
+    if (field === 'name') {
+      this.localEntry.name = value;
+    }
+    if (field === 'location.url') {
+      this.localEntry.location.url = value;
+    } else if (field === 'location.domain') {
+      this.localEntry.location.domain = value;
+    } else if (field === 'credentials.username') {
+      this.localEntry.credentials.username = value;
+    } else if (field === 'credentials.phoneNumber') {
+      this.localEntry.credentials.phoneNumber = value;
+    } else if (field === 'credentials.password') {
+      this.localEntry.credentials.password = value;
+      this.localEntry.credentials.passwordStrength = this.passwordStrengthService.getPasswordScore(this.localEntry.credentials.password);
+    } else if (field === 'name') {
+      this.localEntry.name = value;
+    } else if (field === 'metadata.category') {
+      this.localEntry.metadata.category = value;
+    }
+  }
+
+  onUpdateEntry(){
+    //TODO Проверка совпадает ли localEntry с passwordEntry
+    //TODO Обновить запись пароля
+    this.isEditLocalEntry = false;
+  }
+
+  onCreateEntry(){
+    //TODO Создать запись пароля
   }
 
   protected readonly PasswordDetailsModalModes = PasswordDetailsModalModes;

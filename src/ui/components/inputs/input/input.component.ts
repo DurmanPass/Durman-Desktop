@@ -29,6 +29,7 @@ export class InputComponent {
   @Input() maxLength: number = 300;
   @Input() maxValue: number = 0;
   @Input() minValue: number = 0;
+  @Input() textAlign: string = 'left';
   @Output() valueChange = new EventEmitter<string>(); // Отправляем значение при изменении
 
   inputValue: string = '';
