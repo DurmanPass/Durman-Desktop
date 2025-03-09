@@ -6,6 +6,9 @@ import {DatePipe, NgIf} from "@angular/common";
 import {InputComponent} from "../../inputs/input/input.component";
 import {PasswordStrengthBarComponent} from "../../bars/password-strength-bar/password-strength-bar.component";
 import {PasswordDetailsModalModes} from "../../../../shared/enums/modes/modals/password-details-modal-modes.enum";
+import {SelectComponent} from "../../controls/select/select.component";
+import {CategoryManagerService} from "../../../../services/password/category-manager.service";
+import {CheckboxComponent} from "../../controls/checkbox/checkbox.component";
 
 @Component({
   selector: 'app-password-details-modal',
@@ -15,7 +18,9 @@ import {PasswordDetailsModalModes} from "../../../../shared/enums/modes/modals/p
     NgIf,
     DatePipe,
     InputComponent,
-    PasswordStrengthBarComponent
+    PasswordStrengthBarComponent,
+    SelectComponent,
+    CheckboxComponent
   ],
   templateUrl: './password-details-modal.component.html',
   styleUrl: './password-details-modal.component.css'
@@ -27,9 +32,11 @@ export class PasswordDetailsModalComponent {
   @Output() editRequested = new EventEmitter<string>(); // Запрос на редактирование
   localEntry: PasswordEntryInterface;
   idEditLocalEntry: boolean = false;
-
+  categoryOptions: { value: string, label: string }[] = [];
+  categories: string[] = [];
   constructor() {
     this.localEntry = this.createEmptyEntry();
+    this.updateCategories();
   }
 
   ngOnChanges(): void {
@@ -40,6 +47,14 @@ export class PasswordDetailsModalComponent {
     } else if (this.passwordEntry) {
       this.localEntry = { ...this.passwordEntry }; // Копируем, чтобы не мутировать исходный объект
     }
+  }
+
+  private updateCategories(): void {
+    this.categories = CategoryManagerService.getAllCategories();
+    this.categoryOptions = this.categories.map(category => ({
+      value: category,
+      label: category
+    }));
   }
 
   private createEmptyEntry(): PasswordEntryInterface {
@@ -57,16 +72,17 @@ export class PasswordDetailsModalComponent {
         password: '',
         passwordStrength: 0,
         email: '',
+        phoneNumber: '',
         pin: '',
         twoFactorCode: '',
         recoveryCodes: []
       },
       metadata: {
-        category: '',
-        createdAt: new Date().toString(),
-        updatedAt: new Date().toString(),
-        usageCount: 0,
-        lastUsed: '',
+        category: '',//
+        createdAt: new Date().toString(),//
+        updatedAt: new Date().toString(),//
+        usageCount: 0,//
+        lastUsed: '',//
         tags: []
       },
       security: {
@@ -99,4 +115,5 @@ export class PasswordDetailsModalComponent {
   }
 
   protected readonly PasswordDetailsModalModes = PasswordDetailsModalModes;
+  protected readonly CategoryManagerService = CategoryManagerService;
 }

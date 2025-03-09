@@ -7,6 +7,7 @@ export interface PasswordEntryInterface {
         username: string;
         email: string;
         password: string;
+        phoneNumber: string;
         passwordStrength: number;
         pin: string;
         twoFactorCode: string;
