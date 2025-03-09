@@ -30,4 +30,5 @@ export const ThemeColors = {
     DarkYellow: 'rgb(244,237,142)',
     LightGreen: 'rgb(47,225,0)',
     GreyDark: 'rgb(0,0,0)',
+    DarkPurpleSolid: '#34063e'
 };

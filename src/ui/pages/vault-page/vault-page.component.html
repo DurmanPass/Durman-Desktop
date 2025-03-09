@@ -1,5 +1,9 @@
 <div class="vault-container">
     <aside class="sidebar" [class.closed]="isSidebarClosed" [style.background]="ThemeColors.GradientPurple">
+        <div class="sidebar-logo">
+            <img src="assets/icons/general/logo/logo_transparent.png" alt="DurmanPass">
+            <app-header-description titleType="h4" title="DurmanPass" titleColor="TextLight"/>
+        </div>
         <div class="tabs">
             <div class="tab"
                     *ngFor="let tab of tabs"

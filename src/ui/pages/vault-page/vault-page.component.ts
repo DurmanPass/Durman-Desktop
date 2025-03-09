@@ -4,6 +4,7 @@ import {ThemeColors} from "../../../shared/const/colors/general/themeColors";
 import {NgComponentOutlet, NgForOf, NgIf} from "@angular/common";
 import {SidebarTabs} from "../../../shared/const/components/sidebar/sidebar.tabs";
 import {SidebarTab} from "../../../interfaces/components/sidebar/sidebarTabs.interface";
+import {HeaderDescriptionComponent} from "../../components/text/header-description/header-description.component";
 
 @Component({
   selector: 'app-vault-page',
@@ -11,7 +12,8 @@ import {SidebarTab} from "../../../interfaces/components/sidebar/sidebarTabs.int
   imports: [
     NgIf,
     NgComponentOutlet,
-    NgForOf
+    NgForOf,
+    HeaderDescriptionComponent
   ],
   templateUrl: './vault-page.component.html',
   styleUrl: './vault-page.component.css'
