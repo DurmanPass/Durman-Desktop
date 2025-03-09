@@ -21,6 +21,8 @@ import {
   PasswordDetailsModalComponent
 } from "../../../../components/modals/password-details-modal/password-details-modal.component";
 import {PasswordDetailsModalModes} from "../../../../../shared/enums/modes/modals/password-details-modal-modes.enum";
+import {CategoryModalModes} from "../../../../../shared/enums/modes/modals/category-model-modes.enum";
+import {CategoryModalComponent} from "../../../../components/modals/category-modal/category-modal.component";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -34,7 +36,8 @@ import {PasswordDetailsModalModes} from "../../../../../shared/enums/modes/modal
     ChipsComponent,
     SelectComponent,
     ModalBaseComponent,
-    PasswordDetailsModalComponent
+    PasswordDetailsModalComponent,
+    CategoryModalComponent
   ],
   templateUrl: './password-tab-content.component.html',
   styleUrl: './password-tab-content.component.css'
@@ -51,12 +54,24 @@ export class PasswordTabContentComponent {
     createOrEditPassword: {
       isModalOpen: false,
       mode: PasswordDetailsModalModes.CREATE
+    },
+    createOrEditCategory: {
+      isModalOpen: false,
+      mode: CategoryModalModes.CREATE
     }
   }
 
   closeCreateOrEditPasswordModal(): void {
     this.modalsControls.createOrEditPassword.isModalOpen = false;
     this.selectedPasswordEntry = null;
+  }
+
+  openCategoryModal(){
+    this.modalsControls.createOrEditCategory.isModalOpen = true;
+  }
+
+  closeCreateOrEditCategoryModal(): void {
+    this.modalsControls.createOrEditCategory.isModalOpen = false;
   }
 
   filteredEntries: PasswordEntryInterface[] = [];
@@ -138,23 +153,17 @@ export class PasswordTabContentComponent {
   }
 
   addEntry(): void {
-    //TODO Открыть модальное окно для добавления новой записи
     this.modalsControls.createOrEditPassword.isModalOpen = true;
     this.modalsControls.createOrEditPassword.mode = PasswordDetailsModalModes.CREATE;
   }
 
   editEntry(id: string): void {
-    //TODO Открыть модальное окно для редактирования записи
     const entry = PasswordManagerService.getEntryById(id);
     if(entry){
       this.selectedPasswordEntry = entry;
       this.modalsControls.createOrEditPassword.isModalOpen = true;
       this.modalsControls.createOrEditPassword.mode = PasswordDetailsModalModes.EDIT;
     }
-  }
-
-  createNewCategory(){
-    //TODO Открыть модальное окно для добавления категории
   }
 
   copyEntry(id: string): void {

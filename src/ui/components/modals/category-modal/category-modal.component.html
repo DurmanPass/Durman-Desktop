@@ -1,0 +1,47 @@
+<div class="category-modal">
+    <header class="category-modal-header">
+        <app-header-description titleType="h3" title="Создать категорию"/>
+    </header>
+
+    <main class="category-modal-main">
+        <app-input
+                [value]="categoryEntry"
+                (valueChange)="onCategoryChange($event)"
+                placeholder="Введите название категории..."
+                size="Long"
+                [isEditable]="isEditCategoryEntry"
+        />
+    </main>
+
+    <footer class="category-modal-footer">
+        <app-solid-button
+                *ngIf="mode === CategoryModalModes.CREATE && categoryEntry.length > 0"
+                text="Создать"
+                bgColor="DarkGreen"
+                size="Medium"
+        />
+
+        <app-solid-button
+                *ngIf="mode === CategoryModalModes.EDIT && categoryEntry.length > 0"
+                text="Сохранить"
+                bgColor="DarkGreen"
+                size="Medium"
+        />
+
+        <app-solid-button
+                *ngIf="mode === CategoryModalModes.EDIT && !isEditCategoryEntry"
+                text="Разрешить редактирование"
+                bgColor="DarkGreen"
+                size="MediumLong"
+                (click)="toggleEditCategoryEntry()"
+        />
+
+        <app-solid-button
+                *ngIf="mode === CategoryModalModes.EDIT && isEditCategoryEntry"
+                text="Запретить редактирование"
+                bgColor="DarkRed"
+                size="MediumLong"
+                (click)="toggleEditCategoryEntry()"
+        />
+    </footer>
+</div>
