@@ -1,10 +1,11 @@
 <div class="vault-container">
     <aside class="sidebar" [class.closed]="isSidebarClosed" [style.background]="ThemeColors.GradientPurple">
         <div class="tabs">
-            <div
+            <div class="tab"
                     *ngFor="let tab of tabs"
                     (click)="selectTab(tab)"
                     [class.active]="tab === selectedTab">
+                <img [src]="'assets/icons/controls/sidebar/tabs/' + tab.id + '.svg'" alt="tab.id"/>
                 {{ tab.title }}
             </div>
         </div>
