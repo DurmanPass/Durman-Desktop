@@ -2,8 +2,8 @@
     <div class="home-tab-top-widgets">
         <app-flower-strength-widget [securityLevel]="securityLevel"/>
         <app-widget-base
-                [title]="getRandomPasswordText().title"
-                [description]="getRandomPasswordText().description"
+                [title]="newPasswordActionInfo.title"
+                [description]="newPasswordActionInfo.description"
                 [button]="true"
                 [buttonText]="'Новый пароль'"
                 [borderRadius]="'15px'"

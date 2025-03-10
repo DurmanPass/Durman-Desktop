@@ -28,6 +28,10 @@ export class HomeTabContentComponent {
     securityLevel: number = 74;
     userEmail: string = "fsgasgdf@gmail.com";
     greeting = getRandomGreetingHomeTab(this.userEmail);
+    newPasswordActionInfo = {
+        title: getRandomPasswordText().title,
+        description: getRandomPasswordText().description
+    }
 
     passwordsInfo: PasswordInfo[] = [
         {
