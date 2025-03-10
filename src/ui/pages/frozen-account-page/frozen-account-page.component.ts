@@ -6,6 +6,7 @@ import {NgIf} from "@angular/common";
 import {ValidateService} from "../../../services/validate.service";
 import {ThemeColors} from "../../../shared/const/colors/general/themeColors";
 import {deleteOverflowWindow} from "../../../utils/overflow.utils";
+import {WindowService} from "../../../services/window.service";
 
 @Component({
   selector: 'app-frozen-account-page',
@@ -42,4 +43,5 @@ export class FrozenAccountPageComponent {
   }
 
   protected readonly ThemeColors = ThemeColors;
+  protected readonly WindowService = WindowService;
 }

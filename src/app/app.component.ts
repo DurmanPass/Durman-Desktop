@@ -22,6 +22,9 @@ export class AppComponent {
   async ngOnInit(): Promise<void> {
     this.windowLabel = await WindowService.getWindowLabel();
 
+    if(this.windowLabel === WINDOWS_LABELS.VAULT){
+
+    }
     SecurityLockService.initialize();
 
     setInterval(() => {
