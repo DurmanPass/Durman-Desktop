@@ -1,0 +1,27 @@
+<div class="frozen-account" [style.background]="ThemeColors.GradientBluePurple">
+    <header class="frozen-account-header">
+        <app-header-description
+                title="Доступ заблокирован"
+                description="Для продолжения работы введите мастер-пароль."
+        />
+    </header>
+    <main class="frozen-account-main">
+        <app-input
+                placeholder="Введите мастер-пароль..."
+                [value]="masterPassword"
+                (valueChange)="onMasterPasswordChange($event)"
+                borderColor="White"
+                size="Long"
+        />
+    </main>
+
+    <footer class="frozen-account-footer">
+        <app-solid-button
+                *ngIf="isValidMasterPassword"
+                text="Разблокировать"
+                size="MediumLong"
+                bgColor="DarkGreen"
+                (click)="onUnlock()"
+        />
+    </footer>
+</div>

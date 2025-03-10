@@ -6,11 +6,12 @@ import {WindowService} from "../services/window.service";
 import {WINDOWS_LABELS} from "../shared/enums/windows-labels.enum";
 import {PasswordGeneratePageComponent} from "../ui/pages/password-generate-page/password-generate-page.component";
 import {VaultPageComponent} from "../ui/pages/vault-page/vault-page.component";
+import {FrozenAccountPageComponent} from "../ui/pages/frozen-account-page/frozen-account-page.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-    imports: [CommonModule, RouterOutlet, StartPageComponent, PasswordGeneratePageComponent, VaultPageComponent],
+    imports: [CommonModule, RouterOutlet, StartPageComponent, PasswordGeneratePageComponent, VaultPageComponent, FrozenAccountPageComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
