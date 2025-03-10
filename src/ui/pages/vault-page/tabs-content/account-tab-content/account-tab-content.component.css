@@ -1,0 +1,17 @@
+.account-page{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.account-page-header{
+    text-align: center;
+}
+
+.account-page-main-content{
+    margin-left: 20px;
+}
+
+.account-page-danger-zone{
+    margin-left: 20px;
+}
