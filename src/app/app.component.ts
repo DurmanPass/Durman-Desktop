@@ -7,6 +7,7 @@ import {WINDOWS_LABELS} from "../shared/enums/windows-labels.enum";
 import {PasswordGeneratePageComponent} from "../ui/pages/password-generate-page/password-generate-page.component";
 import {VaultPageComponent} from "../ui/pages/vault-page/vault-page.component";
 import {FrozenAccountPageComponent} from "../ui/pages/frozen-account-page/frozen-account-page.component";
+import {SecurityLockService} from "../services/security/security-lock.service";
 
 @Component({
   selector: 'app-root',
@@ -17,8 +18,26 @@ import {FrozenAccountPageComponent} from "../ui/pages/frozen-account-page/frozen
 })
 export class AppComponent {
   windowLabel: string = '';
+  isLocked: boolean = SecurityLockService.getIsLocked();
   async ngOnInit(): Promise<void> {
     this.windowLabel = await WindowService.getWindowLabel();
+
+    SecurityLockService.initialize();
+
+    setInterval(() => {
+      this.isLocked = SecurityLockService.getIsLocked();
+    }, 1000);
+  }
+
+  unlockAccount(password: string): void {
+    let isVerifyPassword = false;
+    //TODO Отправить проверку пароля на backend
+    if (isVerifyPassword) {
+      SecurityLockService.unlock();
+      this.isLocked = false;
+    } else {
+      alert('Неверный пароль');
+    }
   }
 
   protected readonly WINDOWS_LABELS = WINDOWS_LABELS;

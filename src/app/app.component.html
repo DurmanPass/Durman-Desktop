@@ -6,7 +6,11 @@
     <app-password-generate-page/>
 </ng-container>
 
-<ng-container *ngIf="windowLabel === WINDOWS_LABELS.VAULT">
+<ng-container *ngIf="windowLabel === WINDOWS_LABELS.VAULT && !isLocked; else lockedTemplate">
 <!--    <app-vault-page/>-->
-    <app-frozen-account-page/>
+    <app-frozen-account-page (unlock)="unlockAccount($event)"/>
 </ng-container>
+
+<ng-template #lockedTemplate>
+    <app-frozen-account-page (unlock)="unlockAccount($event)"/>
+</ng-template>

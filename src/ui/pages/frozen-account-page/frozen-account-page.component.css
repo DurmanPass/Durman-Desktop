@@ -1,8 +1,19 @@
 .frozen-account{
     width: 100vw;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
 }
 .frozen-account-header{
     text-align: center;
     padding-top: 20px;
+}
+
+.frozen-account-footer{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }
