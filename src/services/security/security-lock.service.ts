@@ -1,6 +1,7 @@
 export class SecurityLockService {
     private static isLocked: boolean = false;
-    private static readonly LOCK_TIMEOUT_MS: number = 3 * 60 * 1000;
+    // private static readonly LOCK_TIMEOUT_MS: number = 3 * 60 * 1000;
+    private static readonly LOCK_TIMEOUT_MS: number = 300 * 60 * 1000;
     private static timeoutId: ReturnType<typeof setTimeout> | null = null;
 
     // Инициализация сервиса
