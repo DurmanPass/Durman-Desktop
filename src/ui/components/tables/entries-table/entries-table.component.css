@@ -1,0 +1,103 @@
+.password-entries {
+    width: 100%;
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+/* Стилизация скроллбара для Webkit-браузеров (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    width: 7px; /* Ширина скроллбара */
+    height: 7px;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 5px; /* Скругление трека */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888; /* Цвет ползунка */
+    border-radius: 5px; /* Скругление ползунка */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Темнее при наведении */
+}
+
+/* Основной контейнер таблицы */
+.entries-table {
+    width: 100%;
+    max-width: 1200px; /* Ограничение максимальной ширины */
+    margin: 20px auto; /* Центрирование и отступы сверху/снизу */
+}
+
+/* Стили для таблицы */
+.entries-table table {
+    width: 100%;
+    border-collapse: collapse; /* Убираем двойные границы */
+    /*background-color: #fff; !* Белый фон *!*/
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Лёгкая тень для объёма */
+    border-radius: 8px; /* Скругленные углы */
+    overflow: hidden; /* Чтобы скругление работало с внутренними элементами */
+    text-align: center;
+}
+
+/* Заголовки таблицы */
+.entries-table thead th {
+    /*background-color: #f5f5f5; !* Светло-серый фон для заголовков *!*/
+    color: #fff; /* Тёмный текст */
+    font-weight: 600; /* Полужирный шрифт */
+    padding: 12px 16px; /* Внутренние отступы */
+    text-align: center; /* Выравнивание текста по левому краю */
+    border-bottom: 2px solid #ddd; /* Граница снизу */
+}
+
+/* Ячейки таблицы */
+.entries-table tbody td {
+    padding: 12px 8px; /* Внутренние отступы */
+    color: #fff; /* Цвет текста чуть светлее */
+    border-bottom: 1px solid #eee; /* Тонкая граница между строками */
+}
+
+.entries-action-btns{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+}
+
+.entries-action-btns img{
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+/* Чередование фона строк для лучшей читаемости */
+.entries-table tbody tr:nth-child(even) {
+
+}
+
+/* Эффект при наведении на строку */
+.entries-table tbody tr:hover {
+    background-color: rgba(0,0,0,0.2); /* Лёгкий серый при наведении */
+    transition: background-color 0.2s ease; /* Плавный переход */
+}
+
+/* Адаптивность для маленьких экранов */
+@media (max-width: 768px) {
+    .entries-table table {
+        font-size: 14px; /* Уменьшаем шрифт */
+    }
+
+    .entries-table thead th,
+    .entries-table tbody td {
+        padding: 8px 10px; /* Уменьшаем отступы */
+    }
+
+    .entries-table td img {
+        padding: 4px 8px; /* Уменьшаем кнопки */
+        margin-right: 4px; /* Уменьшаем отступ между кнопками */
+        font-size: 12px; /* Уменьшаем шрифт кнопок */
+    }
+}

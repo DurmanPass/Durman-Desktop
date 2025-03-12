@@ -23,6 +23,9 @@ import {
 import {PasswordDetailsModalModes} from "../../../../../shared/enums/modes/modals/password-details-modal-modes.enum";
 import {CategoryModalModes} from "../../../../../shared/enums/modes/modals/category-model-modes.enum";
 import {CategoryModalComponent} from "../../../../components/modals/category-modal/category-modal.component";
+import {Table} from "jspdf-autotable";
+import {TableColumn} from "../../../../../interfaces/components/table/tableColumn.interface";
+import {EntriesTableComponent} from "../../../../components/tables/entries-table/entries-table.component";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -37,7 +40,8 @@ import {CategoryModalComponent} from "../../../../components/modals/category-mod
     SelectComponent,
     ModalBaseComponent,
     PasswordDetailsModalComponent,
-    CategoryModalComponent
+    CategoryModalComponent,
+    EntriesTableComponent
   ],
   templateUrl: './password-tab-content.component.html',
   styleUrl: './password-tab-content.component.css'
@@ -60,6 +64,15 @@ export class PasswordTabContentComponent {
       mode: CategoryModalModes.CREATE
     }
   }
+
+  passwordTableColumns = [
+    { label: 'Название', render: (entry: PasswordEntryInterface) => entry.name },
+    { label: 'URL', render: (entry: PasswordEntryInterface) => entry.location.domain },
+    { label: 'Имя пользователя', render: (entry: PasswordEntryInterface) => entry.credentials.username },
+    { label: 'Электронная почта', render: (entry: PasswordEntryInterface) => entry.credentials.email },
+    { label: 'Номер телефона', render: (entry: PasswordEntryInterface) => entry.credentials.phoneNumber || '' },
+    { label: 'Категория', render: (entry: PasswordEntryInterface) => entry.metadata.category }
+  ];
 
   closeCreateOrEditPasswordModal(): void {
     this.modalsControls.createOrEditPassword.isModalOpen = false;
