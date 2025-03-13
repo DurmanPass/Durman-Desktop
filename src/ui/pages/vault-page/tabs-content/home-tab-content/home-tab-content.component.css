@@ -17,6 +17,7 @@
     justify-content: center;
     gap: 30px;
     flex-wrap: initial;
+    margin: 20px 0;
 }
 
 .home-tab-middle-widgets{
@@ -49,4 +50,8 @@
     align-content: center;
     justify-content: center;
     gap: 30px;
+}
+
+.home-tab-header{
+    text-align: center;
 }

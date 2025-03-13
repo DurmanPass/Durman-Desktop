@@ -1,4 +1,12 @@
 <div class="home-tab-content">
+    <div class="home-tab-header">
+        <app-header-description
+                [title]="greeting.title"
+                [description]="greeting.description"
+                titleType="h1"
+        />
+    </div>
+
     <div class="home-tab-top-widgets">
         <app-flower-strength-widget [securityLevel]="securityLevel"/>
         <app-widget-base
@@ -15,12 +23,6 @@
     </div>
 
     <div class="home-tab-middle-widgets">
-        <app-header-description
-                [title]="greeting.title"
-                [description]="greeting.description"
-                titleType="h1"
-        />
-
         <div class="home-tab-middle-panel">
             <ng-container *ngFor="let widget of PasswordsInfoWidgets; let i = index">
                 <app-widget-base
