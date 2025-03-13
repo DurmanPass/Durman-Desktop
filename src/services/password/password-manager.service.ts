@@ -154,7 +154,7 @@ const newEntry2: PasswordEntryInterface = {
         email: 'user@example.com',
         password: 'securePass123!',
         passwordStrength: 4,
-        phoneNumber: '+79528893456',
+        phoneNumber: '',
         pin: '',
         twoFactorCode: '',
         recoveryCodes: ['abc123', 'xyz789']

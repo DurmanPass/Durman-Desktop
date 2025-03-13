@@ -8,7 +8,7 @@
         </thead>
         <tbody>
         <tr *ngFor="let entry of entries">
-            <td *ngFor="let column of columns">{{ column.render(entry) }}</td>
+            <td *ngFor="let column of columns">{{ column.render(entry) ? column.render(entry) : '-' }}</td>
             <td class="entries-action-btns" *ngIf="showActions">
                 <img src="assets/icons/controls/password-entries/copy.svg" alt="Copy" (click)="onCopyEntry(getEntryId(entry))">
                 <img src="assets/icons/controls/password-entries/edit.svg" alt="Edit" (click)="onEditEntry(getEntryId(entry))">

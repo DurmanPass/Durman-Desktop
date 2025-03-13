@@ -148,7 +148,9 @@ export class PasswordTabContentComponent {
           entry.name.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
           entry.metadata.category.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
           entry.credentials.username.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
-          entry.location.domain.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase())
+          entry.location.domain.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
+          entry.credentials.email.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
+          entry.credentials.phoneNumber.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase())
       );
     }
 
