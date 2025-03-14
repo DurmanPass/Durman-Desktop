@@ -9,17 +9,29 @@
 
     <div class="home-tab-top-widgets">
         <app-flower-strength-widget *ngIf="SettingsService.getHideFlowerStrengthWidget()" [securityLevel]="securityLevel"/>
+
         <app-widget-base
-                [title]="newPasswordActionInfo.title"
-                [description]="newPasswordActionInfo.description"
-                [button]="true"
-                [buttonText]="'Новый пароль'"
-                [borderRadius]="'15px'"
-                [size]="'Medium'"
+                [title]="'Генератор паролей'"
+                [description]="'Генерируй надёжные пароли за секунду!'"
+                [borderRadius]="'30px'"
+                [size]="'LongMinHeight'"
                 textAlign="Center"
-                buttonColor="White"
-                buttonTextColor="DarkGreen"
+                buttonText="Открыть"
+                buttonColor="DarkGreen"
+                (buttonClick)="WindowService.openPasswordGenerateWindow()"
         />
+        
+<!--        <app-widget-base-->
+<!--                [title]="newPasswordActionInfo.title"-->
+<!--                [description]="newPasswordActionInfo.description"-->
+<!--                [button]="true"-->
+<!--                [buttonText]="'Новый пароль'"-->
+<!--                [borderRadius]="'15px'"-->
+<!--                [size]="'Medium'"-->
+<!--                textAlign="Center"-->
+<!--                buttonColor="White"-->
+<!--                buttonTextColor="DarkGreen"-->
+<!--        />-->
     </div>
 
     <div class="home-tab-middle-widgets">
@@ -40,15 +52,5 @@
     </div>
 
     <div class="home-tab-bottom-widgets">
-        <app-widget-base
-                [title]="'Генератор паролей'"
-                [description]="'Генерируй надёжные пароли за секунду!'"
-                [borderRadius]="'30px'"
-                [size]="'LongMinHeight'"
-                textAlign="Center"
-                buttonText="Открыть"
-                buttonColor="DarkGreen"
-                (buttonClick)="WindowService.openPasswordGenerateWindow()"
-        />
     </div>
 </div>

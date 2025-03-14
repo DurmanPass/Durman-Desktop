@@ -8,12 +8,11 @@ import {HeaderDescriptionComponent} from "../../../../components/text/header-des
 import {getRandomGreetingHomeTab} from "../../../../../shared/const/components/text/greeting.home-tab";
 import {NgForOf, NgIf} from "@angular/common";
 import {PasswordsInfoWidgets} from "../../../../../shared/const/components/widgets/passwords-info.widget";
-import {ThemeColors} from "../../../../../shared/const/colors/general/themeColors";
 import {PasswordInfo} from "../../../../../interfaces/data/passwordsInfo.interface";
 import {WindowService} from "../../../../../services/window.service";
 import {SettingsService} from "../../../../../services/settings/app-settings.service";
 import {PasswordStrengthService} from "../../../../../services/password/password-strength.service";
-import {PasswordManagerService} from "../../../../../services/password/password-manager.service";
+import {UserDataService} from "../../../../../services/user/user-data.service";
 
 @Component({
   selector: 'app-home-tab-content',
@@ -30,7 +29,7 @@ import {PasswordManagerService} from "../../../../../services/password/password-
 })
 export class HomeTabContentComponent {
     securityLevel: number = 0;
-    userEmail: string = "fsgasgdf@gmail.com";
+    userEmail: string = UserDataService.getEmail();
     greeting = getRandomGreetingHomeTab(this.userEmail);
     newPasswordActionInfo = {
         title: getRandomPasswordText().title,
