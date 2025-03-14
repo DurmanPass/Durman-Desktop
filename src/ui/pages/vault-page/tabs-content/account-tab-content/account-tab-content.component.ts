@@ -3,6 +3,7 @@ import {HeaderDescriptionComponent} from "../../../../components/text/header-des
 import {InputComponent} from "../../../../components/inputs/input/input.component";
 import {ThemeColors} from "../../../../../shared/const/colors/general/themeColors";
 import {SolidButtonComponent} from "../../../../components/buttons/solid-button/solid-button.component";
+import {UserDataService} from "../../../../../services/user/user-data.service";
 
 @Component({
   selector: 'app-account-tab-content',
@@ -17,9 +18,9 @@ import {SolidButtonComponent} from "../../../../components/buttons/solid-button/
 })
 export class AccountTabContentComponent {
   userData = {
-    username: 'Lox123',
-    email: 'gsfgsdh@gmail.com',
-    fingerprint: 'lox-dyra-ta-fgh'
+    username: UserDataService.getUsername(),
+    email: UserDataService.getEmail(),
+    fingerprint: UserDataService.getFingerprint()
   }
 
   colorData = {

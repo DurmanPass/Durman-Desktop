@@ -7,7 +7,8 @@ export class UserDataService {
         masterPasswordHash: '',
         registrationDate: new Date().toISOString(),
         lastLoginDate: new Date().toISOString(),
-        profilePicture: undefined
+        profilePicture: undefined,
+        fingerPrint: 'one-two-three-four-five'
     };
 
     public static loadUserData(): void {
@@ -69,6 +70,10 @@ export class UserDataService {
     public static setProfilePicture(url: string | undefined): void {
         this.userData.profilePicture = url;
         this.saveUserData(); // Пока заглушка
+    }
+
+    public static getFingerprint(): string {
+        return this.userData.fingerPrint;
     }
 
     public static setUserData(data: Partial<UserData>): void {
