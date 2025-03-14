@@ -5,11 +5,6 @@ export const PasswordsInfoWidgets = [
         description: "Общее количество сохранённых паролей."
     },
     {
-        id: 'compromised',
-        title: "Скомпрометированные",
-        description: "Пароли, возможно, попавшие в утечки."
-    },
-    {
         id: 'weak',
         title: "Слабые пароли",
         description: "Пароли, которые легко взломать."

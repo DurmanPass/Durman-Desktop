@@ -153,7 +153,7 @@ const newEntry2: PasswordEntryInterface = {
         username: 'user123',
         email: 'user@example.com',
         password: 'securePass123!',
-        passwordStrength: 4,
+        passwordStrength: 3,
         phoneNumber: '',
         pin: '',
         twoFactorCode: '',

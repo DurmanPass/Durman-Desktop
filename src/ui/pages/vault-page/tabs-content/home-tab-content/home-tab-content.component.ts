@@ -12,6 +12,8 @@ import {ThemeColors} from "../../../../../shared/const/colors/general/themeColor
 import {PasswordInfo} from "../../../../../interfaces/data/passwordsInfo.interface";
 import {WindowService} from "../../../../../services/window.service";
 import {SettingsService} from "../../../../../services/settings/app-settings.service";
+import {PasswordStrengthService} from "../../../../../services/password/password-strength.service";
+import {PasswordManagerService} from "../../../../../services/password/password-manager.service";
 
 @Component({
   selector: 'app-home-tab-content',
@@ -27,7 +29,7 @@ import {SettingsService} from "../../../../../services/settings/app-settings.ser
   styleUrl: './home-tab-content.component.css'
 })
 export class HomeTabContentComponent {
-    securityLevel: number = 74;
+    securityLevel: number = 0;
     userEmail: string = "fsgasgdf@gmail.com";
     greeting = getRandomGreetingHomeTab(this.userEmail);
     newPasswordActionInfo = {
@@ -35,35 +37,36 @@ export class HomeTabContentComponent {
         description: getRandomPasswordText().description
     }
 
+    protected passwordStrengthService = new PasswordStrengthService();
+
+
     passwordsInfo: PasswordInfo[] = [
         {
             id: 'all',
-            score: 256,
+            score: this.passwordStrengthService.getUniquePasswordsCount(),
             color: "DarkGreen"
         },
         {
-            id: 'compromised',
-            score: 16,
-            color: "DarkRed"
-        },
-        {
             id: 'weak',
-            score: 36,
+            score: this.passwordStrengthService.getWeakPasswordsCount(),
             color: "DarkOrange"
         },
         {
             id: 'reused',
-            score: 91,
+            score: this.passwordStrengthService.getReusedPasswordsCount(),
             color: "Grey"
         },
     ];
+
+    ngOnInit() {
+        this.securityLevel = this.passwordStrengthService.getOverallPasswordStrengthPercentage();
+    }
 
     // Получение score по индексу
     getScoreByIndex(index: number): number {
         return this.passwordsInfo[index].score;
     }
 
-    protected readonly getRandomPasswordText = getRandomPasswordText;
     protected readonly PasswordsInfoWidgets = PasswordsInfoWidgets;
     protected readonly WindowService = WindowService;
     protected readonly SettingsService = SettingsService;
