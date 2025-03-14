@@ -1,1 +1,59 @@
-<p>settings-tab-content works!</p>
+<div class="settings-page">
+    <app-chips
+            [chips]="settingCategories"
+            (chipsSelected)="onCategoryChange($event)"
+            [selectedChips]="selectedCategory"
+            [hideAllChip]="true"
+            [hideAddChip]="true"
+    />
+
+    <!-- Общие настройки -->
+    <div class="settings-section" *ngIf="selectedCategory === SETTINGS_MODES.GENERAL.label">
+        <div class="setting">
+            <label>Режим высокой контрастности:</label>
+            <input
+                    type="checkbox"
+                    [checked]="appSettings.general.highContrastMode"
+                    (change)="toggleHighContrastMode($event)"
+            >
+        </div>
+        <div class="setting">
+            <label>Скрыть виджет силы пароля:</label>
+            <input
+                    type="checkbox"
+                    [checked]="appSettings.general.hideFlowerStrengthWidget"
+                    (change)="toggleHideFlowerStrengthWidget($event)"
+            >
+        </div>
+    </div>
+
+    <!-- Настройки безопасности -->
+    <div class="settings-section" *ngIf="selectedCategory === SETTINGS_MODES.SECURITY.label">
+        <div class="setting">
+            <label>Тайм-аут блокировки (минуты):</label>
+            <input
+                    type="number"
+                    [value]="appSettings.security.lockTimeout"
+                    (input)="updateLockTimeout($event)"
+                    min="1"
+                    max="60"
+            >
+        </div>
+        <div class="setting">
+            <label>Скрывать пароли:</label>
+            <input
+                    type="checkbox"
+                    [checked]="appSettings.security.hidePasswords"
+                    (change)="toggleHidePasswords($event)"
+            >
+        </div>
+        <div class="setting">
+            <label>Двухфакторная аутентификация:</label>
+            <input
+                    type="checkbox"
+                    [checked]="appSettings.security.twoFactorEnabled"
+                    (change)="toggleTwoFactorEnabled($event)"
+            >
+        </div>
+    </div>
+</div>

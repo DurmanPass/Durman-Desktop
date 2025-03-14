@@ -8,6 +8,7 @@ import {PasswordGeneratePageComponent} from "../ui/pages/password-generate-page/
 import {VaultPageComponent} from "../ui/pages/vault-page/vault-page.component";
 import {FrozenAccountPageComponent} from "../ui/pages/frozen-account-page/frozen-account-page.component";
 import {SecurityLockService} from "../services/security/security-lock.service";
+import {SettingsService} from "../services/settings/app-settings.service";
 
 @Component({
   selector: 'app-root',
@@ -26,6 +27,8 @@ export class AppComponent {
 
     }
     SecurityLockService.initialize();
+
+    SettingsService.loadSettings();
 
     setInterval(() => {
       this.isLocked = SecurityLockService.getIsLocked();

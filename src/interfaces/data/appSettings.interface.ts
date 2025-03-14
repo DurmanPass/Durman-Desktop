@@ -1,7 +1,11 @@
 export interface AppSettings {
-    lockTimeout: number;
-    hidePasswords: boolean;
-    twoFactorEnabled: boolean;
-    highContrastMode: boolean;
-    hideFlowerStrengthWidget: boolean;
+    general: {
+        highContrastMode: boolean;
+        hideFlowerStrengthWidget: boolean;
+    };
+    security: {
+        lockTimeout: number;
+        hidePasswords: boolean;
+        twoFactorEnabled: boolean;
+    };
 }

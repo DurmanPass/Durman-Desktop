@@ -1,5 +1,6 @@
 <div class="category-chips">
   <span
+          *ngIf="!hideAllChip"
           class="chip"
           [class.active]="selectedChips === 'All'"
           (click)="selectChip('All')"
@@ -14,5 +15,6 @@
     >
     {{ chip }}
   </span>
-    <span class="chip chip-add" (click)="onClickAddChip()">+</span>
+    <span             *ngIf="!hideAddChip"
+                      class="chip chip-add" (click)="onClickAddChip()">+</span>
 </div>

@@ -1,13 +1,17 @@
-import {AppSettings} from "../../interfaces/data/appSettings.interface";
+import { AppSettings } from "../../interfaces/data/appSettings.interface";
 
 export class SettingsService {
     private static readonly SETTINGS_KEY = 'app_settings';
     private static settings: AppSettings = {
-        lockTimeout: 3,
-        hidePasswords: true,
-        twoFactorEnabled: false,
-        highContrastMode: false,
-        hideFlowerStrengthWidget: false,
+        general: {
+            highContrastMode: false,
+            hideFlowerStrengthWidget: false
+        },
+        security: {
+            lockTimeout: 3,
+            hidePasswords: true,
+            twoFactorEnabled: false
+        }
     };
 
     // Загрузка настроек из localStorage
@@ -16,7 +20,10 @@ export class SettingsService {
         if (storedSettings) {
             try {
                 const parsedSettings = JSON.parse(storedSettings);
-                this.settings = { ...this.settings, ...parsedSettings };
+                this.settings = {
+                    general: { ...this.settings.general, ...parsedSettings.general },
+                    security: { ...this.settings.security, ...parsedSettings.security }
+                };
             } catch (error) {
                 console.error('Ошибка при загрузке настроек:', error);
                 this.saveSettings();
@@ -29,49 +36,55 @@ export class SettingsService {
         localStorage.setItem(this.SETTINGS_KEY, JSON.stringify(this.settings));
     }
 
+    // Получение всех настроек
     public static getAllSettings(): AppSettings {
-        return { ...this.settings };
+        return {
+            general: { ...this.settings.general },
+            security: { ...this.settings.security }
+        };
     }
 
-    public static getLockTimeout(): number {
-        return this.settings.lockTimeout;
-    }
-
-    public static setLockTimeout(minutes: number): void {
-        this.settings.lockTimeout = Math.max(1, Math.min(60, minutes)); // Ограничение от 1 до 60 минут
-        this.saveSettings();
-    }
-
-    public static getHidePasswords(): boolean {
-        return this.settings.hidePasswords;
-    }
-
-    public static setHidePasswords(hide: boolean): void {
-        this.settings.hidePasswords = hide;
-        this.saveSettings();
-    }
-
-    public static getTwoFactorEnabled(): boolean {
-        return this.settings.twoFactorEnabled;
-    }
-    public static setTwoFactorEnabled(enabled: boolean): void {
-        this.settings.twoFactorEnabled = enabled;
-        this.saveSettings();
-    }
+    // Геттеры и сеттеры для general
 
     public static getHighContrastMode(): boolean {
-        return this.settings.highContrastMode;
+        return this.settings.general.highContrastMode;
     }
     public static setHighContrastMode(enabled: boolean): void {
-        this.settings.highContrastMode = enabled;
+        this.settings.general.highContrastMode = enabled;
         this.saveSettings();
     }
 
     public static getHideFlowerStrengthWidget(): boolean {
-        return this.settings.hideFlowerStrengthWidget;
+        return this.settings.general.hideFlowerStrengthWidget;
     }
     public static setHideFlowerStrengthWidget(enabled: boolean): void {
-        this.settings.hideFlowerStrengthWidget = enabled;
+        this.settings.general.hideFlowerStrengthWidget = enabled;
+        this.saveSettings();
+    }
+
+    // Геттеры и сеттеры для security
+
+    public static getLockTimeout(): number {
+        return this.settings.security.lockTimeout;
+    }
+    public static setLockTimeout(minutes: number): void {
+        this.settings.security.lockTimeout = Math.max(1, Math.min(60, minutes));
+        this.saveSettings();
+    }
+
+    public static getHidePasswords(): boolean {
+        return this.settings.security.hidePasswords;
+    }
+    public static setHidePasswords(hide: boolean): void {
+        this.settings.security.hidePasswords = hide;
+        this.saveSettings();
+    }
+
+    public static getTwoFactorEnabled(): boolean {
+        return this.settings.security.twoFactorEnabled;
+    }
+    public static setTwoFactorEnabled(enabled: boolean): void {
+        this.settings.security.twoFactorEnabled = enabled;
         this.saveSettings();
     }
 }

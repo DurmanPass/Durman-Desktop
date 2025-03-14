@@ -1,11 +1,12 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-chips',
   standalone: true,
   imports: [
-    NgForOf
+    NgForOf,
+    NgIf
   ],
   templateUrl: './chips.component.html',
   styleUrl: './chips.component.css'
@@ -13,6 +14,8 @@ import {NgForOf} from "@angular/common";
 export class ChipsComponent {
   @Input() chips: string[] = [];
   @Input() selectedChips: string = 'All';
+  @Input() hideAllChip: boolean = false;
+  @Input() hideAddChip: boolean = false;
   @Output() chipsSelected = new EventEmitter<string>();
   @Output() addChipHandler = new EventEmitter<void>();
 
