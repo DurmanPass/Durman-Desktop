@@ -1,7 +1,9 @@
+import {SettingsService} from "../settings/app-settings.service";
+
 export class SecurityLockService {
     private static isLocked: boolean = false;
-    // private static readonly LOCK_TIMEOUT_MS: number = 3 * 60 * 1000;
-    private static readonly LOCK_TIMEOUT_MS: number = 300 * 60 * 1000;
+    // private static readonly LOCK_TIMEOUT_MS: number = Number(SettingsService.getLockTimeout()) * 60 * 1000;
+    private static readonly LOCK_TIMEOUT_MS: number = 100 * 60 * 1000;
     private static timeoutId: ReturnType<typeof setTimeout> | null = null;
 
     // Инициализация сервиса
@@ -13,6 +15,9 @@ export class SecurityLockService {
     // Получение состояния блокировки
     public static getIsLocked(): boolean {
         return this.isLocked;
+    }
+    public static getTimeout(): number{
+        return this.LOCK_TIMEOUT_MS;
     }
 
     // Разблокировка (например, после ввода пароля)

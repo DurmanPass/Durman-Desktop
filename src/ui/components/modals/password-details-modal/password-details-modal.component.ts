@@ -10,6 +10,7 @@ import {SelectComponent} from "../../controls/select/select.component";
 import {CategoryManagerService} from "../../../../services/password/category-manager.service";
 import {CheckboxComponent} from "../../controls/checkbox/checkbox.component";
 import {PasswordStrengthService} from "../../../../services/password/password-strength.service";
+import {SettingsService} from "../../../../services/settings/app-settings.service";
 
 @Component({
   selector: 'app-password-details-modal',
@@ -164,4 +165,5 @@ export class PasswordDetailsModalComponent {
 
   protected readonly PasswordDetailsModalModes = PasswordDetailsModalModes;
   protected readonly CategoryManagerService = CategoryManagerService;
+  protected readonly SettingsService = SettingsService;
 }

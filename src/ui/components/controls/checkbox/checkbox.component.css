@@ -39,3 +39,7 @@
 .checkbox-container input:checked + .checkmark::after {
     display: block;
 }
+
+.label{
+    margin: 10px;
+}

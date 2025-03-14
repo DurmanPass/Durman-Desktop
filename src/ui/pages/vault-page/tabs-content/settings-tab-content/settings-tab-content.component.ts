@@ -6,6 +6,9 @@ import {NgIf} from "@angular/common";
 import {SETTINGS_MODES} from "../../../../../shared/const/modes/settings.modes";
 import {HeaderDescriptionComponent} from "../../../../components/text/header-description/header-description.component";
 import {CheckboxComponent} from "../../../../components/controls/checkbox/checkbox.component";
+import {InputComponent} from "../../../../components/inputs/input/input.component";
+import {SolidButtonComponent} from "../../../../components/buttons/solid-button/solid-button.component";
+import {SecurityLockService} from "../../../../../services/security/security-lock.service";
 
 @Component({
   selector: 'app-settings-tab-content',
@@ -14,7 +17,9 @@ import {CheckboxComponent} from "../../../../components/controls/checkbox/checkb
     ChipsComponent,
     NgIf,
     HeaderDescriptionComponent,
-    CheckboxComponent
+    CheckboxComponent,
+    InputComponent,
+    SolidButtonComponent
   ],
   templateUrl: './settings-tab-content.component.html',
   styleUrl: './settings-tab-content.component.css'
@@ -24,22 +29,20 @@ export class SettingsTabContentComponent {
   settingCategories: string[] = [SETTINGS_MODES.GENERAL.label, SETTINGS_MODES.SECURITY.label];
   selectedCategory: string = SETTINGS_MODES.GENERAL.label;
 
-  updateLockTimeout(event: Event): void {
-    const value = Number((event.target as HTMLInputElement).value);
+  updateLockTimeout(event: string): void {
+    const value = Number(event);
     SettingsService.setLockTimeout(value);
     this.appSettings.security.lockTimeout = value;
   }
 
-  toggleHidePasswords(event: Event): void {
-    const value = (event.target as HTMLInputElement).checked;
-    SettingsService.setHidePasswords(value);
-    this.appSettings.security.hidePasswords = value;
+  toggleHidePasswords(event: boolean): void {
+    SettingsService.setHidePasswords(event);
+    this.appSettings.security.hidePasswords = event;
   }
 
-  toggleTwoFactorEnabled(event: Event): void {
-    const value = (event.target as HTMLInputElement).checked;
-    SettingsService.setTwoFactorEnabled(value);
-    this.appSettings.security.twoFactorEnabled = value;
+  toggleTwoFactorEnabled(event: boolean): void {
+    SettingsService.setTwoFactorEnabled(event);
+    this.appSettings.security.twoFactorEnabled = event;
   }
 
   toggleHighContrastMode(event: boolean): void {
@@ -57,4 +60,6 @@ export class SettingsTabContentComponent {
   }
 
   protected readonly SETTINGS_MODES = SETTINGS_MODES;
+  protected readonly SecurityLockService = SecurityLockService;
+  protected readonly SettingsService = SettingsService;
 }

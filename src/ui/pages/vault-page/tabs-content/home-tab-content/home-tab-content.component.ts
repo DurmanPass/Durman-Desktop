@@ -6,11 +6,12 @@ import {WidgetBaseComponent} from "../../../../components/widgets/widget-base/wi
 import {getRandomPasswordText} from "../../../../../shared/const/components/widgets/create-password.widget";
 import {HeaderDescriptionComponent} from "../../../../components/text/header-description/header-description.component";
 import {getRandomGreetingHomeTab} from "../../../../../shared/const/components/text/greeting.home-tab";
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {PasswordsInfoWidgets} from "../../../../../shared/const/components/widgets/passwords-info.widget";
 import {ThemeColors} from "../../../../../shared/const/colors/general/themeColors";
 import {PasswordInfo} from "../../../../../interfaces/data/passwordsInfo.interface";
 import {WindowService} from "../../../../../services/window.service";
+import {SettingsService} from "../../../../../services/settings/app-settings.service";
 
 @Component({
   selector: 'app-home-tab-content',
@@ -19,7 +20,8 @@ import {WindowService} from "../../../../../services/window.service";
         FlowerStrengthWidgetComponent,
         WidgetBaseComponent,
         HeaderDescriptionComponent,
-        NgForOf
+        NgForOf,
+        NgIf
     ],
   templateUrl: './home-tab-content.component.html',
   styleUrl: './home-tab-content.component.css'
@@ -64,4 +66,5 @@ export class HomeTabContentComponent {
     protected readonly getRandomPasswordText = getRandomPasswordText;
     protected readonly PasswordsInfoWidgets = PasswordsInfoWidgets;
     protected readonly WindowService = WindowService;
+    protected readonly SettingsService = SettingsService;
 }

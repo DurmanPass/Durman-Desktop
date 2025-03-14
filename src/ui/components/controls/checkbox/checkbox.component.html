@@ -1,5 +1,5 @@
 <label class="checkbox-container">
     <input type="checkbox" [checked]="checked" (change)="toggleChecked()" [disabled]="disabled"/>
     <span class="checkmark" [ngStyle]="{'background-color': checked ? checkedColor : 'transparent'}"></span>
-    {{ label }}
+    <span class="label">{{ label }}</span>
 </label>
