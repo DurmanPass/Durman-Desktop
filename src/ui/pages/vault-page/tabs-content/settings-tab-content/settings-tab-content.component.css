@@ -7,7 +7,12 @@
 }
 
 .settings-section {
-    margin-top: 20px;
+    width: 100%;
+    height: 80vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .setting {
@@ -28,4 +33,22 @@ input[type="number"] {
 
 input[type="checkbox"] {
     margin-left: 10px;
+}
+
+.settings-page-header{
+    text-align: center;
+}
+
+.settings-page-main{
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+
+.settings-categories-chips{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
 }

@@ -1,59 +1,69 @@
 <div class="settings-page">
-    <app-chips
-            [chips]="settingCategories"
-            (chipsSelected)="onCategoryChange($event)"
-            [selectedChips]="selectedCategory"
-            [hideAllChip]="true"
-            [hideAddChip]="true"
-    />
+    <header class="settings-page-header">
+        <app-header-description
+                title="Настройки"
+                description="Персонализируйте приложение и управляйте параметрами безопасности."
+        />
+    </header>
 
-    <!-- Общие настройки -->
-    <div class="settings-section" *ngIf="selectedCategory === SETTINGS_MODES.GENERAL.label">
-        <div class="setting">
-            <label>Режим высокой контрастности:</label>
-            <input
-                    type="checkbox"
-                    [checked]="appSettings.general.highContrastMode"
-                    (change)="toggleHighContrastMode($event)"
-            >
+    <main class="settings-page-main">
+        <div class="settings-categories-chips">
+            <app-chips
+                    [chips]="settingCategories"
+                    (chipsSelected)="onCategoryChange($event)"
+                    [selectedChips]="selectedCategory"
+                    [hideAllChip]="true"
+                    [hideAddChip]="true"
+            />
         </div>
-        <div class="setting">
-            <label>Скрыть виджет силы пароля:</label>
-            <input
-                    type="checkbox"
-                    [checked]="appSettings.general.hideFlowerStrengthWidget"
-                    (change)="toggleHideFlowerStrengthWidget($event)"
-            >
-        </div>
-    </div>
+        <div class="settings-categories-tabs">
+            <!-- Общие настройки -->
+            <div class="settings-section" *ngIf="selectedCategory === SETTINGS_MODES.GENERAL.label">
+                <div class="setting">
+                    <app-checkbox
+                            [checked]="appSettings.general.highContrastMode"
+                            (checkedChange)="toggleHighContrastMode($event)"
+                            label="Режим высокой контрастности"
+                    />
+                </div>
+                <div class="setting">
+                    <app-checkbox
+                            [checked]="appSettings.general.hideFlowerStrengthWidget"
+                            (checkedChange)="toggleHideFlowerStrengthWidget($event)"
+                            label="Скрыть виджет силы пароля"
+                    />
+                </div>
+            </div>
 
-    <!-- Настройки безопасности -->
-    <div class="settings-section" *ngIf="selectedCategory === SETTINGS_MODES.SECURITY.label">
-        <div class="setting">
-            <label>Тайм-аут блокировки (минуты):</label>
-            <input
-                    type="number"
-                    [value]="appSettings.security.lockTimeout"
-                    (input)="updateLockTimeout($event)"
-                    min="1"
-                    max="60"
-            >
+            <!-- Настройки безопасности -->
+            <div class="settings-section" *ngIf="selectedCategory === SETTINGS_MODES.SECURITY.label">
+                <div class="setting">
+                    <label>Тайм-аут блокировки (минуты):</label>
+                    <input
+                            type="number"
+                            [value]="appSettings.security.lockTimeout"
+                            (input)="updateLockTimeout($event)"
+                            min="1"
+                            max="60"
+                    >
+                </div>
+                <div class="setting">
+                    <label>Скрывать пароли:</label>
+                    <input
+                            type="checkbox"
+                            [checked]="appSettings.security.hidePasswords"
+                            (change)="toggleHidePasswords($event)"
+                    >
+                </div>
+                <div class="setting">
+                    <label>Двухфакторная аутентификация:</label>
+                    <input
+                            type="checkbox"
+                            [checked]="appSettings.security.twoFactorEnabled"
+                            (change)="toggleTwoFactorEnabled($event)"
+                    >
+                </div>
+            </div>
         </div>
-        <div class="setting">
-            <label>Скрывать пароли:</label>
-            <input
-                    type="checkbox"
-                    [checked]="appSettings.security.hidePasswords"
-                    (change)="toggleHidePasswords($event)"
-            >
-        </div>
-        <div class="setting">
-            <label>Двухфакторная аутентификация:</label>
-            <input
-                    type="checkbox"
-                    [checked]="appSettings.security.twoFactorEnabled"
-                    (change)="toggleTwoFactorEnabled($event)"
-            >
-        </div>
-    </div>
+    </main>
 </div>

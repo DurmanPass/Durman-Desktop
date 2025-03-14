@@ -4,13 +4,17 @@ import {AppSettings} from "../../../../../interfaces/data/appSettings.interface"
 import {ChipsComponent} from "../../../../components/controls/chips/chips.component";
 import {NgIf} from "@angular/common";
 import {SETTINGS_MODES} from "../../../../../shared/const/modes/settings.modes";
+import {HeaderDescriptionComponent} from "../../../../components/text/header-description/header-description.component";
+import {CheckboxComponent} from "../../../../components/controls/checkbox/checkbox.component";
 
 @Component({
   selector: 'app-settings-tab-content',
   standalone: true,
   imports: [
     ChipsComponent,
-    NgIf
+    NgIf,
+    HeaderDescriptionComponent,
+    CheckboxComponent
   ],
   templateUrl: './settings-tab-content.component.html',
   styleUrl: './settings-tab-content.component.css'
@@ -38,16 +42,14 @@ export class SettingsTabContentComponent {
     this.appSettings.security.twoFactorEnabled = value;
   }
 
-  toggleHighContrastMode(event: Event): void {
-    const value = (event.target as HTMLInputElement).checked;
-    SettingsService.setHighContrastMode(value);
-    this.appSettings.general.highContrastMode = value;
+  toggleHighContrastMode(event: boolean): void {
+    SettingsService.setHighContrastMode(event);
+    this.appSettings.general.highContrastMode = event;
   }
 
-  toggleHideFlowerStrengthWidget(event: Event): void {
-    const value = (event.target as HTMLInputElement).checked;
-    SettingsService.setHideFlowerStrengthWidget(value);
-    this.appSettings.general.hideFlowerStrengthWidget = value;
+  toggleHideFlowerStrengthWidget(event: boolean): void {
+    SettingsService.setHideFlowerStrengthWidget(event);
+    this.appSettings.general.hideFlowerStrengthWidget = event;
   }
 
   onCategoryChange(category: string): void {
