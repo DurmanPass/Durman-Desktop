@@ -152,8 +152,8 @@ const newEntry2: PasswordEntryInterface = {
     credentials: {
         username: 'user123',
         email: 'user@example.com',
-        password: 'securePass123!',
-        passwordStrength: 3,
+        password: 'sec',
+        passwordStrength: 1,
         phoneNumber: '',
         pin: '',
         twoFactorCode: '',
@@ -177,6 +177,111 @@ const newEntry2: PasswordEntryInterface = {
         sensitive: false
     }
 };
+
+const newEntry3: PasswordEntryInterface = {
+    id: '3',
+    name: 'GitHub',
+    description: 'My GitHub account',
+    favicon: 'https://github.com/favicon.ico',
+    credentials: {
+        username: 'user123',
+        email: 'user@example.com',
+        password: 'sec',
+        passwordStrength: 1,
+        phoneNumber: '',
+        pin: '',
+        twoFactorCode: '',
+        recoveryCodes: ['abc123', 'xyz789']
+    },
+    location: {
+        url: 'https://github.com/login',
+        domain: 'github.com'
+    },
+    metadata: {
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        lastUsed: '',
+        usageCount: 0,
+        tags: ['work', 'dev'],
+        category: 'Lol'
+    },
+    security: {
+        isFavorite: true,
+        requires2FA: true,
+        sensitive: false
+    }
+};
+
+const newEntry4: PasswordEntryInterface = {
+    id: '4',
+    name: 'GitHub',
+    description: 'My GitHub account',
+    favicon: 'https://github.com/favicon.ico',
+    credentials: {
+        username: 'user123',
+        email: 'user@example.com',
+        password: 'sec',
+        passwordStrength: 1,
+        phoneNumber: '',
+        pin: '',
+        twoFactorCode: '',
+        recoveryCodes: ['abc123', 'xyz789']
+    },
+    location: {
+        url: 'https://github.com/login',
+        domain: 'github.com'
+    },
+    metadata: {
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        lastUsed: '',
+        usageCount: 0,
+        tags: ['work', 'dev'],
+        category: 'Lol'
+    },
+    security: {
+        isFavorite: true,
+        requires2FA: true,
+        sensitive: false
+    }
+};
+
+const newEntry5: PasswordEntryInterface = {
+    id: '5',
+    name: 'GitHub',
+    description: 'My GitHub account',
+    favicon: 'https://github.com/favicon.ico',
+    credentials: {
+        username: 'user123',
+        email: 'user@example.com',
+        password: 'sec',
+        passwordStrength: 1,
+        phoneNumber: '',
+        pin: '',
+        twoFactorCode: '',
+        recoveryCodes: ['abc123', 'xyz789']
+    },
+    location: {
+        url: 'https://github.com/login',
+        domain: 'github.com'
+    },
+    metadata: {
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        lastUsed: '',
+        usageCount: 0,
+        tags: ['work', 'dev'],
+        category: 'Lol'
+    },
+    security: {
+        isFavorite: true,
+        requires2FA: true,
+        sensitive: false
+    }
+};
+
+
+
 
 
 
@@ -204,3 +309,6 @@ PasswordManagerService.addEntry(newEntry);
 PasswordManagerService.addEntry(newEntry);
 PasswordManagerService.addEntry(newEntry);
 PasswordManagerService.addEntry(newEntry2);
+PasswordManagerService.addEntry(newEntry3);
+PasswordManagerService.addEntry(newEntry4);
+PasswordManagerService.addEntry(newEntry5);

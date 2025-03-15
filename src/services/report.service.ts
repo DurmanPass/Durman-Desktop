@@ -1,5 +1,10 @@
 import {ReportCard} from "../interfaces/data/reportCard.interface";
 import {PasswordManagerService} from "./password/password-manager.service";
+import {DialogService} from "./filesystem/dialog.service";
+import {WeakPasswordsReportTemplate} from "../shared/export-templates/reports/weak-passwords-report-template";
+import {PasswordStrengthService} from "./password/password-strength.service";
+import {invoke} from "@tauri-apps/api/core";
+import {TauriCommands} from "../shared/const/app/tauri/tauri.commands";
 
 
 export class ReportService {
@@ -39,10 +44,72 @@ export class ReportService {
     public static getReportById(id: string): ReportCard | undefined {
         return this.reports.find(report => report.id === id);
     }
-    public static generateWeakPasswordsReport(): void {
+    public static async generateWeakPasswordsReport() {
+        const selectedPath = await DialogService.selectPath();
+        if(!selectedPath){
+            return;
+        }
+
         const weakPasswords = PasswordManagerService.getAllEntries()
             .filter(entry => entry.credentials.passwordStrength < 3);
         //TODO Сгенерировать отчёт по слабым паролям
+
+        if (weakPasswords.length === 0) {
+            console.log('Слабых паролей не найдено');
+            return;
+        }
+
+        const passwordStrengthService = new PasswordStrengthService();
+
+        // Генерируем HTML для каждой записи
+        const weakPasswordEntries = weakPasswords.map(entry => {
+            const feedback = passwordStrengthService.getPasswordFeedback(entry.credentials.password || '');
+            const strength = entry.credentials.passwordStrength ?? passwordStrengthService.getPasswordScore(entry.credentials.password || '');
+
+            // Формируем описание причин слабости
+            const warning = feedback.warning ? `Причина: ${feedback.warning}` : 'Причина: Пароль слишком простой или предсказуемый.';
+            const suggestions = feedback.suggestions.length > 0
+                ? feedback.suggestions.map(s => `<li>${s}</li>`).join('')
+                : '<li>Используйте более длинный пароль с буквами, цифрами и символами.</li>';
+
+            return `
+        <div class="password-entry">
+          <h2>Запись: ${entry.name}</h2>
+          <div class="password-details">
+            <p><strong>URL:</strong> ${entry.location.url || 'Не указан'}</p>
+            <p><strong>Электронная почта:</strong> ${entry.credentials.email || 'Не указано'}</p>
+            <p><strong>Имя пользователя:</strong> ${entry.credentials.username || 'Не указано'}</p>
+            <p><strong>Номер телефона:</strong> ${entry.credentials.phoneNumber || 'Не указано'}</p>
+            <p><strong>Пароль:</strong> ${entry.credentials.password || 'Не указан'}</p>
+            <p><strong>Категория:</strong> ${entry.metadata.category || 'Без категории'}</p>
+            <p><strong>Сила пароля:</strong> ${strength} из 4</p>
+          </div>
+          <div class="feedback">
+            <strong>Почему пароль слабый?</strong>
+            <p>${warning}</p>
+          </div>
+          <div class="recommendations">
+            <strong>Рекомендации:</strong>
+            <ul>${suggestions}</ul>
+          </div>
+        </div>
+      `;
+        }).join('');
+
+        // Подставляем записи в шаблон
+        const htmlContent = WeakPasswordsReportTemplate.replace('{{WEAK_PASSWORD_ENTRIES}}', weakPasswordEntries);
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const arrayBuffer = await blob.arrayBuffer();
+        const uint8Array = new Uint8Array(arrayBuffer);
+        const fullPath = `${selectedPath}/weak-passwords-report-${new Date().toISOString().slice(0, 10)}.html`;
+
+        // Сохраняем файл через Tauri
+        await invoke<string>(TauriCommands.SAVE_FILE, {
+            data: Array.from(uint8Array),
+            filePath: fullPath
+        });
+
+        console.log(`Отчёт сохранён: ${fullPath}`);
     }
 
     public static generateFrequentUsageReport(): void {
