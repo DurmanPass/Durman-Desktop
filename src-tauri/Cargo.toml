@@ -26,4 +26,3 @@ zip = "2.2.3"
 dirs = "6.0.0"
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
-

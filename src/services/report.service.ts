@@ -5,6 +5,7 @@ import {WeakPasswordsReportTemplate} from "../shared/export-templates/reports/we
 import {PasswordStrengthService} from "./password/password-strength.service";
 import {invoke} from "@tauri-apps/api/core";
 import {TauriCommands} from "../shared/const/app/tauri/tauri.commands";
+import {UnsafeUrlReportTemplate} from "../shared/export-templates/reports/unsafe-url-report-template";
 
 
 export class ReportService {
@@ -52,7 +53,6 @@ export class ReportService {
 
         const weakPasswords = PasswordManagerService.getAllEntries()
             .filter(entry => entry.credentials.passwordStrength < 3);
-        //TODO Сгенерировать отчёт по слабым паролям
 
         if (weakPasswords.length === 0) {
             console.log('Слабых паролей не найдено');
@@ -118,7 +118,131 @@ export class ReportService {
         //TODO Сгенерировать отчёт по часто используемым паролям
     }
 
-    public static generateUnsafeUrlReport(): void {
-        //TODO Сгенерировать отчёт по слабым url
+    // Проверка, является ли URL небезопасным
+    private static isUrlUnsafe(url: string | undefined, domain: string): boolean {
+        if (!url || typeof url !== 'string') {
+            return false;
+        }
+
+        try {
+            const lowerUrl = url.toLowerCase();
+            const unsafeTlds = ['.xyz', '.top', '.info', '.club'];
+
+            return (
+                !lowerUrl.startsWith('https://') ||
+                unsafeTlds.some(tld => domain.endsWith(tld)) ||
+                (domain.length > 0 && domain.length < 5)
+            );
+        } catch (error) {
+            console.error('Ошибка в isUrlUnsafe для URL:', url, error);
+            return false; // Пропускаем проблемный URL
+        }
+    }
+
+    // Генерация обратной связи для небезопасного URL
+    private static getUrlSafetyFeedback(url: string, domain: string): { reason: string, suggestions: string[] } {
+        if (!url) {
+            return { reason: 'URL не указан.', suggestions: ['Добавьте корректный URL для записи.'] };
+        }
+
+        const lowerUrl = url.toLowerCase();
+        let reason = '';
+        const suggestions: string[] = [];
+
+        if (!lowerUrl.startsWith('https://')) {
+            reason = 'Сайт использует незащищённое соединение HTTP вместо HTTPS.';
+            suggestions.push('Используйте сайты с HTTPS для защиты данных.');
+            suggestions.push('Проверьте, доступна ли версия сайта с HTTPS.');
+        } else if (['.xyz', '.top', '.info', '.club'].some(tld => domain.endsWith(tld))) {
+            reason = 'Домен верхнего уровня считается подозрительным и может быть связан с мошенничеством.';
+            suggestions.push('Избегайте использования сайтов с такими доменами.');
+            suggestions.push('Проверьте репутацию сайта через онлайн-сервисы.');
+        } else if (domain.length > 0 && domain.length < 5) {
+            reason = 'Домен слишком короткий и может указывать на сомнительный сайт.';
+            suggestions.push('Будьте осторожны с короткими доменами.');
+            suggestions.push('Убедитесь, что это официальный сайт.');
+        } else {
+            reason = 'Сайт может быть небезопасным по другим причинам.';
+            suggestions.push('Проверьте сайт на наличие сертификата безопасности.');
+        }
+
+        return { reason, suggestions };
+    }
+
+    /**
+     * Генерирует отчёт о небезопасных URL в HTML
+     */
+    public static async generateUnsafeUrlReport() {
+
+        const entries = PasswordManagerService.getAllEntries();
+        if (entries.length === 0) {
+            console.log('Записей не найдено');
+            return;
+        }
+        
+        const selectedPath = await DialogService.selectPath();
+        if(!selectedPath){
+            return;
+        }
+
+        const uniqueEntriesMap = new Map<string, typeof entries[0]>();
+        entries.forEach(entry => {
+            if (entry.id) {
+                uniqueEntriesMap.set(entry.id, entry);
+            }
+        });
+
+        // Проверяем фильтрацию небезопасных URL
+        let unsafeUrls: typeof entries;
+        try {
+            unsafeUrls = Array.from(uniqueEntriesMap.values()).filter(entry => {
+                try {
+                    return ReportService.isUrlUnsafe(entry.location.url, entry.location.domain);
+                } catch (innerError) {
+                    return false;
+                }
+            });
+        } catch (filterError) {
+            return;
+        }
+        if (unsafeUrls.length === 0) {
+            return;
+        }
+
+          // Генерируем HTML для каждой небезопасной записи
+          const unsafeUrlEntries = unsafeUrls.map(entry => {
+              const { reason, suggestions } = ReportService.getUrlSafetyFeedback(entry.location.url, entry.location.domain);
+
+              return `
+          <div class="url-entry">
+            <h2>Запись: ${entry.name}</h2>
+            <div class="url-details">
+              <p><strong>URL:</strong> ${entry.location.url || 'Не указан'}</p>
+              <p><strong>Имя пользователя:</strong> ${entry.credentials.username || 'Не указано'}</p>
+              <p><strong>Пароль:</strong> ${entry.credentials.password || 'Не указан'}</p>
+              <p><strong>Категория:</strong> ${entry.metadata.category || 'Без категории'}</p>
+            </div>
+            <div class="risk">
+              <strong>Почему сайт небезопасен?</strong>
+              <p>${reason ? reason : ''}</p>
+            </div>
+            <div class="recommendations">
+              <strong>Рекомендации:</strong>
+              <ul>${suggestions.length > 0 ? suggestions.map(s => `<li>${s}</li>`).join('') : ''}</ul>
+            </div>
+          </div>
+        `;
+          }).join('');
+
+        const htmlContent = UnsafeUrlReportTemplate.replace('{{UNSAFE_URL_ENTRIES}}', unsafeUrlEntries);
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const arrayBuffer = await blob.arrayBuffer();
+        const uint8Array = new Uint8Array(arrayBuffer);
+        const fullPath = `${selectedPath}/unsafe-url-report-${new Date().toISOString().slice(0, 10)}.html`;
+
+        await invoke<string>(TauriCommands.SAVE_FILE, {
+            data: Array.from(uint8Array),
+            filePath: fullPath
+        });
     }
 }

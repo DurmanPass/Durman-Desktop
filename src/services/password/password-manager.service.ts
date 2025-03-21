@@ -180,9 +180,9 @@ const newEntry2: PasswordEntryInterface = {
 
 const newEntry3: PasswordEntryInterface = {
     id: '3',
-    name: 'GitHub',
+    name: 'MaxXyz',
     description: 'My GitHub account',
-    favicon: 'https://github.com/favicon.ico',
+    favicon: '',
     credentials: {
         username: 'user123',
         email: 'user@example.com',
@@ -194,8 +194,8 @@ const newEntry3: PasswordEntryInterface = {
         recoveryCodes: ['abc123', 'xyz789']
     },
     location: {
-        url: 'https://github.com/login',
-        domain: 'github.com'
+        url: 'http://max.xyz/fake',
+        domain: 'max.xyz'
     },
     metadata: {
         createdAt: new Date().toISOString(),
@@ -216,7 +216,7 @@ const newEntry4: PasswordEntryInterface = {
     id: '4',
     name: 'GitHub',
     description: 'My GitHub account',
-    favicon: 'https://github.com/favicon.ico',
+    favicon: '',
     credentials: {
         username: 'user123',
         email: 'user@example.com',
@@ -228,8 +228,8 @@ const newEntry4: PasswordEntryInterface = {
         recoveryCodes: ['abc123', 'xyz789']
     },
     location: {
-        url: 'https://github.com/login',
-        domain: 'github.com'
+        url: 'http://lox.top',
+        domain: 'lox.top'
     },
     metadata: {
         createdAt: new Date().toISOString(),
@@ -285,28 +285,6 @@ const newEntry5: PasswordEntryInterface = {
 
 
 
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry);
 PasswordManagerService.addEntry(newEntry);
 PasswordManagerService.addEntry(newEntry2);
 PasswordManagerService.addEntry(newEntry3);
