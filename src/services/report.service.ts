@@ -6,6 +6,8 @@ import {PasswordStrengthService} from "./password/password-strength.service";
 import {invoke} from "@tauri-apps/api/core";
 import {TauriCommands} from "../shared/const/app/tauri/tauri.commands";
 import {UnsafeUrlReportTemplate} from "../shared/export-templates/reports/unsafe-url-report-template";
+import {PasswordEntryInterface} from "../interfaces/data/passwordEntry.interface";
+import {FrequentUsageReportTemplate} from "../shared/export-templates/reports/frequent-usage-report-template";
 
 
 export class ReportService {
@@ -112,10 +114,65 @@ export class ReportService {
         console.log(`Отчёт сохранён: ${fullPath}`);
     }
 
-    public static generateFrequentUsageReport(): void {
-        const frequentPasswords = PasswordManagerService.getAllEntries()
-            .filter(entry => entry.metadata.usageCount > 5);
-        //TODO Сгенерировать отчёт по часто используемым паролям
+    public static async generateFrequentUsageReport() {
+        try {
+            const selectedPath = await DialogService.selectPath();
+            if (!selectedPath) {
+                return;
+            }
+
+            const passwordStrengthService = new PasswordStrengthService();
+            const reusedEntries = passwordStrengthService.getReusedPasswords();
+            if (reusedEntries.length === 0) {
+                return;
+            }
+
+            const passwordGroups = new Map<string, PasswordEntryInterface[]>();
+            reusedEntries.forEach(entry => {
+                const password = entry.credentials.password || '';
+                const group = passwordGroups.get(password) || [];
+                group.push(entry);
+                passwordGroups.set(password, group);
+            });
+
+            const reusedPasswordGroups = Array.from(passwordGroups.entries()).map(([password, entries]) => {
+                const entryCards = entries.map(entry => `
+          <div class="entry-card">
+            <p><strong>Название:</strong> ${entry.name}</p>
+            <p><strong>URL:</strong> ${entry.location.url || 'Не указан'}</p>
+            <p><strong>Имя пользователя:</strong> ${entry.credentials.username || 'Не указано'}</p>
+            <p><strong>Категория:</strong> ${entry.metadata.category || 'Без категории'}</p>
+          </div>
+        `).join('');
+
+                return `
+          <div class="password-group">
+            <h2>Пароль: "${password}" (используется ${entries.length} раз)</h2>
+            ${entryCards}
+            <div class="recommendations">
+              <strong>Рекомендации:</strong>
+              <ul>
+                <li>Используйте уникальный пароль для каждой записи.</li>
+                <li>Сгенерируйте новый сложный пароль в менеджере паролей.</li>
+                <li>Обновите этот пароль на всех указанных сайтах.</li>
+              </ul>
+            </div>
+          </div>
+        `;
+            }).join('') || '<p>Переиспользуемых паролей не найдено.</p>';
+
+            const htmlContent = FrequentUsageReportTemplate.replace('{{REUSED_PASSWORD_GROUPS}}', reusedPasswordGroups);
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const arrayBuffer = await blob.arrayBuffer();
+            const uint8Array = new Uint8Array(arrayBuffer);
+            const fullPath = `${selectedPath}/frequent-usage-report-${new Date().toISOString().slice(0, 10)}.html`;
+
+            await invoke<string>(TauriCommands.SAVE_FILE, {
+                data: Array.from(uint8Array),
+                filePath: fullPath
+            });
+        } catch (error) {
+        }
     }
 
     // Проверка, является ли URL небезопасным

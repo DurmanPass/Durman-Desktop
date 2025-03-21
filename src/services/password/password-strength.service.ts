@@ -169,4 +169,44 @@ export class PasswordStrengthService {
 
         return reusedCount;
     }
+
+    /**
+     * Возвращает записи с переиспользуемыми паролями
+     * @returns Массив записей, где пароли используются более одного раза
+     */
+    getReusedPasswords(): PasswordEntryInterface[] {
+        const entries = PasswordManagerService.getAllEntries();
+        if (entries.length === 0) return [];
+
+        // Фильтруем по уникальным ID
+        const uniqueEntriesMap = new Map<string, PasswordEntryInterface>();
+        entries.forEach(entry => {
+            if (entry.id && !uniqueEntriesMap.has(entry.id)) {
+                uniqueEntriesMap.set(entry.id, entry);
+            }
+        });
+
+        const uniqueEntries = Array.from(uniqueEntriesMap.values());
+        if (uniqueEntries.length === 0) return [];
+
+        // Подсчитываем частоту появления каждого пароля
+        const passwordFrequency = new Map<string, { count: number, entries: PasswordEntryInterface[] }>();
+        uniqueEntries.forEach(entry => {
+            const password = entry.credentials.password || '';
+            const current = passwordFrequency.get(password) || { count: 0, entries: [] };
+            current.count += 1;
+            current.entries.push(entry);
+            passwordFrequency.set(password, current);
+        });
+
+        // Собираем записи с переиспользуемыми паролями
+        const reusedEntries: PasswordEntryInterface[] = [];
+        passwordFrequency.forEach((data, password) => {
+            if (data.count > 1 && password !== '') {
+                reusedEntries.push(...data.entries);
+            }
+        });
+
+        return reusedEntries;
+    }
 }
