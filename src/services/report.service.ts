@@ -8,6 +8,7 @@ import {TauriCommands} from "../shared/const/app/tauri/tauri.commands";
 import {UnsafeUrlReportTemplate} from "../shared/export-templates/reports/unsafe-url-report-template";
 import {PasswordEntryInterface} from "../interfaces/data/passwordEntry.interface";
 import {FrequentUsageReportTemplate} from "../shared/export-templates/reports/frequent-usage-report-template";
+import {ToastService} from "./notification/toast.service";
 
 
 export class ReportService {
@@ -110,8 +111,7 @@ export class ReportService {
             data: Array.from(uint8Array),
             filePath: fullPath
         });
-
-        console.log(`Отчёт сохранён: ${fullPath}`);
+        ToastService.success("Отчёт о слабых паролях успешно создан!")
     }
 
     public static async generateFrequentUsageReport() {
@@ -171,6 +171,7 @@ export class ReportService {
                 data: Array.from(uint8Array),
                 filePath: fullPath
             });
+            ToastService.success("Отчёт о часто используемых паролях успешно создан!")
         } catch (error) {
         }
     }
@@ -301,5 +302,6 @@ export class ReportService {
             data: Array.from(uint8Array),
             filePath: fullPath
         });
+        ToastService.success("Отчёт о небезопасных сайтах успешно создан!")
     }
 }

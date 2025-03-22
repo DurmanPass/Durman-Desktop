@@ -169,9 +169,8 @@ export class PasswordTabContentComponent {
   }
 
   addEntry(): void {
-    ToastService.danger('Ошибка сохранения', 'Ошибка');
-    // this.modalsControls.createOrEditPassword.isModalOpen = true;
-    // this.modalsControls.createOrEditPassword.mode = PasswordDetailsModalModes.CREATE;
+    this.modalsControls.createOrEditPassword.isModalOpen = true;
+    this.modalsControls.createOrEditPassword.mode = PasswordDetailsModalModes.CREATE;
   }
 
   editEntry(id: string): void {
@@ -187,6 +186,7 @@ export class PasswordTabContentComponent {
     const entry = PasswordManagerService.getEntryById(id);
     if (entry && entry.credentials.password) {
       copyToClipboard(entry.credentials.password);
+      ToastService.success('Пароль был успешно скопирован в буфер обмена!')
     }
   }
 
@@ -195,6 +195,7 @@ export class PasswordTabContentComponent {
     this.updateEntries();
     this.updateStats();
     this.updateCategories();
+    ToastService.danger('Запись была успешно удалена!')
   }
 
   async onExportChange(value: string) {
@@ -221,9 +222,11 @@ export class PasswordTabContentComponent {
     switch (format) {
       case EXPORT_PASSWORDS_TYPES.XLSX:
         PasswordExportService.exportToXlsx(path);
+        ToastService.success('Пароли успешно экспортированы в формат xlsx!');
         break;
       case EXPORT_PASSWORDS_TYPES.HTML:
         PasswordExportService.exportToHtml(path);
+        ToastService.success('Пароли успешно экспортированы в формат html!');
         break;
       case EXPORT_PASSWORDS_TYPES.ZIP:
         const password = prompt('Введите пароль для ZIP-архива:');
@@ -231,6 +234,7 @@ export class PasswordTabContentComponent {
           PasswordExportService.exportToZip(path,password)
               .catch(err => console.error('Ошибка экспорта в ZIP:', err));
         }
+        ToastService.success('Пароли успешно экспортированы в формат zip!');
         break;
     }
   }

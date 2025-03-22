@@ -4,6 +4,8 @@ import {HeaderDescriptionComponent} from "../../text/header-description/header-d
 import {InputComponent} from "../../inputs/input/input.component";
 import {NgIf} from "@angular/common";
 import {SolidButtonComponent} from "../../buttons/solid-button/solid-button.component";
+import {ModalBaseComponent} from "../modal-base/modal-base.component";
+import {ToastService} from "../../../../services/notification/toast.service";
 
 @Component({
   selector: 'app-category-modal',
@@ -34,6 +36,16 @@ export class CategoryModalComponent {
 
   onCategoryChange(value: string){
     this.categoryEntry = value;
+  }
+
+  onCreateCategory(){
+    //TODO Добавить новую категорию
+    ToastService.success("Добавлена новая категория: " + this.categoryEntry)
+  }
+
+  closeModal(): void {
+    const modalBase = this as any as ModalBaseComponent;
+    modalBase.closeModal();
   }
 
   protected readonly CategoryModalModes = CategoryModalModes;

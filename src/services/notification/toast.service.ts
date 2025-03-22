@@ -75,7 +75,7 @@ export class ToastService {
                     return;
                 }
                 // this.appRef.detachView(toastRef.hostView);
-                toastRef.destroy();
+                //toastRef.destroy();
                 // this.updateToastPositions();
                 this.toasts.splice(index, 1);
             }

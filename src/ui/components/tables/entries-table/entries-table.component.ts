@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {TableColumn} from "../../../../interfaces/components/table/tableColumn.interface";
 import {NgForOf, NgIf} from "@angular/common";
+import {ToastService} from "../../../../services/notification/toast.service";
 
 @Component({
   selector: 'app-entries-table',
@@ -23,6 +24,7 @@ export class EntriesTableComponent<T> {
 
   onCopyEntry(id: string): void {
     this.copyEntry.emit(id);
+    ToastService.success('Пароль был успешно скопирован в буфер обмена!')
   }
 
   onEditEntry(id: string): void {
@@ -31,6 +33,7 @@ export class EntriesTableComponent<T> {
 
   onDeleteEntry(id: string): void {
     this.deleteEntry.emit(id);
+    ToastService.danger('Запись была успешно удалена!')
   }
 
   // Универсальный метод для получения ID из объекта (предполагаем, что у объекта есть поле id)

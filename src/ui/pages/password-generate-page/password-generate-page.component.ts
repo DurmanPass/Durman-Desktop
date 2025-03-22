@@ -12,6 +12,7 @@ import {
 } from "../../components/bars/password-strength-bar/password-strength-bar.component";
 import {NgIf} from "@angular/common";
 import {PasswordStrengthService} from "../../../services/password/password-strength.service";
+import {ToastService} from "../../../services/notification/toast.service";
 
 @Component({
   selector: 'app-password-generate-page',
@@ -83,6 +84,11 @@ export class PasswordGeneratePageComponent {
 
   ngOnInit(){
     deleteOverflowWindow();
+  }
+
+  copyPasswordToClipboard(){
+    ToastService.success('Пароль скопирован в буфер обмена!');
+    copyToClipboard(this.password);
   }
 
   generate() {

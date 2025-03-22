@@ -11,6 +11,7 @@ import {CategoryManagerService} from "../../../../services/password/category-man
 import {CheckboxComponent} from "../../controls/checkbox/checkbox.component";
 import {PasswordStrengthService} from "../../../../services/password/password-strength.service";
 import {SettingsService} from "../../../../services/settings/app-settings.service";
+import {ToastService} from "../../../../services/notification/toast.service";
 
 @Component({
   selector: 'app-password-details-modal',
@@ -157,10 +158,12 @@ export class PasswordDetailsModalComponent {
     //TODO Проверка совпадает ли localEntry с passwordEntry
     //TODO Обновить запись пароля
     this.isEditLocalEntry = false;
+    ToastService.success("Запись была успешно обновлена!");
   }
 
   onCreateEntry(){
     //TODO Создать запись пароля
+    ToastService.success("Запись была успешно создана!");
   }
 
   protected readonly PasswordDetailsModalModes = PasswordDetailsModalModes;
