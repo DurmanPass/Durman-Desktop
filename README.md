@@ -1,5 +1,7 @@
 # DurmanPass
-![DurmanPass Logo](src/assets/icons/general/logo/logo_transparent.png)
+<div align="center">
+  <img src="src/assets/icons/general/logo/logo_transparent.png" alt="DurmanPass Logo" width="200" height="200">
+</div>
 
 ## Что такое DurmanPass?
 ![DurmanPass Screenshot](src/assets/screens/DurmanPass-Pass.png)
