@@ -120,7 +120,7 @@ const newEntry: PasswordEntryInterface = {
         username: 'user123',
         email: 'user@example.com',
         password: 'securePass123!',
-        phoneNumber: '+79528893456',
+        phoneNumber: '+79999999999',
         passwordStrength: 4,
         pin: '2345',
         twoFactorCode: '',
@@ -146,8 +146,8 @@ const newEntry: PasswordEntryInterface = {
 };
 const newEntry2: PasswordEntryInterface = {
     id: '',
-    name: 'GitHub',
-    description: 'My GitHub account',
+    name: 'Instagram',
+    description: 'My Instagram account',
     favicon: 'https://github.com/favicon.ico',
     credentials: {
         username: 'user123',
@@ -161,7 +161,7 @@ const newEntry2: PasswordEntryInterface = {
     },
     location: {
         url: 'https://github.com/login',
-        domain: 'github.com'
+        domain: 'instagram.com'
     },
     metadata: {
         createdAt: new Date().toISOString(),
@@ -169,7 +169,7 @@ const newEntry2: PasswordEntryInterface = {
         lastUsed: '',
         usageCount: 0,
         tags: ['work', 'dev'],
-        category: 'Lol'
+        category: 'Personal'
     },
     security: {
         isFavorite: true,
@@ -177,10 +177,9 @@ const newEntry2: PasswordEntryInterface = {
         sensitive: false
     }
 };
-
 const newEntry3: PasswordEntryInterface = {
     id: '3',
-    name: 'MaxXyz',
+    name: 'Facebook',
     description: 'My GitHub account',
     favicon: '',
     credentials: {
@@ -195,7 +194,7 @@ const newEntry3: PasswordEntryInterface = {
     },
     location: {
         url: 'http://max.xyz/fake',
-        domain: 'max.xyz'
+        domain: 'facebook.com'
     },
     metadata: {
         createdAt: new Date().toISOString(),
@@ -203,7 +202,7 @@ const newEntry3: PasswordEntryInterface = {
         lastUsed: '',
         usageCount: 0,
         tags: ['work', 'dev'],
-        category: 'Lol'
+        category: 'Personal'
     },
     security: {
         isFavorite: true,
@@ -211,10 +210,9 @@ const newEntry3: PasswordEntryInterface = {
         sensitive: false
     }
 };
-
 const newEntry4: PasswordEntryInterface = {
     id: '4',
-    name: 'GitHub',
+    name: 'YouTube',
     description: 'My GitHub account',
     favicon: '',
     credentials: {
@@ -229,7 +227,7 @@ const newEntry4: PasswordEntryInterface = {
     },
     location: {
         url: 'http://lox.top',
-        domain: 'lox.top'
+        domain: 'youtube.com'
     },
     metadata: {
         createdAt: new Date().toISOString(),
@@ -237,7 +235,7 @@ const newEntry4: PasswordEntryInterface = {
         lastUsed: '',
         usageCount: 0,
         tags: ['work', 'dev'],
-        category: 'Lol'
+        category: 'Personal'
     },
     security: {
         isFavorite: true,
@@ -245,48 +243,110 @@ const newEntry4: PasswordEntryInterface = {
         sensitive: false
     }
 };
-
 const newEntry5: PasswordEntryInterface = {
     id: '5',
-    name: 'GitHub',
-    description: 'My GitHub account',
-    favicon: 'https://github.com/favicon.ico',
+    name: 'Gmail',
+    description: 'Primary email account',
+    favicon: '',
     credentials: {
-        username: 'user123',
-        email: 'user@example.com',
-        password: 'sec',
+        username: 'john.doe',
+        email: 'john.doe@gmail.com',
+        password: 'P@ssw0rd123',
+        passwordStrength: 3,
+        phoneNumber: '+1-555-123-4567',
+        pin: '',
+        twoFactorCode: '123456',
+        recoveryCodes: ['rec987', 'rec654']
+    },
+    location: {
+        url: 'https://mail.google.com',
+        domain: 'google.com'
+    },
+    metadata: {
+        createdAt: new Date('2024-01-15').toISOString(),
+        updatedAt: new Date('2024-03-10').toISOString(),
+        lastUsed: new Date('2025-03-20').toISOString(),
+        usageCount: 42,
+        tags: ['email', 'personal'],
+        category: 'Communication'
+    },
+    security: {
+        isFavorite: false,
+        requires2FA: true,
+        sensitive: true
+    }
+};
+const newEntry6: PasswordEntryInterface = {
+    id: '8',
+    name: 'Netflix',
+    description: 'Streaming account',
+    favicon: '',
+    credentials: {
+        username: '',
+        email: 'movie.fan@example.com',
+        password: '12345', // Переиспользуемый слабый пароль
         passwordStrength: 1,
         phoneNumber: '',
         pin: '',
         twoFactorCode: '',
-        recoveryCodes: ['abc123', 'xyz789']
+        recoveryCodes: []
     },
     location: {
-        url: 'https://github.com/login',
-        domain: 'github.com'
+        url: 'http://netflix.com',
+        domain: 'netflix.com'
     },
     metadata: {
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        lastUsed: '',
-        usageCount: 0,
-        tags: ['work', 'dev'],
-        category: 'Lol'
+        createdAt: new Date('2023-09-10').toISOString(),
+        updatedAt: new Date('2024-12-01').toISOString(),
+        lastUsed: new Date('2025-03-21').toISOString(),
+        usageCount: 25,
+        tags: ['entertainment'],
+        category: 'Media'
     },
     security: {
-        isFavorite: true,
-        requires2FA: true,
+        isFavorite: false,
+        requires2FA: false,
         sensitive: false
     }
 };
 
-
-
-
-
-
+const newEntry7: PasswordEntryInterface = {
+    id: '9',
+    name: 'Work VPN',
+    description: 'Remote access to company network',
+    favicon: '',
+    credentials: {
+        username: 'employee007',
+        email: 'employee007@company.com',
+        password: '12345', // Переиспользуемый слабый пароль
+        passwordStrength: 1,
+        phoneNumber: '',
+        pin: '7890',
+        twoFactorCode: '987654',
+        recoveryCodes: ['vpn123']
+    },
+    location: {
+        url: 'https://vpn.company.com',
+        domain: 'company.com'
+    },
+    metadata: {
+        createdAt: new Date('2024-02-01').toISOString(),
+        updatedAt: new Date('2025-01-20').toISOString(),
+        lastUsed: '',
+        usageCount: 3,
+        tags: ['work', 'vpn'],
+        category: 'Work'
+    },
+    security: {
+        isFavorite: false,
+        requires2FA: true,
+        sensitive: true
+    }
+};
 PasswordManagerService.addEntry(newEntry);
 PasswordManagerService.addEntry(newEntry2);
 PasswordManagerService.addEntry(newEntry3);
 PasswordManagerService.addEntry(newEntry4);
 PasswordManagerService.addEntry(newEntry5);
+PasswordManagerService.addEntry(newEntry6);
+PasswordManagerService.addEntry(newEntry7);

@@ -1,7 +1,42 @@
-# Tauri + Angular
+# DurmanPass
 
-This template should help get you started developing with Tauri and Angular.
+![PasswordGuard Screenshot](src/assets/screens/DurmanPass-Pass.png)
 
-## Recommended IDE Setup
+Для загрузки последней версии DurmanPass перейдите на [https://durmanpass.ru/](https://durmanpass.ru/) и следуйте инструкциям по установке для вашей операционной системы. Сайт также предоставляет дополнительную информацию о функциях программы.
 
-[VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) + [Angular Language Service](https://marketplace.visualstudio.com/items?itemName=Angular.ng-template).
+## Что такое DurmanPass?
+
+DurmanPass — это современный менеджер паролей, разработанный для безопасного хранения, управления и анализа учётных данных. Построенный на Angular и Tauri, он сочетает высокую производительность, кроссплатформенность и удобный интерфейс, предоставляя пользователям инструменты для повышения безопасности их паролей и защиты от уязвимостей.
+
+### Основные возможности
+- **Хранение учётных данных**: Надёжное сохранение паролей, логинов, URL и категорий с поддержкой локального шифрования.
+- **Анализ безопасности**: Оценка силы паролей и проверка URL на наличие HTTPS и подозрительных доменов.
+- **Генерация отчётов**: Подробные HTML-отчёты о слабых паролях, переиспользуемых паролях и небезопасных сайтах.
+
+## Локальная установка
+
+1. **Требования**:
+    - Node.js (версия 18+)
+    - Rust (для сборки Tauri)
+    - npm или yarn
+
+2. **Клонирование репозитория**:
+   ```bash
+   git clone https://github.com/DurmanPass/Durman-Desktop
+   cd Durman-Desktop
+   ```
+
+3. **Установка зависимостей**:
+   ```bash
+   npm install
+   ```
+
+4. **Запуск в режиме разработки**:
+   ```bash
+   npm run tauri dev
+   ```
+
+5. **Сборка приложения**:
+   ```bash
+   npm run tauri build
+   ```
