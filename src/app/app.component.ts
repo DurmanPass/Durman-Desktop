@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {ApplicationRef, Component, EnvironmentInjector} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import {StartPageComponent} from "../ui/pages/start-page/start-page.component";
@@ -14,6 +14,7 @@ import {
     PasswordDetailsModalComponent
 } from "../ui/components/modals/password-details-modal/password-details-modal.component";
 import {ConfirmModalComponent} from "../ui/components/modals/confirm-modal/confirm-modal.component";
+import {ToastService} from "../services/notification/toast.service";
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,9 @@ import {ConfirmModalComponent} from "../ui/components/modals/confirm-modal/confi
 export class AppComponent {
   windowLabel: string = '';
   isLocked: boolean = SecurityLockService.getIsLocked();
+  constructor(appRef: ApplicationRef, injector: EnvironmentInjector) {
+    ToastService.initialize(appRef, injector);
+  }
   async ngOnInit(): Promise<void> {
     this.windowLabel = await WindowService.getWindowLabel();
 
@@ -39,6 +43,7 @@ export class AppComponent {
       this.isLocked = SecurityLockService.getIsLocked();
     }, 1000);
   }
+
 
   unlockAccount(password: string): void {
     let isVerifyPassword = false;

@@ -26,6 +26,7 @@ import {CategoryModalComponent} from "../../../../components/modals/category-mod
 import {Table} from "jspdf-autotable";
 import {TableColumn} from "../../../../../interfaces/components/table/tableColumn.interface";
 import {EntriesTableComponent} from "../../../../components/tables/entries-table/entries-table.component";
+import {ToastService} from "../../../../../services/notification/toast.service";
 
 @Component({
   selector: 'app-password-tab-content',
