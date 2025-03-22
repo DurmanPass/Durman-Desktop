@@ -169,8 +169,9 @@ export class PasswordTabContentComponent {
   }
 
   addEntry(): void {
-    this.modalsControls.createOrEditPassword.isModalOpen = true;
-    this.modalsControls.createOrEditPassword.mode = PasswordDetailsModalModes.CREATE;
+    ToastService.danger('Ошибка сохранения', 'Ошибка');
+    // this.modalsControls.createOrEditPassword.isModalOpen = true;
+    // this.modalsControls.createOrEditPassword.mode = PasswordDetailsModalModes.CREATE;
   }
 
   editEntry(id: string): void {
