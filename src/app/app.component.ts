@@ -9,11 +9,16 @@ import {VaultPageComponent} from "../ui/pages/vault-page/vault-page.component";
 import {FrozenAccountPageComponent} from "../ui/pages/frozen-account-page/frozen-account-page.component";
 import {SecurityLockService} from "../services/security/security-lock.service";
 import {SettingsService} from "../services/settings/app-settings.service";
+import {ModalBaseComponent} from "../ui/components/modals/modal-base/modal-base.component";
+import {
+    PasswordDetailsModalComponent
+} from "../ui/components/modals/password-details-modal/password-details-modal.component";
+import {ConfirmModalComponent} from "../ui/components/modals/confirm-modal/confirm-modal.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-    imports: [CommonModule, RouterOutlet, StartPageComponent, PasswordGeneratePageComponent, VaultPageComponent, FrozenAccountPageComponent],
+  imports: [CommonModule, RouterOutlet, StartPageComponent, PasswordGeneratePageComponent, VaultPageComponent, FrozenAccountPageComponent, ModalBaseComponent, PasswordDetailsModalComponent, ConfirmModalComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

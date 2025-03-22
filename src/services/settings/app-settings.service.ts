@@ -5,7 +5,7 @@ export class SettingsService {
     private static settings: AppSettings = {
         general: {
             highContrastMode: false,
-            hideFlowerStrengthWidget: false
+            hideFlowerStrengthWidget: true
         },
         security: {
             lockTimeout: 3,
