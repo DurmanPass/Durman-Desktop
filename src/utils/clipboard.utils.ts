@@ -28,14 +28,14 @@ export function copyToClipboard(text: string, clearBuffer: boolean, clearBufferT
 // Функция очистки буфера обмена
 export function clearClipboard(): void {
     if (navigator.clipboard) {
-        navigator.clipboard.writeText('')
+        navigator.clipboard.writeText('\x00')
             .then(() => {
             })
             .catch(err => {
             });
     } else {
         const textArea = document.createElement('textarea');
-        textArea.value = '';
+        textArea.value = '\x00';
         document.body.appendChild(textArea);
         textArea.select();
         try {
