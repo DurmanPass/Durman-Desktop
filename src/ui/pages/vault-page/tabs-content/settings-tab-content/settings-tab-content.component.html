@@ -19,13 +19,6 @@
         <div class="settings-categories-tabs">
             <!-- Общие настройки -->
             <div class="settings-section" *ngIf="selectedCategory === SETTINGS_MODES.GENERAL.label">
-<!--                <div class="setting">-->
-<!--                    <app-checkbox-->
-<!--                            [checked]="appSettings.general.highContrastMode"-->
-<!--                            (checkedChange)="toggleHighContrastMode($event)"-->
-<!--                            label="Режим высокой контрастности"-->
-<!--                    />-->
-<!--                </div>-->
                 <div class="setting">
                     <app-checkbox
                             [checked]="appSettings.general.hideFlowerStrengthWidget"
@@ -42,6 +35,13 @@
                             [checked]="appSettings.security.hidePasswords"
                             (checkedChange)="toggleHidePasswords($event)"
                             label="Скрывать пароли"
+                    />
+                </div>
+                <div class="setting">
+                    <app-checkbox
+                            [checked]="appSettings.security.buffer.clearBuffer"
+                            (checkedChange)="toggleClearBuffer($event)"
+                            label="Очищать буфер через 20сек после копирования пароля"
                     />
                 </div>
                 <div class="setting">

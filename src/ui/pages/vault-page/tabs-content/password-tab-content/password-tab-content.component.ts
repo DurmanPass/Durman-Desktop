@@ -27,6 +27,7 @@ import {Table} from "jspdf-autotable";
 import {TableColumn} from "../../../../../interfaces/components/table/tableColumn.interface";
 import {EntriesTableComponent} from "../../../../components/tables/entries-table/entries-table.component";
 import {ToastService} from "../../../../../services/notification/toast.service";
+import {SettingsService} from "../../../../../services/settings/app-settings.service";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -185,7 +186,7 @@ export class PasswordTabContentComponent {
   copyEntry(id: string): void {
     const entry = PasswordManagerService.getEntryById(id);
     if (entry && entry.credentials.password) {
-      copyToClipboard(entry.credentials.password);
+      copyToClipboard(entry.credentials.password, SettingsService.getClearBuffer(), SettingsService.getClearBufferTimeout());
       ToastService.success('Пароль был успешно скопирован в буфер обмена!')
     }
   }

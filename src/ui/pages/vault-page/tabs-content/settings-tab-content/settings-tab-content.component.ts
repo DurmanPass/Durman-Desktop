@@ -40,6 +40,11 @@ export class SettingsTabContentComponent {
     this.appSettings.security.hidePasswords = event;
   }
 
+  toggleClearBuffer(event: boolean): void {
+    SettingsService.setClearBuffer(event);
+    this.appSettings.security.buffer.clearBuffer = event;
+  }
+
   toggleTwoFactorEnabled(event: boolean): void {
     SettingsService.setTwoFactorEnabled(event);
     this.appSettings.security.twoFactorEnabled = event;

@@ -120,7 +120,7 @@ export class PasswordDetailsModalComponent {
 
   copyToClipboard(value: string): void {
     if (value) {
-      copyToClipboard(value);
+      copyToClipboard(value, SettingsService.getClearBuffer(), SettingsService.getClearBufferTimeout());
     }
   }
 

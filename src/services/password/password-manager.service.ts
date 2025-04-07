@@ -160,7 +160,7 @@ const newEntry2: PasswordEntryInterface = {
         recoveryCodes: ['abc123', 'xyz789']
     },
     location: {
-        url: 'https://github.com/login',
+        url: 'https://instagram.com',
         domain: 'instagram.com'
     },
     metadata: {
@@ -193,7 +193,7 @@ const newEntry3: PasswordEntryInterface = {
         recoveryCodes: ['abc123', 'xyz789']
     },
     location: {
-        url: 'http://max.xyz/fake',
+        url: 'https://facebook.com',
         domain: 'facebook.com'
     },
     metadata: {
@@ -226,7 +226,7 @@ const newEntry4: PasswordEntryInterface = {
         recoveryCodes: ['abc123', 'xyz789']
     },
     location: {
-        url: 'http://lox.top',
+        url: 'https://youtube.com',
         domain: 'youtube.com'
     },
     metadata: {
@@ -292,7 +292,7 @@ const newEntry6: PasswordEntryInterface = {
         recoveryCodes: []
     },
     location: {
-        url: 'http://netflix.com',
+        url: 'https://netflix.com',
         domain: 'netflix.com'
     },
     metadata: {
@@ -343,6 +343,41 @@ const newEntry7: PasswordEntryInterface = {
         sensitive: true
     }
 };
+
+const newEntry8: PasswordEntryInterface = {
+    id: '9',
+    name: 'UnsafeSite',
+    description: 'Remote access to company network',
+    favicon: '',
+    credentials: {
+        username: 'employee007',
+        email: 'employee007@company.com',
+        password: '12345', // Переиспользуемый слабый пароль
+        passwordStrength: 1,
+        phoneNumber: '',
+        pin: '7890',
+        twoFactorCode: '987654',
+        recoveryCodes: ['vpn123']
+    },
+    location: {
+        url: 'http://site.fake/login',
+        domain: 'site.fake'
+    },
+    metadata: {
+        createdAt: new Date('2024-02-01').toISOString(),
+        updatedAt: new Date('2025-01-20').toISOString(),
+        lastUsed: '',
+        usageCount: 3,
+        tags: ['work', 'vpn'],
+        category: 'Work'
+    },
+    security: {
+        isFavorite: false,
+        requires2FA: true,
+        sensitive: true
+    }
+};
+
 PasswordManagerService.addEntry(newEntry);
 PasswordManagerService.addEntry(newEntry2);
 PasswordManagerService.addEntry(newEntry3);
@@ -350,3 +385,4 @@ PasswordManagerService.addEntry(newEntry4);
 PasswordManagerService.addEntry(newEntry5);
 PasswordManagerService.addEntry(newEntry6);
 PasswordManagerService.addEntry(newEntry7);
+PasswordManagerService.addEntry(newEntry8);

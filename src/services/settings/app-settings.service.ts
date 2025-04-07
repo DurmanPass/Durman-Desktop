@@ -10,7 +10,11 @@ export class SettingsService {
         security: {
             lockTimeout: 3,
             hidePasswords: true,
-            twoFactorEnabled: false
+            twoFactorEnabled: false,
+            buffer: {
+                clearBuffer: true,
+                clearBufferTimeout: 20000
+            }
         }
     };
 
@@ -86,5 +90,16 @@ export class SettingsService {
     public static setTwoFactorEnabled(enabled: boolean): void {
         this.settings.security.twoFactorEnabled = enabled;
         this.saveSettings();
+    }
+
+    public static getClearBuffer(): boolean {
+        return this.settings.security.buffer.clearBuffer;
+    }
+    public static setClearBuffer(enabled: boolean): void {
+        this.settings.security.buffer.clearBuffer = enabled;
+        this.saveSettings();
+    }
+    public static getClearBufferTimeout(): number {
+        return this.settings.security.buffer.clearBufferTimeout;
     }
 }

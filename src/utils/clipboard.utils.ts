@@ -1,20 +1,47 @@
-export function copyToClipboard(text: string): void {
+// Функция копирования текста в буфер обмена
+export function copyToClipboard(text: string, clearBuffer: boolean, clearBufferTimeout:number): void {
     if (!navigator.clipboard) {
-        // Если Clipboard API недоступен, используем запасной вариант
         const textArea = document.createElement('textarea');
         textArea.value = text;
         document.body.appendChild(textArea);
         textArea.select();
         try {
-            document.execCommand('copy'); // Старый метод копирования
+            if(clearBuffer){
+                setTimeout(clearClipboard, clearBufferTimeout);
+            }
         } catch (err) {
-            console.error('Ошибка при копировании в буфер обмена:', err);
         }
         document.body.removeChild(textArea);
         return;
     }
 
     navigator.clipboard.writeText(text)
-        .then(() => console.log('Текст успешно скопирован!'))
-        .catch(err => console.error('Ошибка при копировании в буфер:', err));
+        .then(() => {
+            if(clearBuffer){
+            setTimeout(clearClipboard, clearBufferTimeout);
+            }
+        })
+        .catch(err => {
+        });
+}
+
+// Функция очистки буфера обмена
+export function clearClipboard(): void {
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText('')
+            .then(() => {
+            })
+            .catch(err => {
+            });
+    } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = '';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+        } catch (err) {
+        }
+        document.body.removeChild(textArea);
+    }
 }

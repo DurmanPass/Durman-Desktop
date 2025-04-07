@@ -7,5 +7,9 @@ export interface AppSettings {
         lockTimeout: number;
         hidePasswords: boolean;
         twoFactorEnabled: boolean;
+        buffer: {
+            clearBuffer: boolean;
+            clearBufferTimeout: number;
+        }
     };
 }

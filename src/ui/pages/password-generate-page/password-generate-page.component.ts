@@ -13,6 +13,7 @@ import {
 import {NgIf} from "@angular/common";
 import {PasswordStrengthService} from "../../../services/password/password-strength.service";
 import {ToastService} from "../../../services/notification/toast.service";
+import {SettingsService} from "../../../services/settings/app-settings.service";
 
 @Component({
   selector: 'app-password-generate-page',
@@ -88,7 +89,7 @@ export class PasswordGeneratePageComponent {
 
   copyPasswordToClipboard(){
     ToastService.success('Пароль скопирован в буфер обмена!');
-    copyToClipboard(this.password);
+    copyToClipboard(this.password, SettingsService.getClearBuffer(), SettingsService.getClearBufferTimeout());
   }
 
   generate() {
