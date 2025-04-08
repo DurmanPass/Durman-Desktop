@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import {ApiRoutes} from "../../../shared/const/app/api/api.routes";
 import {ToastService} from "../../notification/toast.service";
@@ -11,8 +10,6 @@ import {ToastService} from "../../notification/toast.service";
 export class RegisterService {
     constructor(
         private http: HttpClient,
-        private router: Router,
-        private toastService: ToastService
     ) {}
 
     sendEmail(email: string): Observable<any> {

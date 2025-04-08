@@ -16,11 +16,15 @@ import {AuthModes} from "../../../shared/enums/modes/auth-modes.enum";
 import {TextLinkComponent} from "../../components/links/text-link/text-link.component";
 import {WindowService} from "../../../services/window.service";
 import {PasswordStrengthService} from "../../../services/password/password-strength.service";
+import {RegisterService} from "../../../services/routes/auth/register.service";
+import {ToastService} from "../../../services/notification/toast.service";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 
 @Component({
   selector: 'app-register-page',
   standalone: true,
   imports: [
+      HttpClientModule,
     HeaderDescriptionComponent,
     InputComponent,
     NgIf,
@@ -83,6 +87,13 @@ export class RegisterPageComponent {
   }
 
   private passwordStrengthService = new PasswordStrengthService();
+  private registerService = new RegisterService(this.http)
+
+  private uuid: string = '';
+
+  constructor(private http: HttpClient) {
+  }
+
 
   onStrengthChange(value: string){
     this.passwordStrength = Number(this.passwordStrengthService.getPasswordScore(value));
@@ -99,13 +110,24 @@ export class RegisterPageComponent {
   }
 
   onEmailChange(email: string){
+    // this.loginUserData.email = email;
+    // ValidateService.validateEmail(this.loginUserData.email) ? this.validateLoginData['step_1']['isEmailValid'] = true : this.validateLoginData['step_1']['isEmailValid'] = false;
+
     this.loginUserData.email = email;
-    ValidateService.validateEmail(this.loginUserData.email) ? this.validateLoginData['step_1']['isEmailValid'] = true : this.validateLoginData['step_1']['isEmailValid'] = false;
+    this.validateLoginData['step_1']['isEmailValid'] = ValidateService.validateEmail(email);
+    if (this.validateLoginData['step_1']['isEmailValid']) {
+      this.sendEmail();
+    }
   }
 
   onConfirmEmailCodeChange(code: string){
+    // this.loginUserData.confirmEmailCode = code;
+    // ValidateService.validateEmailCode(this.loginUserData.confirmEmailCode) ? this.validateLoginData['step_2']['isEmailCodeValid'] = true : this.validateLoginData['step_2']['isEmailCodeValid'] = false;
     this.loginUserData.confirmEmailCode = code;
-    ValidateService.validateEmailCode(this.loginUserData.confirmEmailCode) ? this.validateLoginData['step_2']['isEmailCodeValid'] = true : this.validateLoginData['step_2']['isEmailCodeValid'] = false;
+    this.validateLoginData['step_2']['isEmailCodeValid'] = ValidateService.validateEmailCode(code);
+    if (this.validateLoginData['step_2']['isEmailCodeValid']) {
+      this.verifyCode();
+    }
   }
 
   onPasswordChange(password: string){
@@ -129,8 +151,58 @@ export class RegisterPageComponent {
   }
 
   onFinish(){
-    WindowService.openVaultWindow().then();
+    // WindowService.openVaultWindow().then();
     // WindowService.closeAllWindowsExVault();
+    if (this.validateLoginData['step_3']['isPasswordValid'] &&
+        this.validateLoginData['step_3']['isPasswordsMatch'] &&
+        this.validateLoginData['step_4']['isPasswordHintValid']) {
+      this.sendPassword();
+    } else {
+      ToastService.danger('Проверьте введённые данные!')
+    }
+  }
+
+  // Отправка email
+  private sendEmail() {
+    this.registerService.sendEmail(this.loginUserData.email).subscribe({
+      next: (response: any) => {
+        if (response.UUID) {
+          this.uuid = response.UUID;
+          ToastService.success('Код отправлен на вашу почту!');
+          this.onStepChanged(RegisterStepsId.ConfirmEmailStepId);
+        }
+      },
+      error: (err) => {
+        const errorMessage = err.error?.error || 'Ошибка при отправке email!';
+        ToastService.danger(errorMessage);
+      }
+    });
+  }
+
+  // Проверка кода верификации
+  private verifyCode() {
+    this.registerService.sendVerificationCode(this.uuid, this.loginUserData.confirmEmailCode).subscribe({
+      next: (response: any) => {
+        if (response === null) {
+          ToastService.success('Email успешно подтверждён!');
+          this.onStepChanged(RegisterStepsId.PasswordStepId);
+        }
+      },
+      error: (err) => {
+        const errorMessage = err.error?.error || 'Неверный код верификации!';
+        ToastService.danger(errorMessage, 'Ошибка при подтверждении кода!');
+      }
+    });
+  }
+
+  // Установка пароля и завершение регистрации
+  private sendPassword() {
+    this.registerService.sendPassword(
+        this.loginUserData.email,
+        this.loginUserData.masterPassword,
+        this.loginUserData.hintPassword
+    );
+    WindowService.openVaultWindow().then();
   }
 
 
