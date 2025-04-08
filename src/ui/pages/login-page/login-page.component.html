@@ -33,6 +33,6 @@
             </app-input>
         </div>
 
-        <app-solid-button text="Продолжить" *ngIf="validateLoginData.isPasswordValid && validateLoginData.isEmailValid" bgColor="DarkGreen" size="Long"/>
+        <app-solid-button (click)="onLogin()" text="Продолжить" *ngIf="validateLoginData.isPasswordValid && validateLoginData.isEmailValid" bgColor="DarkGreen" size="Long"/>
     </div>
 </div>

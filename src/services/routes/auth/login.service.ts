@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiRoutes } from '../../../shared/const/app/api/api.routes';
 import { ToastService } from '../../notification/toast.service';
+import {WindowService} from "../../window.service";
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +11,6 @@ import { ToastService } from '../../notification/toast.service';
 export class LoginService {
     constructor(
         private http: HttpClient,
-        private toastService: ToastService
     ) {}
 
     login(email: string, password: string) {
@@ -21,7 +21,7 @@ export class LoginService {
                 if (response.accessToken && response.message === 'Login successful' && response.refreshToken) {
                     localStorage.setItem('accessToken', response.accessToken);
                     localStorage.setItem('refreshToken', response.refreshToken);
-
+                    WindowService.openVaultWindow();
                     ToastService.success('Вход выполнен успешно!')
                 } else {
                     ToastService.danger('Ошибка при входе!')
