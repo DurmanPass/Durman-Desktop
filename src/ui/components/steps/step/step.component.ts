@@ -54,6 +54,7 @@ export class StepComponent {
   // Переход к следующему шагу
   nextStep() {
     if (this.currentStep < this.steps.length - 1) {
+      this.steps[this.currentStep].action();
       this.currentStep++;
       this.emitStepChange(); // Вызываем событие при изменении шага
     }
@@ -82,9 +83,7 @@ export class StepComponent {
 
   // Завершение процесса (вызывает переданную функцию onFinish)
   finish() {
-    if (this.onFinish) {
-      this.onFinish();
-    }
+    this.steps[this.currentStep].action();
   }
 
   protected readonly ThemeColors = ThemeColors;

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {ApiRoutes} from "../../../shared/const/app/api/api.routes";
 import {ToastService} from "../../notification/toast.service";
+import {WindowService} from "../../window.service";
 
 @Injectable({
     providedIn: 'root'
@@ -29,6 +30,7 @@ export class RegisterService {
             next: (response: any) => {
                 if (response.message === 'User registered successfully' && response.userID) {
                     ToastService.success('Регистрация прошла успешно!')
+                    WindowService.openVaultWindow().then();
                 } else {
                     ToastService.danger(response.error, 'Ошибка при регистрации!')
                 }

@@ -1,6 +1,6 @@
 <div class="register-page">
     <!-- Компонент шагов -->
-    <app-step [steps]="RegisterSteps" (stepChanged)="onStepChanged($event)" lineColorStep="Primary" borderColorStep="Primary" bgColorStep="Transparent"
+    <app-step [steps]="RegisterStepsOnAction" (stepChanged)="onStepChanged($event)" lineColorStep="Primary" borderColorStep="Primary" bgColorStep="Transparent"
     activeBorderColorStep="DarkOrange"
               lineColorStepActive="DarkGreen"
               [validateSteps]="validateLoginData"

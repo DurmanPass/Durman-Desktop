@@ -19,6 +19,7 @@ import {PasswordStrengthService} from "../../../services/password/password-stren
 import {RegisterService} from "../../../services/routes/auth/register.service";
 import {ToastService} from "../../../services/notification/toast.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {Step} from "../../../interfaces/components/steps/login-steps.interface";
 
 @Component({
   selector: 'app-register-page',
@@ -39,7 +40,10 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
 })
 export class RegisterPageComponent {
   @Output() changeMode = new EventEmitter<AuthModes>();
-  currentStepId: string = RegisterSteps[0].contentId;
+
+  RegisterStepsOnAction: Step[] = RegisterSteps(this.sendEmail.bind(this), this.verifyCode.bind(this), this.sendPassword.bind(this));
+
+  currentStepId: string = this.RegisterStepsOnAction[0].contentId;
   passwordStrength: number = 0;
   loginUserData: LoginUserData = {
     email: '',
@@ -94,15 +98,9 @@ export class RegisterPageComponent {
   constructor(private http: HttpClient) {
   }
 
-
   onStrengthChange(value: string){
     this.passwordStrength = Number(this.passwordStrengthService.getPasswordScore(value));
   }
-
-  // updateStrength(strength: number) {
-  //   this.passwordStrength = strength;
-  //   return strength;
-  // }
 
   // Обрабатываем изменение шага
   onStepChanged(stepId: string) {
@@ -110,24 +108,13 @@ export class RegisterPageComponent {
   }
 
   onEmailChange(email: string){
-    // this.loginUserData.email = email;
-    // ValidateService.validateEmail(this.loginUserData.email) ? this.validateLoginData['step_1']['isEmailValid'] = true : this.validateLoginData['step_1']['isEmailValid'] = false;
-
     this.loginUserData.email = email;
     this.validateLoginData['step_1']['isEmailValid'] = ValidateService.validateEmail(email);
-    if (this.validateLoginData['step_1']['isEmailValid']) {
-      this.sendEmail();
-    }
   }
 
   onConfirmEmailCodeChange(code: string){
-    // this.loginUserData.confirmEmailCode = code;
-    // ValidateService.validateEmailCode(this.loginUserData.confirmEmailCode) ? this.validateLoginData['step_2']['isEmailCodeValid'] = true : this.validateLoginData['step_2']['isEmailCodeValid'] = false;
     this.loginUserData.confirmEmailCode = code;
     this.validateLoginData['step_2']['isEmailCodeValid'] = ValidateService.validateEmailCode(code);
-    if (this.validateLoginData['step_2']['isEmailCodeValid']) {
-      this.verifyCode();
-    }
   }
 
   onPasswordChange(password: string){
@@ -151,15 +138,7 @@ export class RegisterPageComponent {
   }
 
   onFinish(){
-    // WindowService.openVaultWindow().then();
-    // WindowService.closeAllWindowsExVault();
-    if (this.validateLoginData['step_3']['isPasswordValid'] &&
-        this.validateLoginData['step_3']['isPasswordsMatch'] &&
-        this.validateLoginData['step_4']['isPasswordHintValid']) {
-      this.sendPassword();
-    } else {
-      ToastService.danger('Проверьте введённые данные!')
-    }
+    this.sendPassword();
   }
 
   // Отправка email
@@ -202,7 +181,6 @@ export class RegisterPageComponent {
         this.loginUserData.masterPassword,
         this.loginUserData.hintPassword
     );
-    WindowService.openVaultWindow().then();
   }
 
 
