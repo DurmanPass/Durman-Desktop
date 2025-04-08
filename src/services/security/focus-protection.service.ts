@@ -1,45 +1,42 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ApplicationRef, EnvironmentInjector, createComponent, ComponentRef } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
+import { FocusOverlayComponent } from '../../ui/components/overlay/focus-overlay/focus-overlay.component';
 
 @Injectable({
     providedIn: 'root'
 })
 export class FocusProtectionService {
-    private overlayElement: HTMLElement | null = null;
+    private overlayRef: ComponentRef<FocusOverlayComponent> | null = null;
     private subscriptions: Subscription[] = [];
+    private isOverlayVisible = false;
 
-    constructor() {
+    constructor(
+        private appRef: ApplicationRef,
+        private injector: EnvironmentInjector
+    ) {
         this.initializeProtection();
     }
 
     private initializeProtection(): void {
-        this.createOverlay();
+        this.createOverlay(); // Создаём оверлей при инициализации
         this.setupEventListeners();
     }
 
     private createOverlay(): void {
-        this.overlayElement = document.createElement('div');
-        this.overlayElement.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.9);
-      z-index: 9999;
-      display: none;
-      pointer-events: none;
-      color: #fff;
-      text-align: center;
-      font-size: 24px;
-      line-height: 100vh;
-    `;
-        this.overlayElement.innerText = 'Контент скрыт для защиты данных';
-        document.body.appendChild(this.overlayElement);
+        if (!this.overlayRef) {
+            this.overlayRef = createComponent(FocusOverlayComponent, {
+                environmentInjector: this.injector
+            });
+            document.body.appendChild(this.overlayRef.location.nativeElement);
+            this.overlayRef.instance.overlayClicked.subscribe(() => this.showContent());
+            this.appRef.attachView(this.overlayRef.hostView);
+            // Устанавливаем начальное состояние как скрытое
+            this.overlayRef.location.nativeElement.style.display = 'none';
+        }
     }
 
     private setupEventListeners(): void {
-        // Реакция на PrintScreen (ограниченно в вебе)
+        // Реакция на PrintScreen
         this.subscriptions.push(
             fromEvent<KeyboardEvent>(document, 'keydown').subscribe((event) => {
                 if (event.key === 'PrintScreen') {
@@ -65,21 +62,25 @@ export class FocusProtectionService {
     }
 
     private hideContent(): void {
-        if (this.overlayElement) {
-            this.overlayElement.style.display = 'block';
+        if (this.overlayRef && !this.isOverlayVisible) {
+            this.overlayRef.location.nativeElement.style.display = 'block';
+            this.isOverlayVisible = true;
         }
     }
 
     private showContent(): void {
-        if (this.overlayElement) {
-            this.overlayElement.style.display = 'none';
+        if (this.overlayRef && this.isOverlayVisible) {
+            this.overlayRef.location.nativeElement.style.display = 'none';
+            this.isOverlayVisible = false;
         }
     }
 
     ngOnDestroy(): void {
         this.subscriptions.forEach(sub => sub.unsubscribe());
-        if (this.overlayElement && this.overlayElement.parentNode) {
-            this.overlayElement.parentNode.removeChild(this.overlayElement);
+        if (this.overlayRef) {
+            this.appRef.detachView(this.overlayRef.hostView);
+            this.overlayRef.destroy();
+            this.overlayRef = null;
         }
     }
 }

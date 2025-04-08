@@ -7,5 +7,8 @@ export const TauriCommands = {
         CREATE_VAULT_WINDOW: 'create_vault_window',
         CLOSE_ALL_WINDOWS_EXCEPT_VAULT_WINDOW: 'close_all_except_vault_window',
         CLOSE_CURRENT_WINDOW: 'close_current_window'
+    },
+    SCREENSHOT_PROTECTION_SERVICE: {
+       INITIALIZE_SCREENSHOT_BLOCKING: 'initialize_screenshot_blocking'
     }
 } as const;

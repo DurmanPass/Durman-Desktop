@@ -105,6 +105,55 @@ fn export_to_encrypted_zip(
     Ok(file_name)
 }
 
+use tauri::{Window};
+use tauri_plugin_global_shortcut::{Code, GlobalShortcutExt, Modifiers, Shortcut};
+
+#[tauri::command]
+fn initialize_screenshot_blocking(window: Window) -> Result<(), String> {
+    window
+        .app_handle()
+        .plugin(
+            tauri_plugin_global_shortcut::Builder::new()
+                .with_handler(move |_app, shortcut, event| {
+                    let print_screen_shortcut = Shortcut::new(None, Code::PrintScreen);
+                    if shortcut == &print_screen_shortcut {
+                        match event.state() {
+                            tauri_plugin_global_shortcut::ShortcutState::Pressed => {
+                                // Блокируем действие PrintScreen
+                            }
+                            tauri_plugin_global_shortcut::ShortcutState::Released => {
+                                // Ничего не делаем при отпускании
+                            }
+                        }
+                    }
+                })
+                .build(),
+        )
+        .map_err(|e| format!("Ошибка инициализации плагина global-shortcut: {}", e))?;
+
+    // Регистрация горячей клавиши PrintScreen
+    let print_screen_shortcut = Shortcut::new(None, Code::PrintScreen);
+    window
+        .global_shortcut()
+        .register(print_screen_shortcut)
+        .map_err(|e| format!("Не удалось зарегистрировать PrintScreen: {}", e))?;
+
+    // // Защита окна от захвата (только для Windows)
+    // #[cfg(target_os = "windows")]
+    // {
+    //     use windows::Win32::Foundation::HWND;
+    //     use windows::Win32::UI::WindowsAndMessaging::{SetWindowDisplayAffinity, WDA_EXCLUDEFROMCAPTURE};
+    //
+    //     let hwnd = window.hwnd().map_err(|e| e.to_string())?;
+    //     unsafe {
+    //         SetWindowDisplayAffinity(HWND(hwnd.0), WDA_EXCLUDEFROMCAPTURE)
+    //             .map_err(|e| format!("Не удалось установить защиту окна: {:?}", e))?;
+    //     }
+    // }
+
+    Ok(())
+}
+
 fn main() {
     Builder::default()
         .plugin(tauri_plugin_dialog::init())
@@ -116,7 +165,8 @@ fn main() {
             close_all_except_vault_window,
             close_current_window,
             export_to_encrypted_zip,
-            save_file
+            save_file,
+            initialize_screenshot_blocking
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

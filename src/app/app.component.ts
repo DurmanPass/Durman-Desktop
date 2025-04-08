@@ -16,6 +16,7 @@ import {
 import {ConfirmModalComponent} from "../ui/components/modals/confirm-modal/confirm-modal.component";
 import {ToastService} from "../services/notification/toast.service";
 import {FocusProtectionService} from "../services/security/focus-protection.service";
+import {ScreenshotBlockingService} from "../services/security/screenshot-blocking.service";
 
 @Component({
   selector: 'app-root',
@@ -27,7 +28,7 @@ import {FocusProtectionService} from "../services/security/focus-protection.serv
 export class AppComponent {
   windowLabel: string = '';
   isLocked: boolean = SecurityLockService.getIsLocked();
-  constructor(appRef: ApplicationRef, injector: EnvironmentInjector,private focusProtection: FocusProtectionService) {
+  constructor(appRef: ApplicationRef, injector: EnvironmentInjector, private focusProtection: FocusProtectionService, public screenshotBlocking: ScreenshotBlockingService) {
     ToastService.initialize(appRef, injector);
   }
   async ngOnInit(): Promise<void> {
