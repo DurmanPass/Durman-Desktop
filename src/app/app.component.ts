@@ -15,6 +15,7 @@ import {
 } from "../ui/components/modals/password-details-modal/password-details-modal.component";
 import {ConfirmModalComponent} from "../ui/components/modals/confirm-modal/confirm-modal.component";
 import {ToastService} from "../services/notification/toast.service";
+import {ScreenshotProtectionService} from "../services/security/screenshot-protection.service";
 
 @Component({
   selector: 'app-root',
@@ -26,7 +27,7 @@ import {ToastService} from "../services/notification/toast.service";
 export class AppComponent {
   windowLabel: string = '';
   isLocked: boolean = SecurityLockService.getIsLocked();
-  constructor(appRef: ApplicationRef, injector: EnvironmentInjector) {
+  constructor(appRef: ApplicationRef, injector: EnvironmentInjector, private screenshotProtection: ScreenshotProtectionService) {
     ToastService.initialize(appRef, injector);
   }
   async ngOnInit(): Promise<void> {

@@ -13,6 +13,18 @@
                 {{ tab.title }}
             </div>
         </div>
+        <div class="help" (click)="openHelpModal()">
+            <img src="assets/icons/controls/sidebar/help.svg">
+        </div>
+        <app-modal-base
+                [isOpen]="modalsControls.help.isModalOpen"
+                [closeOnOverlayClick]="true"
+                [contentBorderRadius]="'12px'"
+                (closed)="closeHelpModal()"
+                [isDraggable]="true"
+        >
+            <app-help-modal/>
+        </app-modal-base>
     </aside>
     <main class="content" [style.background]="ThemeColors.GradientBluePurple">
         <button class="toggle-btn" (click)="toggleSidebar()">

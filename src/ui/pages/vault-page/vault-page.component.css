@@ -105,3 +105,15 @@
     width: 20px;
     height: 20px;
 }
+
+.help{
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    cursor: pointer;
+}
+
+.help img{
+    width: 20px;
+    height: 20px;
+}

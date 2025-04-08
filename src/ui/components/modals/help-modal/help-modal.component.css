@@ -1,0 +1,133 @@
+.modal-content {
+    background: transparent;
+    color: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    padding: 20px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.modal-header h1 {
+    font-size: 28px;
+    margin: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #e74c3c;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: #c0392b;
+}
+
+.modal-body {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.help-section {
+    margin-bottom: 25px;
+}
+
+.help-section h2 {
+    color: #2980b9;
+    font-size: 22px;
+    border-bottom: 1px solid #3498db;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.help-section p {
+    margin: 0 0 10px;
+}
+
+.help-section ol, .help-section ul {
+    padding-left: 20px;
+    margin: 0;
+}
+
+.help-section ul {
+    list-style: none;
+}
+
+.help-section li {
+    margin-bottom: 10px;
+}
+
+.icon {
+    font-size: 18px;
+    margin-right: 8px;
+}
+
+.modal-footer {
+    text-align: center;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+    color: #7f8c8d;
+    font-size: 14px;
+}
+
+/* Адаптация для тем */
+:host-context(.dark-theme) .modal-content {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: #ecf0f1;
+}
+
+:host-context(.dark-theme) .modal-header {
+    border-bottom-color: #00b7ff;
+}
+
+:host-context(.dark-theme) .modal-header h1 {
+    color: #ecf0f1;
+}
+
+:host-context(.dark-theme) .help-section h2 {
+    color: #00b7ff;
+    border-bottom-color: #00b7ff;
+}
+
+:host-context(.dark-theme) .modal-footer {
+    border-top-color: #444;
+    color: #bdc3c7;
+}
+
+/* Прозрачная прокрутка для Webkit-браузеров */
+.modal-content::-webkit-scrollbar {
+    width: 8px; /* Ширина полосы прокрутки */
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: transparent; /* Прозрачный фон трека */
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: rgba(52, 73, 94, 0.3); /* Полупрозрачный бегунок */
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(52, 73, 94, 0.5); /* Чуть темнее при наведении */
+}
+
+/* Прозрачная прокрутка для Firefox */
+.modal-content {
+    scrollbar-width: thin; /* Тонкая полоса прокрутки */
+    scrollbar-color: rgba(52, 73, 94, 0.3) transparent; /* Полупрозрачный бегунок и прозрачный трек */
+}
