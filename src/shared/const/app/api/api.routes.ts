@@ -8,5 +8,8 @@ export const ApiRoutes = {
     },
     LOGIN: {
         LOGIN: ApiSettings.apiUrl + '/login'
+    },
+    REFRESH_TOKEN: {
+        REFRESH: ApiSettings.apiUrl + '/refresh-token'
     }
 };
