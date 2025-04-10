@@ -20,6 +20,7 @@ import {RegisterService} from "../../../services/routes/auth/register.service";
 import {ToastService} from "../../../services/notification/toast.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {Step} from "../../../interfaces/components/steps/login-steps.interface";
+import {LoginService} from "../../../services/routes/auth/login.service";
 
 @Component({
   selector: 'app-register-page',
@@ -177,6 +178,7 @@ export class RegisterPageComponent {
   // Установка пароля и завершение регистрации
   private sendPassword() {
     this.registerService.sendPassword(
+        this.uuid,
         this.loginUserData.email,
         this.loginUserData.masterPassword,
         this.loginUserData.hintPassword

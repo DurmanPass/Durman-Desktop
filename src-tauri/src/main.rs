@@ -153,11 +153,20 @@ fn initialize_screenshot_blocking(window: Window) -> Result<(), String> {
 
     Ok(())
 }
-
 fn main() {
     Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
+        .plugin(
+            tauri_plugin_stronghold::Builder::with_argon2(
+                // Путь к файлу соли в конфигурационном каталоге пользователя
+                &dirs::config_dir()
+                    .expect("could not resolve config directory")
+                    .join("durmanpass")
+                    .join("salt.txt")
+            )
+                .build()
+        )
         .invoke_handler(tauri::generate_handler![
             create_password_generate_window,
             get_window_label,
