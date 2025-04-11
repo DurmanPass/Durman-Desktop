@@ -59,9 +59,6 @@ export class VaultPageComponent {
 
     async ngOnInit() {
         deleteOverflowWindow();
-        // const userId = await StoreService.get(StoreKeys.USER_ID);
-        // ToastService.success(userId?.toString());
-        // console.log('User ID:', userId);
     }
 
 
