@@ -7,14 +7,27 @@
   >
     Все
   </span>
-    <span
-            class="chip"
-            *ngFor="let chip of chips"
-            [class.active]="selectedChips === chip"
-            (click)="selectChip(chip)"
-    >
-    {{ chip }}
-  </span>
+    <ng-container *ngIf="chips.length > 0">
+            <span
+                    class="chip"
+                    *ngFor="let chip of chips"
+                    [class.active]="selectedChips === chip"
+                    (click)="selectChip(chip)"
+            >
+                {{ chip }}
+             </span>
+    </ng-container>
+
+    <ng-container *ngIf="categories.length > 0">
+            <span
+                    class="chip"
+                    *ngFor="let category of categories"
+                    [class.active]="selectedChips === category.name"
+                    (click)="selectChip(category.name)"
+            >
+                {{ category.name }}
+             </span>
+    </ng-container>
     <span             *ngIf="!hideAddChip"
                       class="chip chip-add" (click)="onClickAddChip()">+</span>
 </div>

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {Category} from "../../interfaces/data/category.interface";
 import {ToastService} from "../notification/toast.service";
 import {CategoryService} from "../routes/category/category.service";
+import {StoreService} from "../vault/store.service";
+import {StoreKeys} from "../../shared/const/vault/store.keys";
 @Injectable({
     providedIn: 'root'
 })
@@ -20,11 +22,15 @@ export class CategoryLocalService {
     }
 
     async createCategory(name: string): Promise<{ id: string; message: string }> {
+        const userId = await StoreService.get(StoreKeys.USER_ID);
+        if (!userId) {
+            throw new Error('User ID not found in storage');
+        }
         try {
             const response = await this.serverCategoryService.createCategory(name);
             const newCategory: Category = {
                 id: response.id,
-                user_id: '',
+                user_id: userId,
                 name,
                 description: null,
                 created_at: new Date().toISOString(),

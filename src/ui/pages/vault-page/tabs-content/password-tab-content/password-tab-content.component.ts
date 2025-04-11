@@ -28,6 +28,10 @@ import {TableColumn} from "../../../../../interfaces/components/table/tableColum
 import {EntriesTableComponent} from "../../../../components/tables/entries-table/entries-table.component";
 import {ToastService} from "../../../../../services/notification/toast.service";
 import {SettingsService} from "../../../../../services/settings/app-settings.service";
+import {Category} from "../../../../../interfaces/data/category.interface";
+import {CategoryService} from "../../../../../services/routes/category/category.service";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {CategoryLocalService} from "../../../../../services/category/category-local.service";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -43,7 +47,8 @@ import {SettingsService} from "../../../../../services/settings/app-settings.ser
     ModalBaseComponent,
     PasswordDetailsModalComponent,
     CategoryModalComponent,
-    EntriesTableComponent
+    EntriesTableComponent,
+      HttpClientModule
   ],
   templateUrl: './password-tab-content.component.html',
   styleUrl: './password-tab-content.component.css'
@@ -76,6 +81,12 @@ export class PasswordTabContentComponent {
     { label: 'Категория', render: (entry: PasswordEntryInterface) => entry.metadata.category }
   ];
 
+  constructor(private http: HttpClient) {
+  }
+
+  protected categoryService = new CategoryService(this.http)
+  protected categoryLocalService = new CategoryLocalService(this.categoryService);
+
   closeCreateOrEditPasswordModal(): void {
     this.modalsControls.createOrEditPassword.isModalOpen = false;
     this.selectedPasswordEntry = null;
@@ -85,14 +96,15 @@ export class PasswordTabContentComponent {
     this.modalsControls.createOrEditCategory.isModalOpen = true;
   }
 
-  closeCreateOrEditCategoryModal(): void {
+  async closeCreateOrEditCategoryModal() {
     this.modalsControls.createOrEditCategory.isModalOpen = false;
+    await this.updateCategories();
   }
 
   filteredEntries: PasswordEntryInterface[] = [];
   stats: PasswordManagerStats = { total: 0, favorites: 0, weak: 0, frequent: 0 };
 
-  categories: string[] = []; // Список уникальных категорий
+  categories: Category[] = [];
   selectedCategory: string = 'All'; // Текущая выбранная категория
 
   exportPath: string = ''
@@ -106,9 +118,9 @@ export class PasswordTabContentComponent {
 
   selectedPasswordEntry: PasswordEntryInterface | null = null; // Выбранная запись
 
-  onSearchQueryChange(query: string){
+  async onSearchQueryChange(query: string){
     this.PasswordManagerState.searchQuery = query;
-    this.updateCategories();
+    await this.updateCategories();
     this.updateEntries();
     this.updateStats();
   }
@@ -118,15 +130,19 @@ export class PasswordTabContentComponent {
     this.updateEntries();
   }
 
-  private updateCategories(): void {
-    const allEntries = PasswordManagerService.getAllEntries();
-    this.categories = [...new Set(allEntries.map(entry => entry.metadata.category).filter(category => category))];
+  private async updateCategories() {
+    await this.categoryLocalService.syncCategories();
+    this.categories = this.categoryLocalService.getCategories();
   }
 
-  ngOnInit(): void {
-    this.updateCategories();
+  async ngOnInit() {
+    await this.updateCategories();
     this.updateEntries();
     this.updateStats();
+  }
+
+  async ngOnChange(){
+    await this.updateCategories();
   }
 
   toggleViewMode(): void {
@@ -191,11 +207,11 @@ export class PasswordTabContentComponent {
     }
   }
 
-  deleteEntry(id: string): void {
+  async deleteEntry(id: string) {
     PasswordManagerService.removeEntry(id);
     this.updateEntries();
     this.updateStats();
-    this.updateCategories();
+    await this.updateCategories();
     ToastService.danger('Запись была успешно удалена!')
   }
 

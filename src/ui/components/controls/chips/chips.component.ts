@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {NgForOf, NgIf} from "@angular/common";
+import {Category} from "../../../../interfaces/data/category.interface";
 
 @Component({
   selector: 'app-chips',
@@ -13,6 +14,7 @@ import {NgForOf, NgIf} from "@angular/common";
 })
 export class ChipsComponent {
   @Input() chips: string[] = [];
+  @Input() categories: Category[] = [];
   @Input() selectedChips: string = 'All';
   @Input() hideAllChip: boolean = false;
   @Input() hideAddChip: boolean = false;
