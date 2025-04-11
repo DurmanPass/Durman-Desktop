@@ -17,6 +17,8 @@ import {ConfirmModalComponent} from "../ui/components/modals/confirm-modal/confi
 import {ToastService} from "../services/notification/toast.service";
 import {FocusProtectionService} from "../services/security/focus-protection.service";
 import {ScreenshotBlockingService} from "../services/security/screenshot-blocking.service";
+import {AppdataService} from "../services/appdata.service";
+import {StoreService} from "../services/vault/store.service";
 
 @Component({
   selector: 'app-root',
@@ -32,10 +34,12 @@ export class AppComponent {
     ToastService.initialize(appRef, injector);
   }
   async ngOnInit(): Promise<void> {
+    await StoreService.initialize();
+    await AppdataService.ensureDurmanpassDir();
+
     this.windowLabel = await WindowService.getWindowLabel();
 
     if(this.windowLabel === WINDOWS_LABELS.VAULT){
-
     }
     SecurityLockService.initialize();
 

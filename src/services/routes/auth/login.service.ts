@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { ApiRoutes } from '../../../shared/const/app/api/api.routes';
 import { ToastService } from '../../notification/toast.service';
 import {WindowService} from "../../window.service";
+import {StoreService} from "../../vault/store.service";
+import {StoreKeys} from "../../../shared/const/vault/store.keys";
 
 @Injectable({
     providedIn: 'root'
@@ -13,15 +15,15 @@ export class LoginService {
         private http: HttpClient,
     ) {}
 
-    login(email: string, password: string) {
+    async login(email: string, password: string) {
         const data = { email, password };
 
         this.http.post(ApiRoutes.LOGIN.LOGIN, data).subscribe({
-            next: (response: any) => {
-                if (response.accessToken && response.message === 'Login successful' && response.refreshToken) {
-                    localStorage.setItem('accessToken', response.accessToken);
-                    localStorage.setItem('refreshToken', response.refreshToken);
-                    WindowService.openVaultWindow();
+            next: async (response: any) => {
+                if (response.accessToken && response.refreshToken) {
+                    await StoreService.save(StoreKeys.REFRESH_TOKEN, response.refreshToken);
+                    await StoreService.save(StoreKeys.ACCESS_TOKEN, response.accessToken);
+                    await WindowService.openVaultWindow();
                     ToastService.success('Вход выполнен успешно!')
                 } else {
                     ToastService.danger('Ошибка при входе!')

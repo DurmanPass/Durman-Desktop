@@ -10,5 +10,8 @@ export const TauriCommands = {
     },
     SCREENSHOT_PROTECTION_SERVICE: {
        INITIALIZE_SCREENSHOT_BLOCKING: 'initialize_screenshot_blocking'
+    },
+    APP_DATA_SERVICE: {
+        CREATE_DURMANPASS_DIR: 'create_durmanpass_dir'
     }
 } as const;

@@ -10,6 +10,9 @@ import {
     PasswordDetailsModalComponent
 } from "../../components/modals/password-details-modal/password-details-modal.component";
 import {HelpModalComponent} from "../../components/modals/help-modal/help-modal.component";
+import {StoreService} from "../../../services/vault/store.service";
+import {StoreKeys} from "../../../shared/const/vault/store.keys";
+import {ToastService} from "../../../services/notification/toast.service";
 
 @Component({
   selector: 'app-vault-page',
@@ -54,9 +57,12 @@ export class VaultPageComponent {
     this.isSidebarClosed = !this.isSidebarClosed;
   }
 
-  ngOnInit(){
-    deleteOverflowWindow();
-  }
+    async ngOnInit() {
+        deleteOverflowWindow();
+        // const userId = await StoreService.get(StoreKeys.USER_ID);
+        // ToastService.success(userId?.toString());
+        // console.log('User ID:', userId);
+    }
 
 
   protected readonly ThemeColors = ThemeColors;

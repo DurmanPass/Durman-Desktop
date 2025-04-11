@@ -153,20 +153,25 @@ fn initialize_screenshot_blocking(window: Window) -> Result<(), String> {
 
     Ok(())
 }
+use std::fs;
+// Команда для создания папки durmanpass
+#[tauri::command]
+fn create_durmanpass_dir() -> Result<(), String> {
+    let config_dir = dirs::config_dir().ok_or("Could not resolve config directory")?;
+    let durmanpass_dir = config_dir.join("com.durmanpass.app");
+
+    if !durmanpass_dir.exists() {
+        fs::create_dir_all(&durmanpass_dir).map_err(|e| format!("Failed to create directory: {}", e))?;
+    }
+
+    Ok(())
+}
+
 fn main() {
     Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
-        .plugin(
-            tauri_plugin_stronghold::Builder::with_argon2(
-                // Путь к файлу соли в конфигурационном каталоге пользователя
-                &dirs::config_dir()
-                    .expect("could not resolve config directory")
-                    .join("durmanpass")
-                    .join("salt.txt")
-            )
-                .build()
-        )
+        .plugin(tauri_plugin_store::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
             create_password_generate_window,
             get_window_label,
@@ -175,7 +180,8 @@ fn main() {
             close_current_window,
             export_to_encrypted_zip,
             save_file,
-            initialize_screenshot_blocking
+            initialize_screenshot_blocking,
+            create_durmanpass_dir
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

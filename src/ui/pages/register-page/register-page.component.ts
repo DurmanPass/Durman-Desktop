@@ -176,8 +176,8 @@ export class RegisterPageComponent {
   }
 
   // Установка пароля и завершение регистрации
-  private sendPassword() {
-    this.registerService.sendPassword(
+  private async sendPassword() {
+    await this.registerService.sendPassword(
         this.uuid,
         this.loginUserData.email,
         this.loginUserData.masterPassword,

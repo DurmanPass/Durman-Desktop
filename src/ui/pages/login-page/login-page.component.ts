@@ -62,9 +62,9 @@ export class LoginPageComponent {
     this.changeMode.emit(AuthModes.START);
   }
 
-  onLogin() {
+  async onLogin() {
     if (this.validateLoginData.isEmailValid && this.validateLoginData.isPasswordValid) {
-      this.loginService.login(this.loginUserData.email, this.loginUserData.masterPassword);
+      await this.loginService.login(this.loginUserData.email, this.loginUserData.masterPassword);
     } else {
       ToastService.danger('Проверьте введённые данные!')
     }
