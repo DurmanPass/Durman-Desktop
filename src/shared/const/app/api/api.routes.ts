@@ -11,5 +11,12 @@ export const ApiRoutes = {
     },
     REFRESH_TOKEN: {
         REFRESH: ApiSettings.apiUrl + '/refresh-token'
+    },
+    CATEGORY: {
+        CREATE_CATEGORY: ApiSettings.apiUrl + '/categories',
+        GET_ALL_CATEGORY_USER: ApiSettings.apiUrl + '/categories',
+        GET_CATEGORY_BY_ID: (categoryId: string) => ApiSettings.apiUrl + `/categories/${categoryId}`,
+        UPDATE_CATEGORY: ApiSettings.apiUrl + '/categories',
+        DELETE_CATEGORY: (categoryId: string) => ApiSettings.apiUrl + `/categories/${categoryId}`,
     }
 };
