@@ -96,7 +96,8 @@ export class PasswordTabContentComponent {
     this.selectedPasswordEntry = null;
   }
 
-  openCategoryModal(){
+  openCategoryModal(mode: CategoryModalModes){
+    this.modalsControls.createOrEditCategory.mode = mode;
     this.modalsControls.createOrEditCategory.isModalOpen = true;
   }
 
@@ -110,6 +111,8 @@ export class PasswordTabContentComponent {
 
   categories: Category[] = [];
   selectedCategory: string = 'All'; // Текущая выбранная категория
+  selectedCategoryEntry: Category | null = null;
+
 
   exportPath: string = ''
 
@@ -138,6 +141,10 @@ export class PasswordTabContentComponent {
     this.selectedCategory = 'All';
     await this.categoryLocalService.syncCategories();
     this.categories = this.categoryLocalService.getCategories();
+  }
+
+  onSelectedCategory(category: Category){
+    this.selectedCategoryEntry = category;
   }
 
   async ngOnInit() {

@@ -4,12 +4,12 @@ import {Category} from "../../../interfaces/data/category.interface";
 export const CategoryContextMenu = (category: Category,
                                     updateCategory: (category: Category) => void,
                                     deleteCategory: (categoryId: string) => void): ContextMenuItem[] => [
-    {
-        id: 'change-category',
-        text: 'Изменить категорию',
-        action: () => updateCategory(category),
-        icon: 'assets/icons/contextMenu/category/change.svg',
-    },
+    // {
+    //     id: 'change-category',
+    //     text: 'Изменить категорию',
+    //     action: () => updateCategory(category),
+    //     icon: 'assets/icons/contextMenu/category/change.svg',
+    // },
     {
         id: 'delete-category',
         text: 'Удалить категорию',

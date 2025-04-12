@@ -87,7 +87,9 @@ export class CategoryService {
                 ToastService.success('Категория успешно обновлена!');
             }),
             catchError(err => {
+                console.log(category);
                 const errorMessage = err.error?.error || 'Ошибка при обновлении категории!';
+                console.log(err);
                 ToastService.danger(errorMessage);
                 return throwError(() => new Error(errorMessage));
             })

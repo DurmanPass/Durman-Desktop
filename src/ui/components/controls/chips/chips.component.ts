@@ -8,6 +8,7 @@ import {PositionEnum} from "../../../../shared/enums/position.enum";
 import {HttpClient} from "@angular/common/http";
 import {CategoryService} from "../../../../services/routes/category/category.service";
 import {CategoryLocalService} from "../../../../services/category/category-local.service";
+import {CategoryModalModes} from "../../../../shared/enums/modes/modals/category-model-modes.enum";
 
 @Component({
   selector: 'app-chips',
@@ -27,10 +28,11 @@ export class ChipsComponent {
   @Input() hideAllChip: boolean = false;
   @Input() hideAddChip: boolean = false;
   @Output() chipsSelected = new EventEmitter<string>();
-  @Output() addChipHandler = new EventEmitter<void>();
+  @Output() addChipHandler = new EventEmitter<CategoryModalModes>();
   @Input() categoryService: CategoryService = new CategoryService(this.http);
   @Input() categoryLocalService: CategoryLocalService = new CategoryLocalService(this.categoryService);
   @Output() categoryDeleted = new EventEmitter<void>();
+  @Output() onSelectedCategory = new EventEmitter<Category>();
 
   CategoryContextMenuFilter: ContextMenuItem[] = [];
 
@@ -53,8 +55,8 @@ export class ChipsComponent {
     this.chipsSelected.emit(category);
   }
 
-  onClickAddChip(){
-    this.addChipHandler.emit();
+  onClickAddChip(mode: CategoryModalModes){
+    this.addChipHandler.emit(mode);
   }
 
   async deleteCategory(categoryId: string): Promise<void> {
@@ -65,12 +67,13 @@ export class ChipsComponent {
   }
 
   updateCategory(category: Category){
-
+    // this.addChipHandler.emit(CategoryModalModes.EDIT);
   }
 
   onShowCategoryContextMenu(event: MouseEvent, category: Category): void {
     event.preventDefault();
     event.stopPropagation();
+    this.onSelectedCategory.emit(category);
     this.selectedCategory = category;
     this.CategoryContextMenuFilter = CategoryContextMenu(
         category,
@@ -86,4 +89,5 @@ export class ChipsComponent {
   }
 
   protected readonly PositionEnum = PositionEnum;
+  protected readonly CategoryModalModes = CategoryModalModes;
 }

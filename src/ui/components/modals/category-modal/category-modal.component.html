@@ -1,6 +1,8 @@
 <div class="category-modal">
     <header class="category-modal-header">
-        <app-header-description titleType="h3" title="Создать категорию"/>
+        <app-header-description titleType="h3"
+                                [title]="mode === CategoryModalModes.CREATE ? 'Создать категорию' : 'Обновить категорию'"
+        />
     </header>
 
     <main class="category-modal-main">
@@ -16,7 +18,7 @@
     <footer class="category-modal-footer">
         <app-solid-button
                 *ngIf="mode === CategoryModalModes.CREATE && categoryEntry.length > 0"
-                text="Создать"
+                [text]="'Создать'"
                 bgColor="DarkGreen"
                 size="Medium"
                 (click)="onCreateCategory()"
@@ -27,6 +29,7 @@
                 text="Сохранить"
                 bgColor="DarkGreen"
                 size="Medium"
+                (click)="onUpdateCategory()"
         />
 
         <app-solid-button

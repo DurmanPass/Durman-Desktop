@@ -9,6 +9,7 @@ import {ToastService} from "../../../../services/notification/toast.service";
 import {CategoryLocalService} from "../../../../services/category/category-local.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {CategoryService} from "../../../../services/routes/category/category.service";
+import {Category} from "../../../../interfaces/data/category.interface";
 
 @Component({
   selector: 'app-category-modal',
@@ -25,18 +26,32 @@ import {CategoryService} from "../../../../services/routes/category/category.ser
 })
 export class CategoryModalComponent {
   @Input() mode: CategoryModalModes = CategoryModalModes.CREATE;
+  @Input() selectedCategory: Category | null = null;
   @Input() categoryService: CategoryService = new CategoryService(this.http);
   @Input() categoryLocalService: CategoryLocalService = new CategoryLocalService(this.categoryService);
   @Output() closed = new EventEmitter<void>();
   categoryEntry: string = '';
   isEditCategoryEntry: boolean = false;
+  localCategory: Category | null = null;
 
   constructor(private http: HttpClient) {
+  }
+
+  ngOnInit(){
+    this.updateSelectedCategory();
   }
 
   ngOnChanges(): void {
     if(this.mode === CategoryModalModes.CREATE){
       this.isEditCategoryEntry = true;
+    }
+    this.updateSelectedCategory();
+  }
+
+  updateSelectedCategory(){
+    if(this.selectedCategory){
+      this.localCategory = this.selectedCategory;
+      this.categoryEntry = this.selectedCategory.name;
     }
   }
 
@@ -46,11 +61,23 @@ export class CategoryModalComponent {
 
   onCategoryChange(value: string){
     this.categoryEntry = value;
+    if(this.localCategory){
+      this.localCategory.name = value;
+      this.updateSelectedCategory();
+    }
   }
 
   async onCreateCategory(){
     if(this.categoryEntry.length === 0){return;}
     await this.categoryLocalService.createCategory(this.categoryEntry);
+    this.closeModal();
+  }
+
+  async onUpdateCategory(){
+    if(this.categoryEntry.length === 0){return;}
+    if(!this.selectedCategory){return;}
+    if(!this.localCategory){return;}
+    await this.categoryLocalService.updateCategory(this.localCategory);
     this.closeModal();
   }
 
