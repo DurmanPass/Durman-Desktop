@@ -32,6 +32,9 @@ import {Category} from "../../../../../interfaces/data/category.interface";
 import {CategoryService} from "../../../../../services/routes/category/category.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {CategoryLocalService} from "../../../../../services/category/category-local.service";
+import {ContextMenuItem} from "../../../../../interfaces/components/context-menu-item.interface";
+import {CategoryContextMenu} from "../../../../../shared/const/contextMenu/category.contextmenu";
+import {ContextMenuComponent} from "../../../../components/contextMenus/context-menu/context-menu.component";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -48,7 +51,8 @@ import {CategoryLocalService} from "../../../../../services/category/category-lo
     PasswordDetailsModalComponent,
     CategoryModalComponent,
     EntriesTableComponent,
-      HttpClientModule
+    HttpClientModule,
+    ContextMenuComponent
   ],
   templateUrl: './password-tab-content.component.html',
   styleUrl: './password-tab-content.component.css'
@@ -130,7 +134,8 @@ export class PasswordTabContentComponent {
     this.updateEntries();
   }
 
-  private async updateCategories() {
+  protected async updateCategories() {
+    this.selectedCategory = 'All';
     await this.categoryLocalService.syncCategories();
     this.categories = this.categoryLocalService.getCategories();
   }

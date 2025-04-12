@@ -23,9 +23,11 @@
                     class="chip"
                     *ngFor="let category of categories"
                     [class.active]="selectedChips === category.name"
-                    (click)="selectChip(category.name)"
+                    (click)="selectChip(category.name); $event.stopPropagation()"
+                    (contextmenu)="onShowCategoryContextMenu($event, category)"
             >
                 {{ category.name }}
+                <app-context-menu [position]="PositionEnum.ABSOLUTE" *ngIf="contextMenus.category.showContextMenu" [items]="CategoryContextMenuFilter" [x]="contextMenus.category.contextMenuPosition.x" [y]="contextMenus.category.contextMenuPosition.y" (close)="onCloseCategoryContextMenu()"/>
              </span>
     </ng-container>
     <span             *ngIf="!hideAddChip"
