@@ -19,18 +19,21 @@ import {FocusProtectionService} from "../services/security/focus-protection.serv
 import {ScreenshotBlockingService} from "../services/security/screenshot-blocking.service";
 import {AppdataService} from "../services/appdata.service";
 import {StoreService} from "../services/vault/store.service";
+import {IvService} from "../services/routes/iv.service";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {CryptoAesGcmService} from "../services/crypto/crypto-aes-gcm.service";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, StartPageComponent, PasswordGeneratePageComponent, VaultPageComponent, FrozenAccountPageComponent, ModalBaseComponent, PasswordDetailsModalComponent, ConfirmModalComponent],
+  imports: [CommonModule, RouterOutlet, StartPageComponent, PasswordGeneratePageComponent, VaultPageComponent, FrozenAccountPageComponent, ModalBaseComponent, PasswordDetailsModalComponent, ConfirmModalComponent, HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   windowLabel: string = '';
   isLocked: boolean = SecurityLockService.getIsLocked();
-  constructor(appRef: ApplicationRef, injector: EnvironmentInjector, private focusProtection: FocusProtectionService, public screenshotBlocking: ScreenshotBlockingService) {
+  constructor(appRef: ApplicationRef, injector: EnvironmentInjector, private focusProtection: FocusProtectionService, public screenshotBlocking: ScreenshotBlockingService, private http: HttpClient) {
     ToastService.initialize(appRef, injector);
   }
   async ngOnInit(): Promise<void> {
@@ -48,7 +51,11 @@ export class AppComponent {
     setInterval(() => {
       this.isLocked = SecurityLockService.getIsLocked();
     }, 1000);
+
+    await this.testCrypto();
   }
+
+  private ivService = new IvService(this.http)
 
 
   unlockAccount(password: string): void {
@@ -59,6 +66,24 @@ export class AppComponent {
       this.isLocked = false;
     } else {
       alert('Неверный пароль');
+    }
+  }
+
+  async testCrypto(): Promise<void> {
+    try {
+      const plaintext = 'Секретное сообщение';
+      const key = 'my-secure-key-32bytes-long123456'; // Ключ 32 байта для AES-256
+      const iv = await this.ivService.generateIv(); // Получаем IV
+
+      // Шифрование
+      const encrypted = await CryptoAesGcmService.encrypt(plaintext, key, iv);
+      console.log('Зашифровано:', encrypted);
+
+      // Расшифровка
+      const decrypted = await CryptoAesGcmService.decrypt(encrypted, key, iv);
+      console.log('Расшифровано:', decrypted);
+    } catch (e) {
+      console.error('Ошибка:', e);
     }
   }
 
