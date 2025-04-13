@@ -67,7 +67,7 @@ export class ChipsComponent {
   }
 
   updateCategory(category: Category){
-    // this.addChipHandler.emit(CategoryModalModes.EDIT);
+    this.addChipHandler.emit(CategoryModalModes.EDIT);
   }
 
   onShowCategoryContextMenu(event: MouseEvent, category: Category): void {
