@@ -20,6 +20,11 @@ export const ApiRoutes = {
         DELETE_CATEGORY: (categoryId: string) => ApiSettings.apiUrl + `/categories/${categoryId}`,
     },
     PASSWORD: {
-        GENERATE_IV: ApiSettings.apiUrl + '/passwords/generate-iv'
+        GENERATE_IV: ApiSettings.apiUrl + '/passwords/generate-iv',
+        CREATE_PASSWORD: ApiSettings.apiUrl + '/passwords',
+        GET_ALL_PASSWORDS: ApiSettings.apiUrl + '/passwords',
+        GET_PASSWORD_BY_ID: (id: string) => ApiSettings.apiUrl + `/passwords/${id}`,
+        UPDATE_PASSWORD: (id: string) => ApiSettings.apiUrl + `/passwords/${id}`,
+        DELETE_PASSWORD: (id: string) => ApiSettings.apiUrl + `/passwords/${id}`,
     }
 };
