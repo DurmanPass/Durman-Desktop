@@ -52,7 +52,6 @@ export class AppComponent {
       this.isLocked = SecurityLockService.getIsLocked();
     }, 1000);
 
-    await this.testCrypto();
   }
 
   private ivService = new IvService(this.http)
@@ -69,23 +68,23 @@ export class AppComponent {
     }
   }
 
-  async testCrypto(): Promise<void> {
-    try {
-      const plaintext = 'Секретное сообщение';
-      const key = 'my-secure-key-32bytes-long123456'; // Ключ 32 байта для AES-256
-      const iv = await this.ivService.generateIv(); // Получаем IV
-
-      // Шифрование
-      const encrypted = await CryptoAesGcmService.encrypt(plaintext, key, iv);
-      console.log('Зашифровано:', encrypted);
-
-      // Расшифровка
-      const decrypted = await CryptoAesGcmService.decrypt(encrypted, key, iv);
-      console.log('Расшифровано:', decrypted);
-    } catch (e) {
-      console.error('Ошибка:', e);
-    }
-  }
+  // async testCrypto(): Promise<void> {
+  //   try {
+  //     const plaintext = 'Секретное сообщение';
+  //     const key = 'my-secure-key-32bytes-long123456'; // Ключ 32 байта для AES-256
+  //     const iv = await this.ivService.generateIv(); // Получаем IV
+  //
+  //     // Шифрование
+  //     const encrypted = await CryptoAesGcmService.encrypt(plaintext, key, iv);
+  //     console.log('Зашифровано:', encrypted);
+  //
+  //     // Расшифровка
+  //     const decrypted = await CryptoAesGcmService.decrypt(encrypted, key, iv);
+  //     console.log('Расшифровано:', decrypted);
+  //   } catch (e) {
+  //     console.error('Ошибка:', e);
+  //   }
+  // }
 
   protected readonly WINDOWS_LABELS = WINDOWS_LABELS;
 }
