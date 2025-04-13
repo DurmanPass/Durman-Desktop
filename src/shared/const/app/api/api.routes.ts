@@ -18,5 +18,8 @@ export const ApiRoutes = {
         GET_CATEGORY_BY_ID: (categoryId: string) => ApiSettings.apiUrl + `/categories/${categoryId}`,
         UPDATE_CATEGORY: (categoryId: string) => ApiSettings.apiUrl + `/categories/${categoryId}`,
         DELETE_CATEGORY: (categoryId: string) => ApiSettings.apiUrl + `/categories/${categoryId}`,
+    },
+    PASSWORD: {
+        GENERATE_IV: ApiSettings.apiUrl + '/passwords/generate-iv'
     }
 };
