@@ -5,6 +5,7 @@ import { PasswordEntryInterface } from '../../interfaces/data/passwordEntry.inte
 import {PasswordService} from "../routes/password/password.service";
 import {StoreService} from "../vault/store.service";
 import {StoreKeys} from "../../shared/const/vault/store.keys";
+import {CryptoAesGcmService} from "../crypto/crypto-aes-gcm.service";
 
 @Injectable({
     providedIn: 'root'
@@ -16,6 +17,7 @@ export class PasswordManagerService {
 
     // Преобразование PasswordBackendEntry в PasswordEntryInterface
     private static mapBackendToEntry(backendEntry: PasswordBackendEntry): PasswordEntryInterface {
+
         return {
             id: backendEntry.id || this.generateUniqueId(),
             name: backendEntry.title,
@@ -29,7 +31,8 @@ export class PasswordManagerService {
                 passwordStrength: backendEntry.password_strength,
                 pin: backendEntry.pin_code,
                 twoFactorCode: '',
-                recoveryCodes: backendEntry.pin_hints
+                recoveryCodes: backendEntry.pin_hints,
+                encryption_iv: backendEntry.encryption_iv
             },
             location: {
                 url: backendEntry.url,

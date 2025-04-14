@@ -16,7 +16,7 @@ export class CategoryLocalService {
         try {
             this.categories = await this.serverCategoryService.getAllCategoryUser();
         } catch (e) {
-            ToastService.danger('Не удалось синхронизировать категории с сервером!');
+            // ToastService.danger('Не удалось синхронизировать категории с сервером!');
             console.error(e);
         }
     }

@@ -7,6 +7,7 @@ export interface PasswordEntryInterface {
         username: string;
         email: string;
         password: string;
+        encryption_iv?: string;
         phoneNumber: string;
         passwordStrength: number;
         pin: string;

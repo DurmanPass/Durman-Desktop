@@ -51,7 +51,6 @@ export class AppComponent {
     setInterval(() => {
       this.isLocked = SecurityLockService.getIsLocked();
     }, 1000);
-
   }
 
   private ivService = new IvService(this.http)
@@ -70,9 +69,11 @@ export class AppComponent {
 
   // async testCrypto(): Promise<void> {
   //   try {
-  //     const plaintext = 'Секретное сообщение';
-  //     const key = 'my-secure-key-32bytes-long123456'; // Ключ 32 байта для AES-256
+  //     const plaintext = 'Password123';
+  //     const key = 'j6V%RTaM'; // Ключ 32 байта для AES-256
   //     const iv = await this.ivService.generateIv(); // Получаем IV
+  //     console.log('iv', iv)
+  //
   //
   //     // Шифрование
   //     const encrypted = await CryptoAesGcmService.encrypt(plaintext, key, iv);

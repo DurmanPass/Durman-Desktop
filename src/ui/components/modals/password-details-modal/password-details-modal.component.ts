@@ -12,6 +12,10 @@ import {CheckboxComponent} from "../../controls/checkbox/checkbox.component";
 import {PasswordStrengthService} from "../../../../services/password/password-strength.service";
 import {SettingsService} from "../../../../services/settings/app-settings.service";
 import {ToastService} from "../../../../services/notification/toast.service";
+import {StoreService} from "../../../../services/vault/store.service";
+import {StoreKeys} from "../../../../shared/const/vault/store.keys";
+import {CryptoAesGcmService} from "../../../../services/crypto/crypto-aes-gcm.service";
+import {DecryptValue} from "../../../../utils/crypto.utils";
 
 @Component({
   selector: 'app-password-details-modal',
@@ -43,15 +47,18 @@ export class PasswordDetailsModalComponent {
   }
   private passwordStrengthService = new PasswordStrengthService();
 
-  ngOnChanges(): void {
-    // Если передан passwordEntry, используем его, иначе создаём пустой объект в режиме CREATE
+  async ngOnChanges() {
     if (this.mode === PasswordDetailsModalModes.CREATE) {
       this.isEditLocalEntry = false;
       this.localEntry = this.createEmptyEntry();
       this.isEditLocalEntry = true;
     } else if (this.passwordEntry) {
       this.isEditLocalEntry = false;
-      this.localEntry = { ...this.passwordEntry }; // Копируем, чтобы не мутировать исходный объект
+      this.localEntry = { ...this.passwordEntry };
+
+      if (this.localEntry) {
+        this.localEntry.credentials.password = await DecryptValue(this.localEntry.credentials.password, this.localEntry.credentials.encryption_iv);
+      }
     }
   }
 
