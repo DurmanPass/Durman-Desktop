@@ -1,13 +1,163 @@
-import {PasswordEntryInterface} from "../../interfaces/data/passwordEntry.interface";
+import { Injectable } from '@angular/core';
+import { ToastService } from '../notification/toast.service';
+import { CreatePasswordResponse, PasswordBackendEntry } from '../../interfaces/data/passwordEntry.interface';
+import { PasswordEntryInterface } from '../../interfaces/data/passwordEntry.interface';
+import {PasswordService} from "../routes/password/password.service";
+import {StoreService} from "../vault/store.service";
+import {StoreKeys} from "../../shared/const/vault/store.keys";
+
+@Injectable({
+    providedIn: 'root'
+})
 export class PasswordManagerService {
     private static entries: PasswordEntryInterface[] = [];
 
-    // Получение количества записей
+    constructor(private serverPasswordService: PasswordService) {}
+
+    // Преобразование PasswordBackendEntry в PasswordEntryInterface
+    private static mapBackendToEntry(backendEntry: PasswordBackendEntry): PasswordEntryInterface {
+        return {
+            id: backendEntry.id || this.generateUniqueId(),
+            name: backendEntry.title,
+            description: backendEntry.title || '',
+            favicon: '',
+            credentials: {
+                username: backendEntry.username || '',
+                email: backendEntry.email,
+                password: backendEntry.encrypted_password, // Оставляем зашифрованным, расшифровка при необходимости
+                phoneNumber: backendEntry.phone,
+                passwordStrength: backendEntry.password_strength,
+                pin: backendEntry.pin_code,
+                twoFactorCode: '',
+                recoveryCodes: backendEntry.pin_hints
+            },
+            location: {
+                url: backendEntry.url,
+                domain: backendEntry.domain
+            },
+            metadata: {
+                createdAt: backendEntry.created_at || new Date().toISOString(),
+                updatedAt: backendEntry.updated_at || new Date().toISOString(),
+                lastUsed: backendEntry.last_used || '',
+                usageCount: backendEntry.usage_count || 0,
+                tags: [],
+                category: backendEntry.category_id || ''
+            },
+            security: {
+                isFavorite: false,
+                requires2FA: false,
+                sensitive: false
+            }
+        };
+    }
+
+    // Преобразование PasswordEntryInterface в PasswordBackendEntry
+    private static mapEntryToBackend(entry: PasswordEntryInterface): PasswordBackendEntry {
+        return {
+            title: entry.name,
+            url: entry.location.url,
+            domain: entry.location.domain,
+            username: entry.credentials.username || null,
+            email: entry.credentials.email,
+            phone: entry.credentials.phoneNumber,
+            encrypted_password: entry.credentials.password,
+            encryption_iv: '', // Предполагается, что IV будет добавлен при шифровании
+            pin_code: entry.credentials.pin,
+            pin_hints: entry.credentials.recoveryCodes,
+            category_id: entry.metadata.category || null,
+            password_strength: entry.credentials.passwordStrength,
+            id: entry.id,
+            user_id: undefined,
+            usage_count: entry.metadata.usageCount,
+            created_at: entry.metadata.createdAt,
+            updated_at: entry.metadata.updatedAt,
+            last_used: entry.metadata.lastUsed || null
+        };
+    }
+
+    // Серверные методы
+    async syncPasswords(): Promise<void> {
+        try {
+            const backendEntries = await this.serverPasswordService.getAllPasswords();
+            PasswordManagerService.entries = backendEntries.map(entry =>
+                PasswordManagerService.mapBackendToEntry(entry)
+            );
+        } catch (e) {
+            ToastService.danger('Не удалось синхронизировать пароли с сервером!');
+            console.error(e);
+        }
+    }
+
+    async createPassword(password: PasswordEntryInterface): Promise<CreatePasswordResponse> {
+        const userId = await StoreService.get(StoreKeys.USER_ID);
+        if (!userId) {
+            throw new Error('User ID not found in storage');
+        }
+        try {
+            const backendPassword = PasswordManagerService.mapEntryToBackend(password);
+            const response = await this.serverPasswordService.createPassword(backendPassword);
+            const newEntry: PasswordEntryInterface = {
+                ...password,
+                id: response.id,
+                metadata: {
+                    ...password.metadata,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    usageCount: 0,
+                    lastUsed: ''
+                }
+            };
+            PasswordManagerService.entries.push(newEntry);
+            return response;
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async getPasswordById(passwordId: string): Promise<PasswordEntryInterface> {
+        const localEntry = PasswordManagerService.getEntryById(passwordId);
+        if (localEntry) {
+            return localEntry;
+        }
+        try {
+            const backendEntry = await this.serverPasswordService.getPasswordById(passwordId);
+            const entry = PasswordManagerService.mapBackendToEntry(backendEntry);
+            PasswordManagerService.entries.push(entry);
+            return entry;
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async updatePassword(passwordId: string, password: PasswordEntryInterface): Promise<void> {
+        try {
+            const backendPassword = PasswordManagerService.mapEntryToBackend(password);
+            await this.serverPasswordService.updatePassword(passwordId, backendPassword);
+            const index = PasswordManagerService.entries.findIndex(e => e.id === passwordId);
+            if (index !== -1) {
+                PasswordManagerService.entries[index] = { ...password, id: passwordId };
+            } else {
+                PasswordManagerService.entries.push({ ...password, id: passwordId });
+            }
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async deletePassword(passwordId: string): Promise<void> {
+        try {
+            await this.serverPasswordService.deletePassword(passwordId);
+            PasswordManagerService.entries = PasswordManagerService.entries.filter(e => e.id !== passwordId);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    // Локальные методы
     public static getEntriesCount(): number {
         return this.entries.length;
     }
 
-    // Добавление новой записи
     public static addEntry(entry: PasswordEntryInterface): void {
         if (!entry.id) {
             entry.id = this.generateUniqueId();
@@ -15,19 +165,16 @@ export class PasswordManagerService {
         this.entries.push(entry);
     }
 
-    // Удаление записи по ID
     public static removeEntry(id: string): boolean {
         const initialLength = this.entries.length;
         this.entries = this.entries.filter(entry => entry.id !== id);
-        return initialLength !== this.entries.length; // Возвращает true, если запись была удалена
+        return initialLength !== this.entries.length;
     }
 
-    // Получение всех записей
     public static getAllEntries(): PasswordEntryInterface[] {
-        return [...this.entries]; // Возвращаем копию массива для защиты данных
+        return [...this.entries];
     }
 
-    // Геттеры
     public static getEntryById(id: string): PasswordEntryInterface | undefined {
         return this.entries.find(entry => entry.id === id);
     }
@@ -44,7 +191,6 @@ export class PasswordManagerService {
         return this.entries.filter(entry => entry.security.isFavorite);
     }
 
-    // Сеттеры
     public static setName(id: string, name: string): void {
         const entry = this.getEntryById(id);
         if (entry) entry.name = name;
@@ -80,309 +226,27 @@ export class PasswordManagerService {
         if (entry) entry.security = { ...entry.security, ...security };
     }
 
-    // Вспомогательная функция для генерации уникального ID
     private static generateUniqueId(): string {
         return 'entry_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
     }
 
-    // Очистка всех записей (опционально)
     public static clearEntries(): void {
         this.entries = [];
     }
 
-    // Сортировка
     public static getEntriesSortedBy(
         criterion: 'name' | 'createdAt' | 'updatedAt' | 'usageCount',
         order: 'asc' | 'desc' = 'asc'
     ): PasswordEntryInterface[] {
-        const sortedEntries = [...this.entries]; // Копируем массив
-
+        const sortedEntries = [...this.entries];
         const sortFunctions: Record<string, (a: PasswordEntryInterface, b: PasswordEntryInterface) => number> = {
             name: (a, b) => a.name.localeCompare(b.name),
             createdAt: (a, b) => new Date(a.metadata.createdAt).getTime() - new Date(b.metadata.createdAt).getTime(),
             updatedAt: (a, b) => new Date(a.metadata.updatedAt).getTime() - new Date(b.metadata.updatedAt).getTime(),
             usageCount: (a, b) => a.metadata.usageCount - b.metadata.usageCount
         };
-
         sortedEntries.sort(sortFunctions[criterion]);
         if (order === 'desc') sortedEntries.reverse();
-
         return sortedEntries;
     }
 }
-// Пример использования
-const newEntry: PasswordEntryInterface = {
-    id: '',
-    name: 'GitHub',
-    description: 'My GitHub account',
-    favicon: 'https://github.com/favicon.ico',
-    credentials: {
-        username: 'user123',
-        email: 'user@example.com',
-        password: 'securePass123!',
-        phoneNumber: '+79999999999',
-        passwordStrength: 4,
-        pin: '2345',
-        twoFactorCode: '',
-        recoveryCodes: ['abc123', 'xyz789']
-    },
-    location: {
-        url: 'https://github.com/login',
-        domain: 'github.com'
-    },
-    metadata: {
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        lastUsed: '',
-        usageCount: 0,
-        tags: ['work', 'dev'],
-        category: 'Development'
-    },
-    security: {
-        isFavorite: true,
-        requires2FA: true,
-        sensitive: false
-    }
-};
-const newEntry2: PasswordEntryInterface = {
-    id: '',
-    name: 'Instagram',
-    description: 'My Instagram account',
-    favicon: 'https://github.com/favicon.ico',
-    credentials: {
-        username: 'user123',
-        email: 'user@example.com',
-        password: 'sec',
-        passwordStrength: 1,
-        phoneNumber: '',
-        pin: '',
-        twoFactorCode: '',
-        recoveryCodes: ['abc123', 'xyz789']
-    },
-    location: {
-        url: 'https://instagram.com',
-        domain: 'instagram.com'
-    },
-    metadata: {
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        lastUsed: '',
-        usageCount: 0,
-        tags: ['work', 'dev'],
-        category: 'Personal'
-    },
-    security: {
-        isFavorite: true,
-        requires2FA: true,
-        sensitive: false
-    }
-};
-const newEntry3: PasswordEntryInterface = {
-    id: '3',
-    name: 'Facebook',
-    description: 'My GitHub account',
-    favicon: '',
-    credentials: {
-        username: 'user123',
-        email: 'user@example.com',
-        password: 'sec',
-        passwordStrength: 1,
-        phoneNumber: '',
-        pin: '',
-        twoFactorCode: '',
-        recoveryCodes: ['abc123', 'xyz789']
-    },
-    location: {
-        url: 'https://facebook.com',
-        domain: 'facebook.com'
-    },
-    metadata: {
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        lastUsed: '',
-        usageCount: 0,
-        tags: ['work', 'dev'],
-        category: 'Personal'
-    },
-    security: {
-        isFavorite: true,
-        requires2FA: true,
-        sensitive: false
-    }
-};
-const newEntry4: PasswordEntryInterface = {
-    id: '4',
-    name: 'YouTube',
-    description: 'My GitHub account',
-    favicon: '',
-    credentials: {
-        username: 'user123',
-        email: 'user@example.com',
-        password: 'sec',
-        passwordStrength: 1,
-        phoneNumber: '',
-        pin: '',
-        twoFactorCode: '',
-        recoveryCodes: ['abc123', 'xyz789']
-    },
-    location: {
-        url: 'https://youtube.com',
-        domain: 'youtube.com'
-    },
-    metadata: {
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        lastUsed: '',
-        usageCount: 0,
-        tags: ['work', 'dev'],
-        category: 'Personal'
-    },
-    security: {
-        isFavorite: true,
-        requires2FA: true,
-        sensitive: false
-    }
-};
-const newEntry5: PasswordEntryInterface = {
-    id: '5',
-    name: 'Gmail',
-    description: 'Primary email account',
-    favicon: '',
-    credentials: {
-        username: 'john.doe',
-        email: 'john.doe@gmail.com',
-        password: 'P@ssw0rd123',
-        passwordStrength: 3,
-        phoneNumber: '+1-555-123-4567',
-        pin: '',
-        twoFactorCode: '123456',
-        recoveryCodes: ['rec987', 'rec654']
-    },
-    location: {
-        url: 'https://mail.google.com',
-        domain: 'google.com'
-    },
-    metadata: {
-        createdAt: new Date('2024-01-15').toISOString(),
-        updatedAt: new Date('2024-03-10').toISOString(),
-        lastUsed: new Date('2025-03-20').toISOString(),
-        usageCount: 42,
-        tags: ['email', 'personal'],
-        category: 'Communication'
-    },
-    security: {
-        isFavorite: false,
-        requires2FA: true,
-        sensitive: true
-    }
-};
-const newEntry6: PasswordEntryInterface = {
-    id: '8',
-    name: 'Netflix',
-    description: 'Streaming account',
-    favicon: '',
-    credentials: {
-        username: '',
-        email: 'movie.fan@example.com',
-        password: '12345', // Переиспользуемый слабый пароль
-        passwordStrength: 1,
-        phoneNumber: '',
-        pin: '',
-        twoFactorCode: '',
-        recoveryCodes: []
-    },
-    location: {
-        url: 'https://netflix.com',
-        domain: 'netflix.com'
-    },
-    metadata: {
-        createdAt: new Date('2023-09-10').toISOString(),
-        updatedAt: new Date('2024-12-01').toISOString(),
-        lastUsed: new Date('2025-03-21').toISOString(),
-        usageCount: 25,
-        tags: ['entertainment'],
-        category: 'Media'
-    },
-    security: {
-        isFavorite: false,
-        requires2FA: false,
-        sensitive: false
-    }
-};
-
-const newEntry7: PasswordEntryInterface = {
-    id: '9',
-    name: 'Work VPN',
-    description: 'Remote access to company network',
-    favicon: '',
-    credentials: {
-        username: 'employee007',
-        email: 'employee007@company.com',
-        password: '12345', // Переиспользуемый слабый пароль
-        passwordStrength: 1,
-        phoneNumber: '',
-        pin: '7890',
-        twoFactorCode: '987654',
-        recoveryCodes: ['vpn123']
-    },
-    location: {
-        url: 'https://vpn.company.com',
-        domain: 'company.com'
-    },
-    metadata: {
-        createdAt: new Date('2024-02-01').toISOString(),
-        updatedAt: new Date('2025-01-20').toISOString(),
-        lastUsed: '',
-        usageCount: 3,
-        tags: ['work', 'vpn'],
-        category: 'Work'
-    },
-    security: {
-        isFavorite: false,
-        requires2FA: true,
-        sensitive: true
-    }
-};
-
-const newEntry8: PasswordEntryInterface = {
-    id: '9',
-    name: 'UnsafeSite',
-    description: 'Remote access to company network',
-    favicon: '',
-    credentials: {
-        username: 'employee007',
-        email: 'employee007@company.com',
-        password: '12345', // Переиспользуемый слабый пароль
-        passwordStrength: 1,
-        phoneNumber: '',
-        pin: '7890',
-        twoFactorCode: '987654',
-        recoveryCodes: ['vpn123']
-    },
-    location: {
-        url: 'http://site.fake/login',
-        domain: 'site.fake'
-    },
-    metadata: {
-        createdAt: new Date('2024-02-01').toISOString(),
-        updatedAt: new Date('2025-01-20').toISOString(),
-        lastUsed: '',
-        usageCount: 3,
-        tags: ['work', 'vpn'],
-        category: 'Work'
-    },
-    security: {
-        isFavorite: false,
-        requires2FA: true,
-        sensitive: true
-    }
-};
-
-PasswordManagerService.addEntry(newEntry);
-PasswordManagerService.addEntry(newEntry2);
-PasswordManagerService.addEntry(newEntry3);
-PasswordManagerService.addEntry(newEntry4);
-PasswordManagerService.addEntry(newEntry5);
-PasswordManagerService.addEntry(newEntry6);
-PasswordManagerService.addEntry(newEntry7);
-PasswordManagerService.addEntry(newEntry8);
