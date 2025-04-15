@@ -46,7 +46,7 @@ export async function withTokenRefresh<T>(
 
                 // Другие ошибки просто передаём дальше
                 const errorMessage = err.error?.error || 'Неизвестная ошибка!';
-                ToastService.danger(errorMessage);
+                // ToastService.danger(errorMessage);
                 return throwError(() => new Error(errorMessage));
             })
         );

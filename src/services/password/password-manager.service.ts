@@ -6,6 +6,9 @@ import {PasswordService} from "../routes/password/password.service";
 import {StoreService} from "../vault/store.service";
 import {StoreKeys} from "../../shared/const/vault/store.keys";
 import {CryptoAesGcmService} from "../crypto/crypto-aes-gcm.service";
+import {CategoryService} from "../routes/category/category.service";
+import {CategoryLocalService} from "../category/category-local.service";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
     providedIn: 'root'
@@ -44,7 +47,7 @@ export class PasswordManagerService {
                 lastUsed: backendEntry.last_used || '',
                 usageCount: backendEntry.usage_count || 0,
                 tags: [],
-                category: backendEntry.category_id || ''
+                category: backendEntry.category_id || '',
             },
             security: {
                 isFavorite: false,
@@ -109,7 +112,7 @@ export class PasswordManagerService {
                 PasswordManagerService.mapBackendToEntry(entry)
             );
         } catch (e) {
-            ToastService.danger('Не удалось синхронизировать пароли с сервером!');
+            // ToastService.danger('Не удалось синхронизировать пароли с сервером!');
             console.error(e);
         }
     }

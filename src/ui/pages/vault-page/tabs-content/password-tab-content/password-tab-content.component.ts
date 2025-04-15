@@ -301,7 +301,7 @@ export class PasswordTabContentComponent {
     { label: 'Имя пользователя', render: (entry: PasswordEntryInterface) => entry.credentials.username ? entry.credentials.username : ''},
     { label: 'Электронная почта', render: (entry: PasswordEntryInterface) => entry.credentials.email ? entry.credentials.email : ''},
     { label: 'Номер телефона', render: (entry: PasswordEntryInterface) => entry.credentials.phoneNumber ? entry.credentials.phoneNumber : '' },
-    { label: 'Категория', render: (entry: PasswordEntryInterface) => entry.metadata.category ? entry.metadata.category : ''}
+    { label: 'Категория', render: (entry: PasswordEntryInterface) => entry.metadata.categoryLabel ? entry.metadata.categoryLabel : 'Все'}
   ];
 
   filteredEntries: PasswordEntryInterface[] = [];
@@ -363,11 +363,16 @@ export class PasswordTabContentComponent {
             : VIEW_MANAGER_MODES.TABLE;
   }
 
-  private updateEntries(): void {
+  private async updateEntries() {
     let entries = PasswordManagerService.getEntriesSortedBy(
         this.PasswordManagerState.sortCriterion,
         this.PasswordManagerState.sortOrder
     );
+
+    entries.map(async entry => {
+      let category = await this.categoryLocalService.getCategoryById(entry.metadata.category ? entry.metadata.category : '');
+      entry.metadata.categoryLabel = category.name;
+    })
 
     if (this.selectedCategory !== 'All') {
       entries = entries.filter(entry => entry.metadata.category === this.selectedCategory);

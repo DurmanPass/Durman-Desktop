@@ -17,6 +17,9 @@ import {PasswordService} from "../../../../services/routes/password/password.ser
 import {PasswordManagerService} from "../../../../services/password/password-manager.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {IvService} from "../../../../services/routes/iv.service";
+import {CategoryService} from "../../../../services/routes/category/category.service";
+import {CategoryLocalService} from "../../../../services/category/category-local.service";
+import {Category} from "../../../../interfaces/data/category.interface";
 
 @Component({
   selector: 'app-password-details-modal',
@@ -42,8 +45,8 @@ export class PasswordDetailsModalComponent {
   @Output() closed = new EventEmitter<void>();
   localEntry: PasswordEntryInterface;
   isEditLocalEntry: boolean = false;
-  categoryOptions: { value: string, label: string }[] = [];
-  categories: string[] = [];
+  categoryOptions: { label: string; value: string }[] = [];
+  @Input() categories: Category[] = []
   constructor(private http: HttpClient) {
     this.localEntry = this.createEmptyEntry();
     this.updateCategories();
@@ -52,6 +55,8 @@ export class PasswordDetailsModalComponent {
   protected serverPasswordService = new PasswordService(this.http);
   protected passwordManagerService = new PasswordManagerService(this.serverPasswordService);
   protected ivService = new IvService(this.http);
+  @Input() categoryService: CategoryService = new CategoryService(this.http);
+  @Input() categoryLocalService: CategoryLocalService = new CategoryLocalService(this.categoryService);
 
   async ngOnChanges() {
     if (this.mode === PasswordDetailsModalModes.CREATE) {
@@ -66,6 +71,11 @@ export class PasswordDetailsModalComponent {
         this.localEntry.credentials.password = await DecryptValue(this.localEntry.credentials.password, this.localEntry.credentials.encryption_iv);
       }
     }
+    this.updateCategories();
+  }
+
+  ngOnInit(){
+    this.updateCategories();
   }
 
   ngOnDestroy(){
@@ -79,10 +89,10 @@ export class PasswordDetailsModalComponent {
   }
 
   private updateCategories(): void {
-    this.categories = CategoryManagerService.getAllCategories().filter((category): category is string => category != null);
+    this.categories = this.categoryLocalService.getCategories();
     this.categoryOptions = this.categories.map(category => ({
-      value: category,
-      label: category
+      value: category.id,
+      label: category.name
     }));
   }
 
@@ -197,6 +207,15 @@ export class PasswordDetailsModalComponent {
     }
   }
 
+  updateSelectField(fieldId: string, event: string): void {
+    switch (fieldId) {
+      case 'category_field':
+        this.localEntry.metadata.category = event;
+        break;
+      default:
+        console.warn(`Unknown field: ${fieldId}`);
+    }
+  }
   async onUpdateEntry(){
     //TODO Проверка совпадает ли localEntry с passwordEntry
     //TODO Обновить запись пароля

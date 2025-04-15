@@ -25,6 +25,7 @@ export interface PasswordEntryInterface {
         usageCount: number | null;
         tags: string[] | null;
         category: string | null;
+        categoryLabel?: string | null;
     };
     security: {
         isFavorite: boolean | null;
