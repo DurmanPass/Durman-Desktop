@@ -220,7 +220,7 @@ export class PasswordDetailsModalComponent {
     //TODO Проверка совпадает ли localEntry с passwordEntry
     //TODO Обновить запись пароля
     if(this.localEntry === this.passwordEntry){return;}
-    this.localEntry.credentials.password = await DecryptValue(this.localEntry.credentials.password, this.localEntry.credentials.encryption_iv);
+    this.localEntry.credentials.password = await EncryptValue(this.localEntry.credentials.password, this.localEntry.credentials.encryption_iv);
     await this.passwordManagerService.updatePassword(this.localEntry.id ? this.localEntry.id : '', this.localEntry)
     this.closed.emit();
     this.isEditLocalEntry = false;

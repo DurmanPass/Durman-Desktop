@@ -60,6 +60,20 @@ export class PasswordService {
     }
 
     async updatePassword(passwordId: string, password: PasswordBackendEntry): Promise<void> {
+        const data = {
+            title: password.title,
+            url: password.url,
+            domain: password.domain,
+            username: password.username,
+            email: password.email,
+            phone: password.phone,
+            encrypted_password: password.encrypted_password,
+            encryption_iv: password.encryption_iv,
+            pin_code: password.pin_code,
+            pin_hints: password.pin_hints,
+            category_id: password.category_id,
+            password_strength: password.password_strength
+        }
         return withTokenRefresh(this.http, this.refreshTokenService, headers =>
             this.http.put(ApiRoutes.PASSWORD.UPDATE_PASSWORD(passwordId), password, { headers }).pipe(
                 map((response: any) => {
