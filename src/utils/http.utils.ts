@@ -21,7 +21,7 @@ export async function withTokenRefresh<T>(
                 if (retryCount > 0) {
                     // Если это повторный запрос после рефреша, не пытаемся снова
                     const errorMessage = err.error?.error || 'Ошибка после обновления токена!';
-                    ToastService.danger(errorMessage);
+                    // ToastService.danger(errorMessage);
                     return throwError(() => new Error(errorMessage));
                 }
 
@@ -37,7 +37,7 @@ export async function withTokenRefresh<T>(
                                 );
                             } else {
                                 const errorMessage = 'Не удалось обновить токен!';
-                                ToastService.danger(errorMessage);
+                                // ToastService.danger(errorMessage);
                                 return throwError(() => new Error(errorMessage));
                             }
                         })

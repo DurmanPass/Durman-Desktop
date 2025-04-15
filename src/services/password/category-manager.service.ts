@@ -3,7 +3,7 @@ import { PasswordManagerService } from "./password-manager.service";
 
 export class CategoryManagerService {
     // Получение всех уникальных категорий
-    public static getAllCategories(): string[] {
+    public static getAllCategories(): (string | null)[] {
         const entries = PasswordManagerService.getAllEntries();
         const categories = entries
             .map(entry => entry.metadata.category)
@@ -58,8 +58,8 @@ export class CategoryManagerService {
         if (categories.length === 0) return null;
 
         return categories.reduce((prev, current) => {
-            const prevCount = this.getEntryCountByCategory(prev);
-            const currentCount = this.getEntryCountByCategory(current);
+            const prevCount = this.getEntryCountByCategory(prev ? prev : '');
+            const currentCount = this.getEntryCountByCategory(current ? current : "");
             return currentCount > prevCount ? current : prev;
         });
     }

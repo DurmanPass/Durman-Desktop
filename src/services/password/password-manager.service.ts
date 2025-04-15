@@ -55,26 +55,49 @@ export class PasswordManagerService {
     }
 
     // Преобразование PasswordEntryInterface в PasswordBackendEntry
-    private static mapEntryToBackend(entry: PasswordEntryInterface): PasswordBackendEntry {
+    private static async mapEntryToBackend(entry: PasswordEntryInterface): Promise<PasswordBackendEntry> {
+        // return {
+        //     title: entry.name,
+        //     url: entry.location.url,
+        //     domain: entry.location.domain,
+        //     username: entry.credentials.username || null,
+        //     email: entry.credentials.email,
+        //     phone: entry.credentials.phoneNumber,
+        //     encrypted_password: entry.credentials.password,
+        //     encryption_iv: '', // Предполагается, что IV будет добавлен при шифровании
+        //     pin_code: entry.credentials.pin,
+        //     pin_hints: entry.credentials.recoveryCodes,
+        //     category_id: entry.metadata.category || null,
+        //     password_strength: entry.credentials.passwordStrength,
+        //     id: entry.id,
+        //     user_id: undefined,
+        //     usage_count: entry.metadata.usageCount,
+        //     created_at: entry.metadata.createdAt,
+        //     updated_at: entry.metadata.updatedAt,
+        //     last_used: entry.metadata.lastUsed || null
+        // };
+
+        const userId = await StoreService.get(StoreKeys.USER_ID);
+
         return {
-            title: entry.name,
-            url: entry.location.url,
-            domain: entry.location.domain,
-            username: entry.credentials.username || null,
-            email: entry.credentials.email,
-            phone: entry.credentials.phoneNumber,
-            encrypted_password: entry.credentials.password,
-            encryption_iv: '', // Предполагается, что IV будет добавлен при шифровании
-            pin_code: entry.credentials.pin,
-            pin_hints: entry.credentials.recoveryCodes,
-            category_id: entry.metadata.category || null,
-            password_strength: entry.credentials.passwordStrength,
-            id: entry.id,
-            user_id: undefined,
-            usage_count: entry.metadata.usageCount,
-            created_at: entry.metadata.createdAt,
-            updated_at: entry.metadata.updatedAt,
-            last_used: entry.metadata.lastUsed || null
+            title: entry.name === '' ? null : entry.name,
+            url: entry.location.url === '' ? null : entry.location.url,
+            domain: entry.location.domain === '' ? null : entry.location.domain,
+            username: entry.credentials.username === '' ? null : entry.credentials.username,
+            email: entry.credentials.email === '' ? null : entry.credentials.email,
+            phone: entry.credentials.phoneNumber === '' ? null : entry.credentials.phoneNumber,
+            encrypted_password: entry.credentials.password === '' ? null : entry.credentials.password,
+            encryption_iv: entry.credentials.encryption_iv === '' ? null : entry.credentials.encryption_iv,
+            pin_code: entry.credentials.pin === '' ? null : entry.credentials.pin,
+            pin_hints: entry.credentials.recoveryCodes? entry.credentials.recoveryCodes : [],
+            category_id: entry.metadata.category === '' ? null : entry.metadata.category,
+            password_strength: entry.credentials.passwordStrength ?? null,
+            id: entry.id === '' ? null : entry.id,
+            user_id: userId, // Оставляем как undefined, как в исходнике
+            usage_count: entry.metadata.usageCount ?? null,
+            created_at: entry.metadata.createdAt === '' ? null : entry.metadata.createdAt,
+            updated_at: entry.metadata.updatedAt === '' ? null : entry.metadata.updatedAt,
+            last_used: entry.metadata.lastUsed === '' ? null : entry.metadata.lastUsed
         };
     }
 
@@ -96,8 +119,10 @@ export class PasswordManagerService {
         if (!userId) {
             throw new Error('User ID not found in storage');
         }
+        console.log(userId);
         try {
-            const backendPassword = PasswordManagerService.mapEntryToBackend(password);
+            const backendPassword = await PasswordManagerService.mapEntryToBackend(password);
+            console.log(backendPassword);
             const response = await this.serverPasswordService.createPassword(backendPassword);
             const newEntry: PasswordEntryInterface = {
                 ...password,
@@ -135,7 +160,7 @@ export class PasswordManagerService {
     async updatePassword(passwordId: string, password: PasswordEntryInterface): Promise<void> {
         try {
             const backendPassword = PasswordManagerService.mapEntryToBackend(password);
-            await this.serverPasswordService.updatePassword(passwordId, backendPassword);
+            await this.serverPasswordService.updatePassword(passwordId, await backendPassword);
             const index = PasswordManagerService.entries.findIndex(e => e.id === passwordId);
             if (index !== -1) {
                 PasswordManagerService.entries[index] = { ...password, id: passwordId };
@@ -183,7 +208,7 @@ export class PasswordManagerService {
     }
 
     public static getEntriesByName(name: string): PasswordEntryInterface[] {
-        return this.entries.filter(entry => entry.name.toLowerCase().includes(name.toLowerCase()));
+        return this.entries.filter(entry => entry.name ? entry.name.toLowerCase().includes(name.toLowerCase()) : '');
     }
 
     public static getEntriesByCategory(category: string): PasswordEntryInterface[] {
@@ -237,16 +262,47 @@ export class PasswordManagerService {
         this.entries = [];
     }
 
+    // public static getEntriesSortedBy(
+    //     criterion: 'name' | 'createdAt' | 'updatedAt' | 'usageCount',
+    //     order: 'asc' | 'desc' = 'asc'
+    // ): PasswordEntryInterface[] {
+    //     const sortedEntries = [...this.entries];
+    //     const sortFunctions: Record<string, (a: PasswordEntryInterface, b: PasswordEntryInterface) => number> = {
+    //         name: (a, b) => a.name.localeCompare(b.name),
+    //         createdAt: (a, b) => new Date(a.metadata.createdAt).getTime() - new Date(b.metadata.createdAt).getTime(),
+    //         updatedAt: (a, b) => new Date(a.metadata.updatedAt).getTime() - new Date(b.metadata.updatedAt).getTime(),
+    //         usageCount: (a, b) => a.metadata.usageCount - b.metadata.usageCount
+    //     };
+    //     sortedEntries.sort(sortFunctions[criterion]);
+    //     if (order === 'desc') sortedEntries.reverse();
+    //     return sortedEntries;
+    // }
     public static getEntriesSortedBy(
         criterion: 'name' | 'createdAt' | 'updatedAt' | 'usageCount',
         order: 'asc' | 'desc' = 'asc'
     ): PasswordEntryInterface[] {
         const sortedEntries = [...this.entries];
         const sortFunctions: Record<string, (a: PasswordEntryInterface, b: PasswordEntryInterface) => number> = {
-            name: (a, b) => a.name.localeCompare(b.name),
-            createdAt: (a, b) => new Date(a.metadata.createdAt).getTime() - new Date(b.metadata.createdAt).getTime(),
-            updatedAt: (a, b) => new Date(a.metadata.updatedAt).getTime() - new Date(b.metadata.updatedAt).getTime(),
-            usageCount: (a, b) => a.metadata.usageCount - b.metadata.usageCount
+            name: (a, b) => {
+                const aName = a.name ?? '';
+                const bName = b.name ?? '';
+                return aName.localeCompare(bName);
+            },
+            createdAt: (a, b) => {
+                const aDate = a.metadata.createdAt ? new Date(a.metadata.createdAt).getTime() : 0;
+                const bDate = b.metadata.createdAt ? new Date(b.metadata.createdAt).getTime() : 0;
+                return aDate - bDate;
+            },
+            updatedAt: (a, b) => {
+                const aDate = a.metadata.updatedAt ? new Date(a.metadata.updatedAt).getTime() : 0;
+                const bDate = b.metadata.updatedAt ? new Date(b.metadata.updatedAt).getTime() : 0;
+                return aDate - bDate;
+            },
+            usageCount: (a, b) => {
+                const aCount = a.metadata.usageCount ?? 0;
+                const bCount = b.metadata.usageCount ?? 0;
+                return aCount - bCount;
+            }
         };
         sortedEntries.sort(sortFunctions[criterion]);
         if (order === 'desc') sortedEntries.reverse();

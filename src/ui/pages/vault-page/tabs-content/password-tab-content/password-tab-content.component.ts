@@ -296,12 +296,12 @@ export class PasswordTabContentComponent {
   };
 
   passwordTableColumns = [
-    { label: 'Название', render: (entry: PasswordEntryInterface) => entry.name },
-    { label: 'URL', render: (entry: PasswordEntryInterface) => entry.location.domain },
-    { label: 'Имя пользователя', render: (entry: PasswordEntryInterface) => entry.credentials.username },
-    { label: 'Электронная почта', render: (entry: PasswordEntryInterface) => entry.credentials.email },
-    { label: 'Номер телефона', render: (entry: PasswordEntryInterface) => entry.credentials.phoneNumber || '' },
-    { label: 'Категория', render: (entry: PasswordEntryInterface) => entry.metadata.category }
+    { label: 'Название', render: (entry: PasswordEntryInterface) => entry.name ? entry.name : '' },
+    { label: 'URL', render: (entry: PasswordEntryInterface) => entry.location.domain ? entry.location.domain : '' },
+    { label: 'Имя пользователя', render: (entry: PasswordEntryInterface) => entry.credentials.username ? entry.credentials.username : ''},
+    { label: 'Электронная почта', render: (entry: PasswordEntryInterface) => entry.credentials.email ? entry.credentials.email : ''},
+    { label: 'Номер телефона', render: (entry: PasswordEntryInterface) => entry.credentials.phoneNumber ? entry.credentials.phoneNumber : '' },
+    { label: 'Категория', render: (entry: PasswordEntryInterface) => entry.metadata.category ? entry.metadata.category : ''}
   ];
 
   filteredEntries: PasswordEntryInterface[] = [];
@@ -375,12 +375,12 @@ export class PasswordTabContentComponent {
 
     if (this.PasswordManagerState.searchQuery) {
       entries = entries.filter(entry =>
-          entry.name.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
-          entry.metadata.category.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
-          entry.credentials.username.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
-          entry.location.domain.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
-          entry.credentials.email.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
-          entry.credentials.phoneNumber.toLowerCase().includes(this.PasswordManagerState.searchQuery.toLowerCase())
+          (entry.name?.toLowerCase() ?? '').includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
+          (entry.metadata.category?.toLowerCase() ?? '').includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
+          (entry.credentials.username?.toLowerCase() ?? '').includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
+          (entry.location.domain?.toLowerCase() ?? '').includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
+          (entry.credentials.email?.toLowerCase() ?? '').includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
+          (entry.credentials.phoneNumber?.toLowerCase() ?? '').includes(this.PasswordManagerState.searchQuery.toLowerCase())
       );
     }
 
@@ -392,8 +392,8 @@ export class PasswordTabContentComponent {
     this.stats = {
       total: entries.length,
       favorites: entries.filter(e => e.security.isFavorite).length,
-      weak: entries.filter(e => e.credentials.passwordStrength < 3).length,
-      frequent: entries.filter(e => e.metadata.usageCount > 5).length
+      weak: entries.filter(e => e.credentials.passwordStrength != null && e.credentials.passwordStrength < 3).length,
+      frequent: entries.filter(e => e.metadata.usageCount !== null && e.metadata.usageCount > 5).length
     };
   }
 
@@ -418,7 +418,7 @@ export class PasswordTabContentComponent {
   async copyEntry(id: string) {
     const entry = PasswordManagerService.getEntryById(id);
     if (entry && entry.credentials.password) {
-      const decrypted = await DecryptValue(entry.credentials.password, entry.credentials.encryption_iv);
+      const decrypted = await DecryptValue(entry.credentials.password, entry.credentials.encryption_iv ? entry.credentials.encryption_iv : '');
       copyToClipboard(
           decrypted,
           SettingsService.getClearBuffer(),

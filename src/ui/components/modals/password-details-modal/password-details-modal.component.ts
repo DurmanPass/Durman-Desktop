@@ -12,10 +12,11 @@ import {CheckboxComponent} from "../../controls/checkbox/checkbox.component";
 import {PasswordStrengthService} from "../../../../services/password/password-strength.service";
 import {SettingsService} from "../../../../services/settings/app-settings.service";
 import {ToastService} from "../../../../services/notification/toast.service";
-import {StoreService} from "../../../../services/vault/store.service";
-import {StoreKeys} from "../../../../shared/const/vault/store.keys";
-import {CryptoAesGcmService} from "../../../../services/crypto/crypto-aes-gcm.service";
-import {DecryptValue} from "../../../../utils/crypto.utils";
+import {DecryptValue, EncryptValue} from "../../../../utils/crypto.utils";
+import {PasswordService} from "../../../../services/routes/password/password.service";
+import {PasswordManagerService} from "../../../../services/password/password-manager.service";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {IvService} from "../../../../services/routes/iv.service";
 
 @Component({
   selector: 'app-password-details-modal',
@@ -27,7 +28,8 @@ import {DecryptValue} from "../../../../utils/crypto.utils";
     InputComponent,
     PasswordStrengthBarComponent,
     SelectComponent,
-    CheckboxComponent
+    CheckboxComponent,
+      HttpClientModule
   ],
   templateUrl: './password-details-modal.component.html',
   styleUrl: './password-details-modal.component.css'
@@ -37,15 +39,19 @@ export class PasswordDetailsModalComponent {
   @Input() mode: PasswordDetailsModalModes = PasswordDetailsModalModes.CREATE;
   @Input() headerBackground: string = 'rgb(34,34,35)'; // Базовый цвет для градиента
   @Output() editRequested = new EventEmitter<string>(); // Запрос на редактирование
+  @Output() closed = new EventEmitter<void>();
   localEntry: PasswordEntryInterface;
   isEditLocalEntry: boolean = false;
   categoryOptions: { value: string, label: string }[] = [];
   categories: string[] = [];
-  constructor() {
+  constructor(private http: HttpClient) {
     this.localEntry = this.createEmptyEntry();
     this.updateCategories();
   }
   private passwordStrengthService = new PasswordStrengthService();
+  protected serverPasswordService = new PasswordService(this.http);
+  protected passwordManagerService = new PasswordManagerService(this.serverPasswordService);
+  protected ivService = new IvService(this.http);
 
   async ngOnChanges() {
     if (this.mode === PasswordDetailsModalModes.CREATE) {
@@ -73,7 +79,7 @@ export class PasswordDetailsModalComponent {
   }
 
   private updateCategories(): void {
-    this.categories = CategoryManagerService.getAllCategories();
+    this.categories = CategoryManagerService.getAllCategories().filter((category): category is string => category != null);
     this.categoryOptions = this.categories.map(category => ({
       value: category,
       label: category
@@ -159,17 +165,55 @@ export class PasswordDetailsModalComponent {
     } else if (field === 'metadata.category') {
       this.localEntry.metadata.category = value;
     }
+    else if (field === 'credentials.email') {
+      this.localEntry.credentials.email = value;
+    }
+    else if (field === 'pin-code') {
+      this.localEntry.credentials.pin = value;
+    }
   }
 
-  onUpdateEntry(){
+  updateTextAreaField(field: string, event: Event): void {
+    const value = (event.target as HTMLTextAreaElement).value;
+
+    switch (field) {
+      case 'description_field':
+        this.localEntry.description = value;
+        break;
+      case 'recovery_codes':
+        this.localEntry.credentials.recoveryCodes = value
+            .split(/[\n,]+/) // Разделяем по запятым или переносам строки
+            .map(code => code.trim()) // Удаляем пробелы
+            .filter(code => code !== ''); // Удаляем пустые строки
+        break;
+      default:
+        console.warn(`Unknown field: ${field}`);
+    }
+  }
+
+  updateCheckboxField(field: string, checked: boolean): void {
+    if (field === 'isFavorite_field') {
+      this.localEntry.security.isFavorite = checked;
+    }
+  }
+
+  async onUpdateEntry(){
     //TODO Проверка совпадает ли localEntry с passwordEntry
     //TODO Обновить запись пароля
+    if(this.localEntry === this.passwordEntry){return;}
+    this.localEntry.credentials.password = await DecryptValue(this.localEntry.credentials.password, this.localEntry.credentials.encryption_iv);
+    await this.passwordManagerService.updatePassword(this.localEntry.id ? this.localEntry.id : '', this.localEntry)
+    this.closed.emit();
     this.isEditLocalEntry = false;
     ToastService.success("Запись была успешно обновлена!");
   }
 
-  onCreateEntry(){
-    //TODO Создать запись пароля
+  async onCreateEntry(){
+    const iv = await this.ivService.generateIv();
+    this.localEntry.credentials.password =  await EncryptValue(this.localEntry.credentials.password, iv);
+    this.localEntry.credentials.encryption_iv = iv;
+    await this.passwordManagerService.createPassword(this.localEntry);
+    this.closed.emit();
     ToastService.success("Запись была успешно создана!");
   }
 

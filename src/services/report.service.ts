@@ -55,7 +55,7 @@ export class ReportService {
         }
 
         const weakPasswords = PasswordManagerService.getAllEntries()
-            .filter(entry => entry.credentials.passwordStrength < 3);
+            .filter(entry => entry.credentials.passwordStrength && entry.credentials.passwordStrength < 3);
 
         if (weakPasswords.length === 0) {
             console.log('Слабых паролей не найдено');
@@ -255,7 +255,7 @@ export class ReportService {
         try {
             unsafeUrls = Array.from(uniqueEntriesMap.values()).filter(entry => {
                 try {
-                    return ReportService.isUrlUnsafe(entry.location.url, entry.location.domain);
+                    return ReportService.isUrlUnsafe(entry.location.url ? entry.location.url : '', entry.location.domain ? entry.location.domain : '');
                 } catch (innerError) {
                     return false;
                 }
@@ -269,7 +269,7 @@ export class ReportService {
 
           // Генерируем HTML для каждой небезопасной записи
           const unsafeUrlEntries = unsafeUrls.map(entry => {
-              const { reason, suggestions } = ReportService.getUrlSafetyFeedback(entry.location.url, entry.location.domain);
+              const { reason, suggestions } = ReportService.getUrlSafetyFeedback(entry.location.url ? entry.location.url : '', entry.location.domain ? entry.location.domain : '');
 
               return `
           <div class="url-entry">
