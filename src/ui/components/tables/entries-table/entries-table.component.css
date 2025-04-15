@@ -68,36 +68,30 @@
 }
 
 .entries-action-btns img{
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
     cursor: pointer;
 }
 
-/* Чередование фона строк для лучшей читаемости */
-.entries-table tbody tr:nth-child(even) {
-
-}
-
-/* Эффект при наведении на строку */
 .entries-table tbody tr:hover {
-    background-color: rgba(0,0,0,0.2); /* Лёгкий серый при наведении */
-    transition: background-color 0.2s ease; /* Плавный переход */
+    background-color: rgba(0,0,0,0.2);
+    transition: background-color 0.2s ease;
 }
 
 /* Адаптивность для маленьких экранов */
 @media (max-width: 768px) {
     .entries-table table {
-        font-size: 14px; /* Уменьшаем шрифт */
+        font-size: 14px;
     }
 
     .entries-table thead th,
     .entries-table tbody td {
-        padding: 8px 10px; /* Уменьшаем отступы */
+        padding: 8px 10px;
     }
 
     .entries-table td img {
-        padding: 4px 8px; /* Уменьшаем кнопки */
-        margin-right: 4px; /* Уменьшаем отступ между кнопками */
-        font-size: 12px; /* Уменьшаем шрифт кнопок */
+        padding: 4px 8px;
+        margin-right: 4px;
+        font-size: 12px;
     }
 }
