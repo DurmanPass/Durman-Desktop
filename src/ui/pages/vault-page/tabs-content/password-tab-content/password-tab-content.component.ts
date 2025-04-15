@@ -341,9 +341,9 @@ export class PasswordTabContentComponent {
     this.updateStats();
   }
 
-  selectCategory(category: string): void {
+  async selectCategory(category: string) {
     this.selectedCategory = category;
-    this.updateEntries();
+    await this.updateEntries();
   }
 
   protected async updateCategories() {
@@ -375,7 +375,7 @@ export class PasswordTabContentComponent {
     })
 
     if (this.selectedCategory !== 'All') {
-      entries = entries.filter(entry => entry.metadata.category === this.selectedCategory);
+      entries = entries.filter(entry => entry.metadata.categoryLabel === this.selectedCategory);
     }
 
     if (this.PasswordManagerState.searchQuery) {
