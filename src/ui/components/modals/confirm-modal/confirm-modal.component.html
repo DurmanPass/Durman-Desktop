@@ -5,7 +5,7 @@
         <button class="no-button" (click)="onNotConfirm()">Нет</button>
     </div>
     <div *ngIf="step === 'password'" class="input-container">
-        <app-input type="password" [(ngModel)]="password" placeholder="Введите пароль..." (valueChange)="onPasswordChange($event)"/>
+        <app-input type="password" [(ngModel)]="password" placeholder="Введите мастер-пароль..." (valueChange)="onPasswordChange($event)"/>
         <p *ngIf="passwordError" class="error">{{ passwordError }}</p>
         <div class="button-container">
             <button class="yes-button" (click)="onConfirm()">Подтвердить</button>

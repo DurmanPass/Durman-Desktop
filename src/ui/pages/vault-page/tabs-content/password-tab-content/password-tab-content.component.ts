@@ -123,7 +123,7 @@ export class PasswordTabContentComponent {
   async ngOnInit() {
     await this.categoryLocalService.syncCategories();
     await this.updateCategories();
-    await this.passwordManagerService.syncPasswords();
+    // await this.passwordManagerService.syncPasswords();
     await this.updateEntries();
     this.updateStats();
   }

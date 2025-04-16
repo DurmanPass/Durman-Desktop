@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EnvironmentInjector, EventEmitter, inject, Input, Output} from '@angular/core';
 import {NgForOf, NgIf} from "@angular/common";
 import {Category} from "../../../../interfaces/data/category.interface";
 import {ContextMenuComponent} from "../../contextMenus/context-menu/context-menu.component";
@@ -9,6 +9,8 @@ import {HttpClient} from "@angular/common/http";
 import {CategoryService} from "../../../../services/routes/category/category.service";
 import {CategoryLocalService} from "../../../../services/category/category-local.service";
 import {CategoryModalModes} from "../../../../shared/enums/modes/modals/category-model-modes.enum";
+import {ConfirmModalService} from "../../../../services/modals/confirm-modal.service";
+import {ModalsConfig} from "../../../../shared/const/components/modals/modals.config";
 
 @Component({
   selector: 'app-chips',
@@ -33,6 +35,9 @@ export class ChipsComponent {
   @Input() categoryLocalService: CategoryLocalService = new CategoryLocalService(this.categoryService);
   @Output() categoryDeleted = new EventEmitter<void>();
   @Output() onSelectedCategory = new EventEmitter<Category>();
+
+  private injector = inject(EnvironmentInjector);
+
 
   CategoryContextMenuFilter: ContextMenuItem[] = [];
 
@@ -60,6 +65,17 @@ export class ChipsComponent {
   }
 
   async deleteCategory(categoryId: string): Promise<void> {
+    const result = await ConfirmModalService.createConfirmModal(
+        this.injector,
+        ModalsConfig.ConfirmModal.deleteCategory.title,
+        ModalsConfig.ConfirmModal.deleteCategory.description,
+        {requirePassword: true}
+    );
+
+    if (!result) {
+      return;
+    }
+
     try {
       await this.categoryLocalService.deleteCategory(categoryId);
       this.categoryDeleted.emit();
