@@ -1,19 +1,18 @@
 <div class="modal-content">
-    <app-header-description
-            [title]="title"
-            [description]="description"
-    />
-    <div *ngIf="requirePassword" class="input-container">
-        <input
-                type="password"
-                [(ngModel)]="password"
-                placeholder="Введите пароль"
-                (input)="passwordError = ''"
-                class="input-field"
-        />
-        <p *ngIf="passwordError" class="error">{{ passwordError }}</p>
+    <app-header-description [title]="title" [description]="description" />
+    <div *ngIf="step === 'confirm'" class="button-container">
+        <button class="yes-button" (click)="onConfirm()">Да</button>
+        <button class="no-button" (click)="onNotConfirm()">Нет</button>
     </div>
-    <div *ngIf="requireEmailCode" class="input-container">
+    <div *ngIf="step === 'password'" class="input-container">
+        <app-input type="password" [(ngModel)]="password" placeholder="Введите пароль..." (valueChange)="onPasswordChange($event)"/>
+        <p *ngIf="passwordError" class="error">{{ passwordError }}</p>
+        <div class="button-container">
+            <button class="yes-button" (click)="onConfirm()">Подтвердить</button>
+            <button class="no-button" (click)="onNotConfirm()">Отмена</button>
+        </div>
+    </div>
+    <div *ngIf="step === 'emailCode'" class="input-container">
         <input
                 type="text"
                 [(ngModel)]="emailCode"
@@ -22,9 +21,9 @@
                 class="input-field"
         />
         <p *ngIf="emailCodeError" class="error">{{ emailCodeError }}</p>
-    </div>
-    <div class="button-container">
-        <button class="yes-button" (click)="onConfirm()">Да</button>
-        <button class="no-button" (click)="onNotConfirm()">Нет</button>
+        <div class="button-container">
+            <button class="yes-button" (click)="onConfirm()">Подтвердить</button>
+            <button class="no-button" (click)="onNotConfirm()">Отмена</button>
+        </div>
     </div>
 </div>

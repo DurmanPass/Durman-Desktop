@@ -232,6 +232,7 @@ export class PasswordTabContentComponent {
         this.injector,
         ModalsConfig.ConfirmModal.deletePassword.title,
         ModalsConfig.ConfirmModal.deletePassword.description,
+        {requirePassword: true}
     );
 
     if (!result) {
