@@ -33,7 +33,6 @@ export class EntriesTableComponent<T> {
 
   onDeleteEntry(id: string): void {
     this.deleteEntry.emit(id);
-    ToastService.danger('Запись была успешно удалена!')
   }
 
   // Универсальный метод для получения ID из объекта (предполагаем, что у объекта есть поле id)

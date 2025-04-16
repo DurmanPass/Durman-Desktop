@@ -3,6 +3,26 @@
             [title]="title"
             [description]="description"
     />
+    <div *ngIf="requirePassword" class="input-container">
+        <input
+                type="password"
+                [(ngModel)]="password"
+                placeholder="Введите пароль"
+                (input)="passwordError = ''"
+                class="input-field"
+        />
+        <p *ngIf="passwordError" class="error">{{ passwordError }}</p>
+    </div>
+    <div *ngIf="requireEmailCode" class="input-container">
+        <input
+                type="text"
+                [(ngModel)]="emailCode"
+                placeholder="Введите код с почты"
+                (input)="emailCodeError = ''"
+                class="input-field"
+        />
+        <p *ngIf="emailCodeError" class="error">{{ emailCodeError }}</p>
+    </div>
     <div class="button-container">
         <button class="yes-button" (click)="onConfirm()">Да</button>
         <button class="no-button" (click)="onNotConfirm()">Нет</button>

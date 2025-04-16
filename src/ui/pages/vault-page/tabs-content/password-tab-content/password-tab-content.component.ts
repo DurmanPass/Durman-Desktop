@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ApplicationRef, Component, EnvironmentInjector, inject} from '@angular/core';
 import {InputComponent} from "../../../../components/inputs/input/input.component";
 import {PasswordManagerStateInterface} from "../../../../../interfaces/data/passwordManagerState.interface";
 import {VIEW_MANAGER_MODES} from "../../../../../shared/enums/modes/view-manager.enum";
@@ -40,6 +40,9 @@ import {CryptoAesGcmService} from "../../../../../services/crypto/crypto-aes-gcm
 import {StoreService} from "../../../../../services/vault/store.service";
 import {StoreKeys} from "../../../../../shared/const/vault/store.keys";
 import {DecryptValue} from "../../../../../utils/crypto.utils";
+import {ConfirmModalComponent} from "../../../../components/modals/confirm-modal/confirm-modal.component";
+import {ConfirmModalService} from "../../../../../services/modals/confirm-modal.service";
+import {ModalsConfig} from "../../../../../shared/const/components/modals/modals.config";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -57,7 +60,8 @@ import {DecryptValue} from "../../../../../utils/crypto.utils";
     CategoryModalComponent,
     EntriesTableComponent,
     HttpClientModule,
-    ContextMenuComponent
+    ContextMenuComponent,
+    ConfirmModalComponent
   ],
   templateUrl: './password-tab-content.component.html',
   styleUrl: './password-tab-content.component.css'
@@ -105,13 +109,16 @@ export class PasswordTabContentComponent {
   ];
 
   constructor(
-      private http: HttpClient
+      private http: HttpClient,
   ) {}
 
   protected categoryService = new CategoryService(this.http)
   protected categoryLocalService = new CategoryLocalService(this.categoryService);
   protected serverPasswordService = new PasswordService(this.http);
   protected passwordManagerService = new PasswordManagerService(this.serverPasswordService);
+
+  private injector = inject(EnvironmentInjector);
+
 
   async ngOnInit() {
     await this.categoryLocalService.syncCategories();
@@ -168,7 +175,7 @@ export class PasswordTabContentComponent {
     if (this.PasswordManagerState.searchQuery) {
       entries = entries.filter(entry =>
           (entry.name?.toLowerCase() ?? '').includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
-          (entry.metadata.category?.toLowerCase() ?? '').includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
+          (entry.metadata.categoryLabel?.toLowerCase() ?? '').includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
           (entry.credentials.username?.toLowerCase() ?? '').includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
           (entry.location.domain?.toLowerCase() ?? '').includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
           (entry.credentials.email?.toLowerCase() ?? '').includes(this.PasswordManagerState.searchQuery.toLowerCase()) ||
@@ -221,15 +228,25 @@ export class PasswordTabContentComponent {
   }
 
   async deleteEntry(id: string): Promise<void> {
+    const result = await ConfirmModalService.createConfirmModal(
+        this.injector,
+        ModalsConfig.ConfirmModal.deletePassword.title,
+        ModalsConfig.ConfirmModal.deletePassword.description,
+    );
+
+    if (!result) {
+      return;
+    }
+
     try {
       await this.passwordManagerService.deletePassword(id);
       await this.updateEntries();
       this.updateStats();
       await this.updateCategories();
-      ToastService.danger('Запись была успешно удалена!');
+
+      ToastService.success('Запись была успешно удалена!');
     } catch (e) {
       ToastService.danger('Не удалось удалить запись!');
-      console.error(e);
     }
   }
 
