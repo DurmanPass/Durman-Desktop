@@ -9,6 +9,7 @@ import {UnsafeUrlReportTemplate} from "../shared/export-templates/reports/unsafe
 import {PasswordEntryInterface} from "../interfaces/data/passwordEntry.interface";
 import {FrequentUsageReportTemplate} from "../shared/export-templates/reports/frequent-usage-report-template";
 import {ToastService} from "./notification/toast.service";
+import {DecryptValue} from "../utils/crypto.utils";
 
 
 export class ReportService {
@@ -54,8 +55,20 @@ export class ReportService {
             return;
         }
 
-        const weakPasswords = PasswordManagerService.getAllEntries()
-            .filter(entry => entry.credentials.passwordStrength && entry.credentials.passwordStrength < 3);
+        const passwords = await Promise.all(
+            PasswordManagerService.getAllEntries().map(async (entry) => {
+                entry.credentials.password = await DecryptValue(
+                    entry.credentials.password,
+                    entry.credentials.encryption_iv
+                );
+                return entry;
+            })
+        );
+
+        const weakPasswords = passwords.filter(
+            (entry) => entry.credentials.passwordStrength && entry.credentials.passwordStrength < 3
+        );
+
 
         if (weakPasswords.length === 0) {
             console.log('Слабых паролей не найдено');
@@ -84,7 +97,7 @@ export class ReportService {
             <p><strong>Имя пользователя:</strong> ${entry.credentials.username || 'Не указано'}</p>
             <p><strong>Номер телефона:</strong> ${entry.credentials.phoneNumber || 'Не указано'}</p>
             <p><strong>Пароль:</strong> ${entry.credentials.password || 'Не указан'}</p>
-            <p><strong>Категория:</strong> ${entry.metadata.category || 'Без категории'}</p>
+            <p><strong>Категория:</strong> ${entry.metadata.categoryLabel || 'Все'}</p>
             <p><strong>Сила пароля:</strong> ${strength} из 4</p>
           </div>
           <div class="feedback">
@@ -122,13 +135,13 @@ export class ReportService {
             }
 
             const passwordStrengthService = new PasswordStrengthService();
-            const reusedEntries = passwordStrengthService.getReusedPasswords();
+            const reusedEntries = await passwordStrengthService.getReusedPasswords();
             if (reusedEntries.length === 0) {
                 return;
             }
 
             const passwordGroups = new Map<string, PasswordEntryInterface[]>();
-            reusedEntries.forEach(entry => {
+            reusedEntries.forEach((entry: PasswordEntryInterface) => {
                 const password = entry.credentials.password || '';
                 const group = passwordGroups.get(password) || [];
                 group.push(entry);
@@ -141,7 +154,7 @@ export class ReportService {
             <p><strong>Название:</strong> ${entry.name}</p>
             <p><strong>URL:</strong> ${entry.location.url || 'Не указан'}</p>
             <p><strong>Имя пользователя:</strong> ${entry.credentials.username || 'Не указано'}</p>
-            <p><strong>Категория:</strong> ${entry.metadata.category || 'Без категории'}</p>
+            <p><strong>Категория:</strong> ${entry.metadata.categoryLabel || 'Все'}</p>
           </div>
         `).join('');
 
@@ -277,8 +290,7 @@ export class ReportService {
             <div class="url-details">
               <p><strong>URL:</strong> ${entry.location.url || 'Не указан'}</p>
               <p><strong>Имя пользователя:</strong> ${entry.credentials.username || 'Не указано'}</p>
-              <p><strong>Пароль:</strong> ${entry.credentials.password || 'Не указан'}</p>
-              <p><strong>Категория:</strong> ${entry.metadata.category || 'Без категории'}</p>
+              <p><strong>Категория:</strong> ${entry.metadata.categoryLabel || 'Все'}</p>
             </div>
             <div class="risk">
               <strong>Почему сайт небезопасен?</strong>

@@ -75,7 +75,6 @@ export class HomeTabContentComponent {
     }
 
     async ngOnInit() {
-        // await this.passwordManagerService.syncPasswords();
         this.updatePasswordInfo();
         this.securityLevel = this.passwordStrengthService.getOverallPasswordStrengthPercentage();
     }

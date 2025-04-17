@@ -4,6 +4,7 @@ import * as zxcvbnCommonPackage from '@zxcvbn-ts/language-common';
 import * as zxcvbnEnPackage from '@zxcvbn-ts/language-en';
 import {PasswordManagerService} from "./password-manager.service";
 import {PasswordEntryInterface} from "../../interfaces/data/passwordEntry.interface";
+import {DecryptValue} from "../../utils/crypto.utils";
 
 @Injectable({
     providedIn: 'root',
@@ -174,8 +175,17 @@ export class PasswordStrengthService {
      * Возвращает записи с переиспользуемыми паролями
      * @returns Массив записей, где пароли используются более одного раза
      */
-    getReusedPasswords(): PasswordEntryInterface[] {
-        const entries = PasswordManagerService.getAllEntries();
+    async getReusedPasswords(): Promise<PasswordEntryInterface[]> {
+        const entries = await Promise.all(
+            PasswordManagerService.getAllEntries().map(async (entry) => {
+                entry.credentials.password = await DecryptValue(
+                    entry.credentials.password,
+                    entry.credentials.encryption_iv
+                );
+                return entry;
+            })
+        );
+
         if (entries.length === 0) return [];
 
         // Фильтруем по уникальным ID
