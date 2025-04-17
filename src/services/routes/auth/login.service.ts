@@ -25,6 +25,9 @@ export class LoginService {
                     await StoreService.save(StoreKeys.ACCESS_TOKEN, response.accessToken);
                     await StoreService.save(StoreKeys.MASTER_PASSWORD, password);
                     await WindowService.openVaultWindow();
+                    setTimeout(async () => {
+                        await WindowService.closeAllWindowsExVault();
+                    }, 100)
                     ToastService.success('Вход выполнен успешно!')
                 } else {
                     ToastService.danger('Ошибка при входе!')
