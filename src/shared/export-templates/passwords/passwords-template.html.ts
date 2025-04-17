@@ -32,8 +32,15 @@ export const ExportPasswordsHtmlTemplate = `
         <th>Название</th>
         <th>URL</th>
         <th>Имя пользователя</th>
+        <th>Электронная почта</th>
+        <th>Номер телефона</th>
+        <th>Пин-код</th>
+        <th>Сила пароля(от 0 до 4)</th>
         <th>Пароль</th>
         <th>Категория</th>
+        <th>Создан</th>
+        <th>Обновлен</th>
+        <th>Описание</th>
       </tr>
     </thead>
     <tbody>
@@ -53,7 +60,7 @@ export const ExportPasswordsHtmlTemplate = `
       // Собираем уникальные категории
       const categories = new Set();
       for (let i = 1; i < rows.length; i++) {
-        const category = rows[i].cells[4].textContent.trim();
+        const category = rows[i].cells[8].textContent.trim();
         if (category) categories.add(category);
       }
 
@@ -85,7 +92,7 @@ export const ExportPasswordsHtmlTemplate = `
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i];
           const text = row.textContent.toLowerCase();
-          const category = row.cells[4].textContent.trim();
+          const category = row.cells[8].textContent.trim();
           const matchesSearch = text.includes(searchText);
           const matchesCategory = !activeCategory || category === activeCategory;
           row.classList.toggle('hidden', !(matchesSearch && matchesCategory));

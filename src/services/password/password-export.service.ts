@@ -7,6 +7,7 @@ import {ExportPasswordsHtmlTemplate} from "../../shared/export-templates/passwor
 import {AppConstConfig} from "../../shared/const/app/app.const";
 import {TauriCommands} from "../../shared/const/app/tauri/tauri.commands";
 import {EXPORT_PASSWORDS_TYPES} from "../../shared/enums/export/passwords/export-passwords.enum";
+import {DecryptValue} from "../../utils/crypto.utils";
 
 
 export class PasswordExportService {
@@ -14,8 +15,16 @@ export class PasswordExportService {
     private static baseFilename = AppConstConfig.APP_NAME + AppConstConfig.EXPORT.DEFAULT_EXPORT_FILENAMES.PASSWORD;
 
     // Получение данных из PasswordManagerService
-    private static getEntries(): PasswordEntryInterface[] {
-        return PasswordManagerService.getAllEntries();
+    private static async getEntries(): Promise<PasswordEntryInterface[]> {
+        return await Promise.all(
+            PasswordManagerService.getAllEntries().map(async (entry) => {
+                entry.credentials.password = await DecryptValue(
+                    entry.credentials.password,
+                    entry.credentials.encryption_iv
+                );
+                return entry;
+            })
+        );
     }
 
     // Вспомогательная функция для добавления даты к имени файла
@@ -26,15 +35,19 @@ export class PasswordExportService {
 
     // Экспорт в XLSX
     public static async exportToXlsx(filePath: string, fileName: string = this.baseFilename): Promise<void> {
-        const entries = this.getEntries();
+        const entries = await this.getEntries();
         const worksheetData = entries.map(entry => ({
-            Name: entry.name,
-            URL: entry.location.url,
-            Username: entry.credentials.username,
-            Password: entry.credentials.password,
-            Category: entry.metadata.category,
-            CreatedAt: entry.metadata.createdAt,
-            UpdatedAt: entry.metadata.updatedAt
+            Name: entry.name ? entry.name : '-',
+            URL: entry.location.url ? entry.location.url : '-',
+            Username: entry.credentials.username ? entry.credentials.username : '-',
+            Email: entry.credentials.email ? entry.credentials.email : '-',
+            PhoneNumber: entry.credentials.phoneNumber ? entry.credentials.phoneNumber : '-',
+            Pin: entry.credentials.pin ? entry.credentials.pin : '-',
+            PasswordStrength: entry.credentials.passwordStrength ? entry.credentials.passwordStrength : '-',
+            Password: entry.credentials.password ? entry.credentials.password : '-',
+            Category: entry.metadata.categoryLabel ? entry.metadata.categoryLabel : '-',
+            CreatedAt: entry.metadata.createdAt ? entry.metadata.createdAt : '-',
+            UpdatedAt: entry.metadata.updatedAt ? entry.metadata.updatedAt : '-',
         }));
 
         const worksheet = XLSX.utils.json_to_sheet(worksheetData);
@@ -52,7 +65,7 @@ export class PasswordExportService {
 
     // Экспорт в HTML
     public static async exportToHtml(filePath: string, fileName: string = this.baseFilename): Promise<void> {
-        const entries = this.getEntries();
+        const entries = await this.getEntries();
         let htmlTemplate = ExportPasswordsHtmlTemplate;
 
         // Генерируем строки таблицы
@@ -63,8 +76,16 @@ export class PasswordExportService {
             <td>${entry.name}</td>
             <td>${entry.location.url}</td>
             <td>${entry.credentials.username}</td>
+            <td>${entry.credentials.email}</td>
+            <td>${entry.credentials.phoneNumber}</td>
+            <td>${entry.credentials.pin}</td>
+            <td>${entry.credentials.passwordStrength}</td>
             <td>${entry.credentials.password}</td>
-            <td>${entry.metadata.category}</td>
+            <td>${entry.metadata.categoryLabel}</td>
+            <td>${entry.metadata.createdAt}</td>
+            <td>${entry.metadata.updatedAt}</td>
+            <td>${entry.description}</td>
+
           </tr>
         `
             )
