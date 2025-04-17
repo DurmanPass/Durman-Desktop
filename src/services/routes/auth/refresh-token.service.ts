@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiRoutes } from '../../../shared/const/app/api/api.routes';
 import { ToastService } from '../../notification/toast.service';
+import {StoreService} from "../../vault/store.service";
+import {StoreKeys} from "../../../shared/const/vault/store.keys";
 
 @Injectable({
     providedIn: 'root'
@@ -13,8 +15,8 @@ export class RefreshTokenService {
         private http: HttpClient,
     ) {}
 
-    refreshToken(): Observable<boolean> {
-        const refreshToken = localStorage.getItem('refreshToken');
+    async refreshToken(): Promise<Observable<boolean>> {
+        const refreshToken = await StoreService.get(StoreKeys.REFRESH_TOKEN);
         if (!refreshToken) {
             // ToastService.danger('Refresh token отсутствует!')
             return new Observable(observer => observer.next(false));
@@ -26,9 +28,8 @@ export class RefreshTokenService {
             map((response: any) => {
                 if (response.accessToken && response.message === 'Token refreshed successfully') {
                     // Сохранение нового accessToken в localStorage
-                    localStorage.setItem('accessToken', response.accessToken);
-                    // Перезаписываем refreshToken (если сервер его не возвращает, оставляем старый)
-                    localStorage.setItem('refreshToken', data.refreshToken);
+                    StoreService.save(StoreKeys.ACCESS_TOKEN, response.accessToken);
+                    StoreService.save(StoreKeys.REFRESH_TOKEN, data.refreshToken);
 
                     // ToastService.success('Токен успешно обновлён!')
                     return true;
