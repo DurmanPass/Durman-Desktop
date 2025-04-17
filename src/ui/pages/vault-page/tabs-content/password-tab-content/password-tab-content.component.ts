@@ -164,6 +164,7 @@ export class PasswordTabContentComponent {
   protected async updateCategories() {
     this.selectedCategory = 'All';
     this.categories = this.categoryLocalService.getCategories();
+    await this.updateEntries();
   }
 
   onSelectedCategory(category: Category) {

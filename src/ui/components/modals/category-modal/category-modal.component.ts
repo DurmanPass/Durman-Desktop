@@ -41,6 +41,11 @@ export class CategoryModalComponent {
     this.updateSelectedCategory();
   }
 
+  clearData(){
+    this.categoryEntry = '';
+    this.localCategory = null;
+  }
+
   ngOnChanges(): void {
     if(this.mode === CategoryModalModes.CREATE){
       this.isEditCategoryEntry = true;
@@ -71,6 +76,7 @@ export class CategoryModalComponent {
     if(this.categoryEntry.length === 0){return;}
     await this.categoryLocalService.createCategory(this.categoryEntry);
     this.closeModal();
+    this.clearData();
   }
 
   async onUpdateCategory(){
