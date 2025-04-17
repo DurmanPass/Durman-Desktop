@@ -22,6 +22,23 @@ export class EntriesTableComponent<T> {
   @Output() editEntry = new EventEmitter<string>();
   @Output() deleteEntry = new EventEmitter<string>();
 
+  @Output() selectionChange = new EventEmitter<string[]>();
+
+  selectedEntryIds: string[] = [];
+
+  toggleSelection(entryId: string) {
+    if (this.selectedEntryIds.includes(entryId)) {
+      this.selectedEntryIds = this.selectedEntryIds.filter(id => id !== entryId);
+    } else {
+      this.selectedEntryIds.push(entryId);
+    }
+    this.selectionChange.emit(this.selectedEntryIds);
+  }
+
+  isSelected(entryId: string): boolean {
+    return this.selectedEntryIds.includes(entryId);
+  }
+
   onCopyEntry(id: string): void {
     this.copyEntry.emit(id);
     ToastService.success('Пароль был успешно скопирован в буфер обмена!')

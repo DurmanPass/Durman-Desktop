@@ -61,7 +61,7 @@ import {ModalsConfig} from "../../../../../shared/const/components/modals/modals
   styleUrl: './password-tab-content.component.css'
 })
 export class PasswordTabContentComponent {
-  protected PasswordManagerState: PasswordManagerStateInterface = {
+  PasswordManagerState: PasswordManagerStateInterface = {
     viewMode: VIEW_MANAGER_MODES.TABLE,
     searchQuery: '',
     sortCriterion: SORT_PASSWORD_ENTRY.CREATED_AT,
@@ -129,7 +129,7 @@ export class PasswordTabContentComponent {
   }
 
   constructor(
-      private http: HttpClient,
+      private http: HttpClient
   ) {}
 
   protected categoryService = new CategoryService(this.http)
@@ -138,6 +138,8 @@ export class PasswordTabContentComponent {
   protected passwordManagerService = new PasswordManagerService(this.serverPasswordService);
 
   private injector = inject(EnvironmentInjector);
+
+  selectedEntryIds: string[] = [];
 
 
   async ngOnInit() {
@@ -266,6 +268,43 @@ export class PasswordTabContentComponent {
     } catch (e) {
       ToastService.danger('Не удалось удалить запись!');
     }
+  }
+
+  async deleteSelectedEntries(): Promise<void> {
+    if (this.selectedEntryIds.length === 0) {
+      ToastService.danger('Выберите хотя бы одну запись для удаления!');
+      return;
+    }
+
+    const result = await ConfirmModalService.createConfirmModal(
+        this.injector,
+        'Удаление нескольких записей',
+        `Вы уверены, что хотите удалить ${this.selectedEntryIds.length} записей? Это действие нельзя отменить.`,
+        { requirePassword: true }
+    );
+
+    if (!result) {
+      return;
+    }
+
+    try {
+      await Promise.all(
+          this.selectedEntryIds.map(id => this.passwordManagerService.deletePassword(id))
+      );
+      let localLen = this.selectedEntryIds.length;
+      this.selectedEntryIds = []; // Очищаем выбор
+      await this.updateEntries();
+      this.updateStats();
+      await this.updateCategories();
+      ToastService.success(`${localLen} записей успешно удалено!`);
+    } catch (e) {
+      ToastService.danger('Не удалось удалить выбранные записи!');
+      console.error(e);
+    }
+  }
+
+  onSelectionChange(selectedIds: string[]): void {
+    this.selectedEntryIds = selectedIds;
   }
 
   async onExportChange(value: string) {

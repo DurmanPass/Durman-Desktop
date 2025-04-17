@@ -2,12 +2,16 @@
     <table>
         <thead>
         <tr>
+            <th *ngIf="showActions">Выбрано</th>
             <th *ngFor="let column of columns">{{ column.label }}</th>
             <th *ngIf="showActions">Действия</th>
         </tr>
         </thead>
         <tbody>
         <tr *ngFor="let entry of entries">
+            <td>
+                <input type="checkbox" [checked]="isSelected(getEntryId(entry))" (change)="toggleSelection(getEntryId(entry))">
+            </td>
             <td *ngFor="let column of columns">{{ column.render(entry) ? column.render(entry) : '-' }}</td>
             <td class="entries-action-btns" *ngIf="showActions">
                 <img src="assets/icons/controls/password-entries/copy.svg" alt="Copy" (click)="onCopyEntry(getEntryId(entry))">

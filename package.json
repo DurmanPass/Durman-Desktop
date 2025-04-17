@@ -30,6 +30,7 @@
     "@zxcvbn-ts/language-en": "^3.0.2",
     "jspdf": "^3.0.0",
     "jspdf-autotable": "^5.0.2",
+    "ng-keyboard-shortcuts": "^13.0.8",
     "otplib": "^12.0.1",
     "pako": "^2.1.0",
     "qrcode": "^1.5.4",
