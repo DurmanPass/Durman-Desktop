@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Input, Output} from '@angular/core';
 import {deleteOverflowWindow} from "../../../utils/overflow.utils";
 import {ThemeColors} from "../../../shared/const/colors/general/themeColors";
 import {NgComponentOutlet, NgForOf, NgIf} from "@angular/common";
@@ -13,6 +13,9 @@ import {HelpModalComponent} from "../../components/modals/help-modal/help-modal.
 import {StoreService} from "../../../services/vault/store.service";
 import {StoreKeys} from "../../../shared/const/vault/store.keys";
 import {ToastService} from "../../../services/notification/toast.service";
+import {PasswordService} from "../../../services/routes/password/password.service";
+import {PasswordManagerService} from "../../../services/password/password-manager.service";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 
 @Component({
   selector: 'app-vault-page',

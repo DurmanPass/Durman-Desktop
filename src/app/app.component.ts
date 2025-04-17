@@ -24,6 +24,8 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {CryptoAesGcmService} from "../services/crypto/crypto-aes-gcm.service";
 import {PasswordService} from "../services/routes/password/password.service";
 import {PasswordManagerService} from "../services/password/password-manager.service";
+import {CategoryService} from "../services/routes/category/category.service";
+import {CategoryLocalService} from "../services/category/category-local.service";
 
 @Component({
   selector: 'app-root',
@@ -38,9 +40,16 @@ export class AppComponent {
   constructor(appRef: ApplicationRef, injector: EnvironmentInjector, private focusProtection: FocusProtectionService, public screenshotBlocking: ScreenshotBlockingService, private http: HttpClient) {
     ToastService.initialize(appRef, injector);
   }
+
+  protected categoryService = new CategoryService(this.http)
+  protected categoryLocalService = new CategoryLocalService(this.categoryService);
   protected serverPasswordService = new PasswordService(this.http);
   protected passwordManagerService = new PasswordManagerService(this.serverPasswordService);
+
   async ngOnInit(): Promise<void> {
+    await this.categoryLocalService.syncCategories();
+    await this.passwordManagerService.syncPasswords();
+
     await StoreService.initialize();
     await AppdataService.ensureDurmanpassDir();
 
@@ -50,9 +59,8 @@ export class AppComponent {
     }
     SecurityLockService.initialize();
 
-    SettingsService.loadSettings()
+    SettingsService.loadSettings();
 
-    await this.passwordManagerService.syncPasswords();
 
     setInterval(() => {
       this.isLocked = SecurityLockService.getIsLocked();

@@ -79,9 +79,13 @@ export class PasswordDetailsModalComponent {
   }
 
   ngOnDestroy(){
+    this.clearData();
+  }
+
+  clearData(){
     this.passwordEntry = null;
     this.localEntry = this.createEmptyEntry();
-    this.isEditLocalEntry = false;
+    // this.isEditLocalEntry = false;
   }
 
   onEditLocalEntry(){
@@ -144,6 +148,7 @@ export class PasswordDetailsModalComponent {
   copyToClipboard(value: string): void {
     if (value) {
       copyToClipboard(value, SettingsService.getClearBuffer(), SettingsService.getClearBufferTimeout());
+      ToastService.success('Скопировано в буфер обмена!')
     }
   }
 
@@ -223,6 +228,7 @@ export class PasswordDetailsModalComponent {
     this.localEntry.credentials.password = await EncryptValue(this.localEntry.credentials.password, this.localEntry.credentials.encryption_iv);
     await this.passwordManagerService.updatePassword(this.localEntry.id ? this.localEntry.id : '', this.localEntry)
     this.closed.emit();
+    this.clearData();
     this.isEditLocalEntry = false;
     ToastService.success("Запись была успешно обновлена!");
   }
@@ -233,6 +239,7 @@ export class PasswordDetailsModalComponent {
     this.localEntry.credentials.encryption_iv = iv;
     await this.passwordManagerService.createPassword(this.localEntry);
     this.closed.emit();
+    this.clearData();
     ToastService.success("Запись была успешно создана!");
   }
 

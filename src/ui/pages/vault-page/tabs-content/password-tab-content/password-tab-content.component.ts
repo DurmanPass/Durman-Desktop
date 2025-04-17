@@ -1,4 +1,4 @@
-import {ApplicationRef, Component, EnvironmentInjector, inject} from '@angular/core';
+import {Component, EnvironmentInjector, inject} from '@angular/core';
 import {InputComponent} from "../../../../components/inputs/input/input.component";
 import {PasswordManagerStateInterface} from "../../../../../interfaces/data/passwordManagerState.interface";
 import {VIEW_MANAGER_MODES} from "../../../../../shared/enums/modes/view-manager.enum";
@@ -23,8 +23,6 @@ import {
 import {PasswordDetailsModalModes} from "../../../../../shared/enums/modes/modals/password-details-modal-modes.enum";
 import {CategoryModalModes} from "../../../../../shared/enums/modes/modals/category-model-modes.enum";
 import {CategoryModalComponent} from "../../../../components/modals/category-modal/category-modal.component";
-import {Table} from "jspdf-autotable";
-import {TableColumn} from "../../../../../interfaces/components/table/tableColumn.interface";
 import {EntriesTableComponent} from "../../../../components/tables/entries-table/entries-table.component";
 import {ToastService} from "../../../../../services/notification/toast.service";
 import {SettingsService} from "../../../../../services/settings/app-settings.service";
@@ -32,13 +30,8 @@ import {Category} from "../../../../../interfaces/data/category.interface";
 import {CategoryService} from "../../../../../services/routes/category/category.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {CategoryLocalService} from "../../../../../services/category/category-local.service";
-import {ContextMenuItem} from "../../../../../interfaces/components/context-menu-item.interface";
-import {CategoryContextMenu} from "../../../../../shared/const/contextMenu/category.contextmenu";
 import {ContextMenuComponent} from "../../../../components/contextMenus/context-menu/context-menu.component";
 import {PasswordService} from "../../../../../services/routes/password/password.service";
-import {CryptoAesGcmService} from "../../../../../services/crypto/crypto-aes-gcm.service";
-import {StoreService} from "../../../../../services/vault/store.service";
-import {StoreKeys} from "../../../../../shared/const/vault/store.keys";
 import {DecryptValue} from "../../../../../utils/crypto.utils";
 import {ConfirmModalComponent} from "../../../../components/modals/confirm-modal/confirm-modal.component";
 import {ConfirmModalService} from "../../../../../services/modals/confirm-modal.service";
@@ -123,7 +116,6 @@ export class PasswordTabContentComponent {
   async ngOnInit() {
     await this.categoryLocalService.syncCategories();
     await this.updateCategories();
-    // await this.passwordManagerService.syncPasswords();
     await this.updateEntries();
     this.updateStats();
   }
@@ -142,7 +134,6 @@ export class PasswordTabContentComponent {
 
   protected async updateCategories() {
     this.selectedCategory = 'All';
-    // await this.categoryLocalService.syncCategories();
     this.categories = this.categoryLocalService.getCategories();
   }
 
@@ -204,8 +195,7 @@ export class PasswordTabContentComponent {
 
   async editEntry(id: string): Promise<void> {
     try {
-      const entry = await this.passwordManagerService.getPasswordById(id);
-      this.selectedPasswordEntry = entry;
+      this.selectedPasswordEntry = await this.passwordManagerService.getPasswordById(id);
       this.modalsControls.createOrEditPassword.isModalOpen = true;
       this.modalsControls.createOrEditPassword.mode = PasswordDetailsModalModes.EDIT;
     } catch (e) {
@@ -297,10 +287,10 @@ export class PasswordTabContentComponent {
     }
   }
 
-  closeCreateOrEditPasswordModal(): void {
+  async closeCreateOrEditPasswordModal() {
     this.modalsControls.createOrEditPassword.isModalOpen = false;
     this.selectedPasswordEntry = null;
-    this.updateEntries();
+    await this.updateEntries();
     this.updateStats();
   }
 

@@ -13,6 +13,9 @@ import {WindowService} from "../../../../../services/window.service";
 import {SettingsService} from "../../../../../services/settings/app-settings.service";
 import {PasswordStrengthService} from "../../../../../services/password/password-strength.service";
 import {UserDataService} from "../../../../../services/user/user-data.service";
+import {PasswordService} from "../../../../../services/routes/password/password.service";
+import {PasswordManagerService} from "../../../../../services/password/password-manager.service";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 
 @Component({
   selector: 'app-home-tab-content',
@@ -22,7 +25,8 @@ import {UserDataService} from "../../../../../services/user/user-data.service";
         WidgetBaseComponent,
         HeaderDescriptionComponent,
         NgForOf,
-        NgIf
+        NgIf,
+        HttpClientModule
     ],
   templateUrl: './home-tab-content.component.html',
   styleUrl: './home-tab-content.component.css'
@@ -36,28 +40,43 @@ export class HomeTabContentComponent {
         description: getRandomPasswordText().description
     }
 
+    constructor(private http: HttpClient) {
+    }
+
     protected passwordStrengthService = new PasswordStrengthService();
+    protected serverPasswordService = new PasswordService(this.http);
+    protected passwordManagerService = new PasswordManagerService(this.serverPasswordService);
 
 
     passwordsInfo: PasswordInfo[] = [
-        {
-            id: 'all',
-            score: this.passwordStrengthService.getUniquePasswordsCount(),
-            color: "DarkGreen"
-        },
-        {
-            id: 'weak',
-            score: this.passwordStrengthService.getWeakPasswordsCount(),
-            color: "DarkOrange"
-        },
-        {
-            id: 'reused',
-            score: this.passwordStrengthService.getReusedPasswordsCount(),
-            color: "Grey"
-        },
+        { id: 'all', score: 0, color: "DarkGreen" },
+        { id: 'weak', score: 0, color: "DarkOrange" },
+        { id: 'reused', score: 0, color: "Grey" },
     ];
 
-    ngOnInit() {
+    private updatePasswordInfo(): void {
+        this.passwordsInfo = [
+            {
+                id: 'all',
+                score: this.passwordStrengthService.getUniquePasswordsCount(),
+                color: "DarkGreen"
+            },
+            {
+                id: 'weak',
+                score: this.passwordStrengthService.getWeakPasswordsCount(),
+                color: "DarkOrange"
+            },
+            {
+                id: 'reused',
+                score: this.passwordStrengthService.getReusedPasswordsCount(),
+                color: "Grey"
+            },
+        ];
+    }
+
+    async ngOnInit() {
+        // await this.passwordManagerService.syncPasswords();
+        this.updatePasswordInfo();
         this.securityLevel = this.passwordStrengthService.getOverallPasswordStrengthPercentage();
     }
 
