@@ -3,7 +3,7 @@ import {InputComponent} from "../../../../components/inputs/input/input.componen
 import {PasswordManagerStateInterface} from "../../../../../interfaces/data/passwordManagerState.interface";
 import {VIEW_MANAGER_MODES} from "../../../../../shared/enums/modes/view-manager.enum";
 import {SORT_ORDER_ENTRY, SORT_PASSWORD_ENTRY} from "../../../../../shared/enums/modes/sort-password-entry.enum";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {ThemeColors} from "../../../../../shared/const/colors/general/themeColors";
 import {PasswordEntryInterface} from "../../../../../interfaces/data/passwordEntry.interface";
 import {PasswordManagerService} from "../../../../../services/password/password-manager.service";
@@ -54,7 +54,8 @@ import {ModalsConfig} from "../../../../../shared/const/components/modals/modals
     EntriesTableComponent,
     HttpClientModule,
     ContextMenuComponent,
-    ConfirmModalComponent
+    ConfirmModalComponent,
+    NgClass
   ],
   templateUrl: './password-tab-content.component.html',
   styleUrl: './password-tab-content.component.css'
@@ -100,6 +101,32 @@ export class PasswordTabContentComponent {
     { value: EXPORT_PASSWORDS_TYPES.HTML, label: 'HTML' },
     { value: EXPORT_PASSWORDS_TYPES.ZIP, label: 'ZIP (защищённый паролем)' }
   ];
+
+  // Опции для выпадающего списка сортировки
+  sortOptions = [
+    { value: SORT_PASSWORD_ENTRY.NAME, label: 'Название' },
+    { value: SORT_PASSWORD_ENTRY.URL, label: 'URL' },
+    { value: SORT_PASSWORD_ENTRY.USERNAME, label: 'Имя пользователя' },
+    { value: SORT_PASSWORD_ENTRY.EMAIL, label: 'Электронная почта' },
+    { value: SORT_PASSWORD_ENTRY.PHONE_NUMBER, label: 'Номер телефона' },
+    { value: SORT_PASSWORD_ENTRY.CATEGORY, label: 'Категория' },
+    { value: SORT_PASSWORD_ENTRY.CREATED_AT, label: 'Дата создания' }
+  ];
+
+  // Обработчик изменения критерия сортировки
+  async onSortCriterionChange(criterion: string) {
+    this.PasswordManagerState.sortCriterion = criterion as SORT_PASSWORD_ENTRY;
+    await this.updateEntries();
+  }
+
+  // Переключение направления сортировки
+  async toggleSortOrder() {
+    this.PasswordManagerState.sortOrder =
+        this.PasswordManagerState.sortOrder === SORT_ORDER_ENTRY.ASC
+            ? SORT_ORDER_ENTRY.DESC
+            : SORT_ORDER_ENTRY.ASC;
+    await this.updateEntries();
+  }
 
   constructor(
       private http: HttpClient,
@@ -307,4 +334,5 @@ export class PasswordTabContentComponent {
   protected readonly VIEW_MANAGER_MODES = VIEW_MANAGER_MODES;
   protected readonly ThemeColors = ThemeColors;
   protected readonly PasswordManagerService = PasswordManagerService;
+  protected readonly SORT_ORDER_ENTRY = SORT_ORDER_ENTRY;
 }

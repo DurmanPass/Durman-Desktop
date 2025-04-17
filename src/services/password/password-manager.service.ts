@@ -9,6 +9,7 @@ import {CryptoAesGcmService} from "../crypto/crypto-aes-gcm.service";
 import {CategoryService} from "../routes/category/category.service";
 import {CategoryLocalService} from "../category/category-local.service";
 import {HttpClient} from "@angular/common/http";
+import {SORT_PASSWORD_ENTRY} from "../../shared/enums/modes/sort-password-entry.enum";
 
 @Injectable({
     providedIn: 'root'
@@ -281,8 +282,8 @@ export class PasswordManagerService {
     //     return sortedEntries;
     // }
     public static getEntriesSortedBy(
-        criterion: 'name' | 'createdAt' | 'updatedAt' | 'usageCount',
-        order: 'asc' | 'desc' = 'asc'
+        criterion: SORT_PASSWORD_ENTRY,
+        order: "asc" | "desc" = 'asc'
     ): PasswordEntryInterface[] {
         const sortedEntries = [...this.entries];
         const sortFunctions: Record<string, (a: PasswordEntryInterface, b: PasswordEntryInterface) => number> = {
