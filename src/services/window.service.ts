@@ -25,6 +25,10 @@ export class WindowService {
         }
     }
 
+    static async closeAllWindows(){
+        await invoke(TauriCommands.WINDOW_SERVICE.CLOSE_ALL_WINDOWS);
+    }
+
     static async closeAllWindowsExVault(){
         await invoke(TauriCommands.WINDOW_SERVICE.CLOSE_ALL_WINDOWS_EXCEPT_VAULT_WINDOW);
     }

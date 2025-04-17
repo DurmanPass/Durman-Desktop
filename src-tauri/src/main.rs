@@ -59,6 +59,17 @@ fn close_all_except_vault_window(app: AppHandle) {
 }
 
 #[tauri::command]
+fn close_all_windows(app: AppHandle) {
+    let windows = app.windows(); // Получаем все окна приложения
+
+    for (label, window) in windows {
+        window.close().unwrap_or_else(|err| {
+            eprintln!("Ошибка при закрытии окна {}: {:?}", label, err);
+        });
+    }
+}
+
+#[tauri::command]
 fn close_current_window(window: tauri::Window) {
     window.close().unwrap();
 }
@@ -181,7 +192,8 @@ fn main() {
             export_to_encrypted_zip,
             save_file,
             initialize_screenshot_blocking,
-            create_durmanpass_dir
+            create_durmanpass_dir,
+            close_all_windows
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

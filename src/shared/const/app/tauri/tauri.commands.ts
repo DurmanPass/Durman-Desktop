@@ -5,6 +5,7 @@ export const TauriCommands = {
         GET_WINDOW_LABEL: 'get_window_label',
         CREATE_PASSWORD_GENERATE_PAGE: 'create_password_generate_window',
         CREATE_VAULT_WINDOW: 'create_vault_window',
+        CLOSE_ALL_WINDOWS: 'close_all_windows',
         CLOSE_ALL_WINDOWS_EXCEPT_VAULT_WINDOW: 'close_all_except_vault_window',
         CLOSE_CURRENT_WINDOW: 'close_current_window'
     },

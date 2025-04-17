@@ -26,6 +26,7 @@ import {PasswordService} from "../services/routes/password/password.service";
 import {PasswordManagerService} from "../services/password/password-manager.service";
 import {CategoryService} from "../services/routes/category/category.service";
 import {CategoryLocalService} from "../services/category/category-local.service";
+import {SessionTimeoutService} from "../services/session/session-timeout.service";
 
 @Component({
   selector: 'app-root',
@@ -37,7 +38,7 @@ import {CategoryLocalService} from "../services/category/category-local.service"
 export class AppComponent {
   windowLabel: string = '';
   isLocked: boolean = SecurityLockService.getIsLocked();
-  constructor(appRef: ApplicationRef, injector: EnvironmentInjector, private focusProtection: FocusProtectionService, public screenshotBlocking: ScreenshotBlockingService, private http: HttpClient) {
+  constructor(appRef: ApplicationRef, injector: EnvironmentInjector, private focusProtection: FocusProtectionService, public screenshotBlocking: ScreenshotBlockingService, private http: HttpClient, private sessionTimeoutService: SessionTimeoutService) {
     ToastService.initialize(appRef, injector);
   }
 
@@ -56,6 +57,9 @@ export class AppComponent {
     this.windowLabel = await WindowService.getWindowLabel();
 
     if(this.windowLabel === WINDOWS_LABELS.VAULT){
+      if (!this.sessionTimeoutService.isSessionTimerStarted()) {
+        this.sessionTimeoutService.startSessionTimer();
+      }
     }
     SecurityLockService.initialize();
 
