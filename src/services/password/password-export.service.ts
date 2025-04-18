@@ -36,6 +36,7 @@ export class PasswordExportService {
     // Экспорт в XLSX
     public static async exportToXlsx(filePath: string, fileName: string = this.baseFilename): Promise<void> {
         const entries = await this.getEntries();
+        console.log(entries);
         const worksheetData = entries.map(entry => ({
             Name: entry.name ? entry.name : '-',
             URL: entry.location.url ? entry.location.url : '-',
@@ -59,11 +60,10 @@ export class PasswordExportService {
         // Сохраняем файл через Tauri plugin-fs
         await writeFile(
             fullPath,
-            excelData // Передаём Uint8Array напрямую
+            excelData
         );
     }
 
-    // Экспорт в HTML
     public static async exportToHtml(filePath: string, fileName: string = this.baseFilename): Promise<void> {
         const entries = await this.getEntries();
         let htmlTemplate = ExportPasswordsHtmlTemplate;
@@ -73,19 +73,18 @@ export class PasswordExportService {
             .map(
                 entry => `
           <tr>
-            <td>${entry.name}</td>
-            <td>${entry.location.url}</td>
-            <td>${entry.credentials.username}</td>
-            <td>${entry.credentials.email}</td>
-            <td>${entry.credentials.phoneNumber}</td>
-            <td>${entry.credentials.pin}</td>
-            <td>${entry.credentials.passwordStrength}</td>
-            <td>${entry.credentials.password}</td>
-            <td>${entry.metadata.categoryLabel}</td>
-            <td>${entry.metadata.createdAt}</td>
-            <td>${entry.metadata.updatedAt}</td>
-            <td>${entry.description}</td>
-
+            <td>${entry.name || '-'}</td>
+            <td>${entry.location.url || '-'}</td>
+            <td>${entry.credentials.username || '-'}</td>
+            <td>${entry.credentials.email || '-'}</td>
+            <td>${entry.credentials.phoneNumber || '-'}</td>
+            <td>${entry.credentials.pin || '-'}</td>
+            <td>${entry.credentials.passwordStrength || '-'}</td>
+            <td>${entry.credentials.password || '-'}</td>
+            <td>${entry.metadata.categoryLabel || 'Все'}</td>
+            <td>${entry.metadata.createdAt || '-'}</td>
+            <td>${entry.metadata.updatedAt || '-'}</td>
+            <td>${entry.description || '-'}</td>
           </tr>
         `
             )
@@ -93,16 +92,18 @@ export class PasswordExportService {
 
         // Подставляем строки в шаблон
         const htmlContent = htmlTemplate.replace('{{TABLE_ROWS}}', tableRows);
-        const blob = new Blob([htmlContent], { type: 'text/html' });
-        const arrayBuffer = await blob.arrayBuffer();
-        const uint8Array = new Uint8Array(arrayBuffer);
+        const encoder = new TextEncoder();
+        const uint8Array = encoder.encode(htmlContent); // Преобразуем строку в Uint8Array
         const fullPath = `${filePath}/${this.getFileNameWithDate(fileName, EXPORT_PASSWORDS_TYPES.HTML)}`;
 
-        // Вызываем Rust-команду для сохранения файла
-        const savedPath = await invoke<string>(TauriCommands.SAVE_FILE, {
-            data: Array.from(uint8Array), // Преобразуем Uint8Array в массив
-            filePath: fullPath
-        });
+        try {
+            // Сохраняем файл через Tauri plugin-fs
+            await writeFile(fullPath, uint8Array);
+            console.log(`HTML file saved successfully at: ${fullPath}`);
+        } catch (err) {
+            console.error('Error saving HTML file:', err);
+            throw new Error('Failed to export to HTML');
+        }
     }
 
     // Экспорт в защищённый паролем ZIP через Tauri
