@@ -23,6 +23,7 @@ export class LoginService {
                 if (response.accessToken && response.refreshToken) {
                     await StoreService.save(StoreKeys.REFRESH_TOKEN, response.refreshToken);
                     await StoreService.save(StoreKeys.ACCESS_TOKEN, response.accessToken);
+                    await StoreService.save(StoreKeys.USER_ID, response.userId);
                     await StoreService.save(StoreKeys.MASTER_PASSWORD, password);
                     await WindowService.openVaultWindow();
                     setTimeout(async () => {
