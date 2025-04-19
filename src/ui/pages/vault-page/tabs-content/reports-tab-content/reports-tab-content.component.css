@@ -81,6 +81,11 @@ body{
 }
 
 .report-content {
-    max-height: 70%;
+    max-height: 700px;
     overflow-y: auto;
+}
+
+.report-content::-webkit-scrollbar {
+    width: 0;
+    height: 0;
 }

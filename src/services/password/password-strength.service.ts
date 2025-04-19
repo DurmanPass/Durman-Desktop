@@ -176,12 +176,17 @@ export class PasswordStrengthService {
      * @returns Массив записей, где пароли используются более одного раза
      */
     async getReusedPasswords(): Promise<PasswordEntryInterface[]> {
-        const entries = await Promise.all(
-            PasswordManagerService.getAllEntries().map(async (entry) => {
+        // Создаём глубокую копию записей
+        const entries = JSON.parse(JSON.stringify(PasswordManagerService.getAllEntries())) as PasswordEntryInterface[];
+
+        const passwords = await Promise.all(
+            entries.map(async (entry) => {
+                console.log('Before decryption:', entry.credentials.password);
                 entry.credentials.password = await DecryptValue(
                     entry.credentials.password,
                     entry.credentials.encryption_iv
                 );
+                console.log('After decryption:', entry.credentials.password);
                 return entry;
             })
         );

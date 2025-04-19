@@ -25,7 +25,7 @@ export class PasswordManagerService {
         return {
             id: backendEntry.id || this.generateUniqueId(),
             name: backendEntry.title,
-            description: backendEntry.title || '',
+            description: '',
             favicon: '',
             credentials: {
                 username: backendEntry.username || '',
@@ -60,27 +60,6 @@ export class PasswordManagerService {
 
     // Преобразование PasswordEntryInterface в PasswordBackendEntry
     private static async mapEntryToBackend(entry: PasswordEntryInterface): Promise<PasswordBackendEntry> {
-        // return {
-        //     title: entry.name,
-        //     url: entry.location.url,
-        //     domain: entry.location.domain,
-        //     username: entry.credentials.username || null,
-        //     email: entry.credentials.email,
-        //     phone: entry.credentials.phoneNumber,
-        //     encrypted_password: entry.credentials.password,
-        //     encryption_iv: '', // Предполагается, что IV будет добавлен при шифровании
-        //     pin_code: entry.credentials.pin,
-        //     pin_hints: entry.credentials.recoveryCodes,
-        //     category_id: entry.metadata.category || null,
-        //     password_strength: entry.credentials.passwordStrength,
-        //     id: entry.id,
-        //     user_id: undefined,
-        //     usage_count: entry.metadata.usageCount,
-        //     created_at: entry.metadata.createdAt,
-        //     updated_at: entry.metadata.updatedAt,
-        //     last_used: entry.metadata.lastUsed || null
-        // };
-
         const userId = await StoreService.get(StoreKeys.USER_ID);
 
         return {
@@ -97,7 +76,7 @@ export class PasswordManagerService {
             category_id: entry.metadata.category === '' ? null : entry.metadata.category,
             password_strength: entry.credentials.passwordStrength ?? null,
             id: entry.id === '' ? null : entry.id,
-            user_id: userId, // Оставляем как undefined, как в исходнике
+            user_id: userId,
             usage_count: entry.metadata.usageCount ?? null,
             created_at: entry.metadata.createdAt === '' ? null : entry.metadata.createdAt,
             updated_at: entry.metadata.updatedAt === '' ? null : entry.metadata.updatedAt,

@@ -488,18 +488,26 @@ export class ReportService {
     }
 
     public static async generateWeakPasswordsReport(): Promise<string> {
+        // Создаём глубокую копию записей
+        const entries = JSON.parse(JSON.stringify(PasswordManagerService.getAllEntries())) as PasswordEntryInterface[];
+
         const passwords = await Promise.all(
-            PasswordManagerService.getAllEntries().map(async (entry) => {
+            entries.map(async (entry) => {
+                console.log('Before decryption:', entry.credentials.password);
                 entry.credentials.password = await DecryptValue(
                     entry.credentials.password,
                     entry.credentials.encryption_iv
                 );
+                console.log('After decryption:', entry.credentials.password);
                 return entry;
             })
         );
 
+        const passwordStrengthService = new PasswordStrengthService();
+
+
         const weakPasswords = passwords.filter(
-            (entry) => entry.credentials.passwordStrength && entry.credentials.passwordStrength < 3
+            (entry) => passwordStrengthService.getPasswordScore(entry.credentials.password ? entry.credentials.password : '') < 3
         );
 
         if (weakPasswords.length === 0) {
@@ -507,8 +515,6 @@ export class ReportService {
             ToastService.warning('Слабых паролей не найдено');
             return '<p>Слабых паролей не найдено.</p>';
         }
-
-        const passwordStrengthService = new PasswordStrengthService();
 
         // Экранирование HTML для безопасного вывода
         const escapeHtml = (unsafe: string | undefined): string => {
@@ -706,7 +712,6 @@ export class ReportService {
               <p><strong>Электронная почта:</strong> ${escapeHtml(entry.credentials.email ? entry.credentials.email : 'Не указано')}</p>
               <p><strong>Имя пользователя:</strong> ${escapeHtml(entry.credentials.username ? entry.credentials.username : 'Не указано')}</p>
               <p><strong>Номер телефона:</strong> ${escapeHtml(entry.credentials.phoneNumber ? entry.credentials.phoneNumber : 'Не указано')}</p>
-              <p><strong>Пароль:</strong> ${escapeHtml(entry.credentials.password ? entry.credentials.password : 'Не указан')}</p>
               <p><strong>Категория:</strong> ${escapeHtml(entry.metadata.categoryLabel ? entry.metadata.categoryLabel : 'Все')}</p>
             </div>
             <div class="risk">
