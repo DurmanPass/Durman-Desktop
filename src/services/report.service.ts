@@ -232,40 +232,118 @@ export class ReportService {
         }
     }
 
-    public static async generateFrequentUsageReport() {
-        try {
-            const selectedPath = await DialogService.selectPath();
-            if (!selectedPath) {
-                return;
-            }
+    // public static async generateFrequentUsageReport() {
+    //     try {
+    //         const selectedPath = await DialogService.selectPath();
+    //         if (!selectedPath) {
+    //             return;
+    //         }
+    //
+    //         const passwordStrengthService = new PasswordStrengthService();
+    //         const reusedEntries = await passwordStrengthService.getReusedPasswords();
+    //         if (reusedEntries.length === 0) {
+    //             return;
+    //         }
+    //
+    //         const passwordGroups = new Map<string, PasswordEntryInterface[]>();
+    //         reusedEntries.forEach((entry: PasswordEntryInterface) => {
+    //             const password = entry.credentials.password || '';
+    //             const group = passwordGroups.get(password) || [];
+    //             group.push(entry);
+    //             passwordGroups.set(password, group);
+    //         });
+    //
+    //         const reusedPasswordGroups = Array.from(passwordGroups.entries()).map(([password, entries]) => {
+    //             const entryCards = entries.map(entry => `
+    //       <div class="entry-card">
+    //         <p><strong>Название:</strong> ${entry.name}</p>
+    //         <p><strong>URL:</strong> ${entry.location.url || 'Не указан'}</p>
+    //         <p><strong>Имя пользователя:</strong> ${entry.credentials.username || 'Не указано'}</p>
+    //         <p><strong>Категория:</strong> ${entry.metadata.categoryLabel || 'Все'}</p>
+    //       </div>
+    //     `).join('');
+    //
+    //             return `
+    //       <div class="password-group">
+    //         <h2>Пароль: "${password}" (используется ${entries.length} раз)</h2>
+    //         ${entryCards}
+    //         <div class="recommendations">
+    //           <strong>Рекомендации:</strong>
+    //           <ul>
+    //             <li>Используйте уникальный пароль для каждой записи.</li>
+    //             <li>Сгенерируйте новый сложный пароль в менеджере паролей.</li>
+    //             <li>Обновите этот пароль на всех указанных сайтах.</li>
+    //           </ul>
+    //         </div>
+    //       </div>
+    //     `;
+    //         }).join('') || '<p>Переиспользуемых паролей не найдено.</p>';
+    //
+    //         const htmlContent = FrequentUsageReportTemplate.replace('{{REUSED_PASSWORD_GROUPS}}', reusedPasswordGroups);
+    //         const blob = new Blob([htmlContent], { type: 'text/html' });
+    //         const arrayBuffer = await blob.arrayBuffer();
+    //         const uint8Array = new Uint8Array(arrayBuffer);
+    //         const fullPath = `${selectedPath}/frequent-usage-report-${new Date().toISOString().slice(0, 10)}.html`;
+    //
+    //         await invoke<string>(TauriCommands.SAVE_FILE, {
+    //             data: Array.from(uint8Array),
+    //             filePath: fullPath
+    //         });
+    //         ToastService.success("Отчёт о часто используемых паролях успешно создан!")
+    //     } catch (error) {
+    //     }
+    // }
 
-            const passwordStrengthService = new PasswordStrengthService();
-            const reusedEntries = await passwordStrengthService.getReusedPasswords();
-            if (reusedEntries.length === 0) {
-                return;
-            }
+    public static async generateFrequentUsageReport(): Promise<void> {
+        const selectedPath = await DialogService.selectPath();
+        if (!selectedPath) {
+            console.log('No path selected for frequent usage report');
+            return;
+        }
 
-            const passwordGroups = new Map<string, PasswordEntryInterface[]>();
-            reusedEntries.forEach((entry: PasswordEntryInterface) => {
-                const password = entry.credentials.password || '';
-                const group = passwordGroups.get(password) || [];
-                group.push(entry);
-                passwordGroups.set(password, group);
-            });
+        const passwordStrengthService = new PasswordStrengthService();
+        const reusedEntries = await passwordStrengthService.getReusedPasswords();
+        if (reusedEntries.length === 0) {
+            console.log('Переиспользуемых паролей не найдено');
+            ToastService.warning('Переиспользуемых паролей не найдено');
+            return;
+        }
 
-            const reusedPasswordGroups = Array.from(passwordGroups.entries()).map(([password, entries]) => {
-                const entryCards = entries.map(entry => `
+        const passwordGroups = new Map<string, PasswordEntryInterface[]>();
+        reusedEntries.forEach((entry: PasswordEntryInterface) => {
+            const password = entry.credentials.password || '';
+            const group = passwordGroups.get(password) || [];
+            group.push(entry);
+            passwordGroups.set(password, group);
+        });
+
+        // Экранирование HTML для безопасного вывода
+        const escapeHtml = (unsafe: string | undefined): string => {
+            if (!unsafe) return 'Не указано';
+            return unsafe
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        };
+
+        const reusedPasswordGroups = Array.from(passwordGroups.entries()).map(([password, entries]) => {
+            const entryCards = entries.map(entry => `
           <div class="entry-card">
-            <p><strong>Название:</strong> ${entry.name}</p>
-            <p><strong>URL:</strong> ${entry.location.url || 'Не указан'}</p>
-            <p><strong>Имя пользователя:</strong> ${entry.credentials.username || 'Не указано'}</p>
-            <p><strong>Категория:</strong> ${entry.metadata.categoryLabel || 'Все'}</p>
+            <p><strong>Название:</strong> ${escapeHtml(entry.name ? entry.name : 'Не указано')}</p>
+            <p><strong>URL:</strong> ${escapeHtml(entry.location.url ? entry.location.url : 'Не указан')}</p>
+            <p><strong>Электронная почта:</strong> ${escapeHtml(entry.credentials.email ? entry.credentials.email : 'Не указано')}</p>
+            <p><strong>Имя пользователя:</strong> ${escapeHtml(entry.credentials.username ? entry.credentials.username : 'Не указано')}</p>
+            <p><strong>Номер телефона:</strong> ${escapeHtml(entry.credentials.phoneNumber ? entry.credentials.phoneNumber : 'Не указано')}</p>
+            <p><strong>Пароль:</strong> ${escapeHtml(entry.credentials.password ? entry.credentials.password : 'Не указан')}</p>
+            <p><strong>Категория:</strong> ${escapeHtml(entry.metadata.categoryLabel ? entry.metadata.categoryLabel : 'Все')}</p>
           </div>
         `).join('');
 
-                return `
+            return `
           <div class="password-group">
-            <h2>Пароль: "${password}" (используется ${entries.length} раз)</h2>
+            <h2>Пароль: "${escapeHtml(password)}" (используется ${entries.length} раз)</h2>
             ${entryCards}
             <div class="recommendations">
               <strong>Рекомендации:</strong>
@@ -277,20 +355,34 @@ export class ReportService {
             </div>
           </div>
         `;
-            }).join('') || '<p>Переиспользуемых паролей не найдено.</p>';
+        }).join('') || '<p>Переиспользуемых паролей не найдено.</p>';
 
-            const htmlContent = FrequentUsageReportTemplate.replace('{{REUSED_PASSWORD_GROUPS}}', reusedPasswordGroups);
-            const blob = new Blob([htmlContent], { type: 'text/html' });
-            const arrayBuffer = await blob.arrayBuffer();
-            const uint8Array = new Uint8Array(arrayBuffer);
-            const fullPath = `${selectedPath}/frequent-usage-report-${new Date().toISOString().slice(0, 10)}.html`;
+        // Подставляем группы в шаблон
+        if (!FrequentUsageReportTemplate) {
+            console.error('Frequent usage report template is empty or not loaded');
+            throw new Error('Report template is not available');
+        }
 
-            await invoke<string>(TauriCommands.SAVE_FILE, {
-                data: Array.from(uint8Array),
-                filePath: fullPath
-            });
-            ToastService.success("Отчёт о часто используемых паролях успешно создан!")
-        } catch (error) {
+        const htmlContent = FrequentUsageReportTemplate.replace('{{REUSED_PASSWORD_GROUPS}}', reusedPasswordGroups);
+        const encoder = new TextEncoder();
+        const uint8Array = encoder.encode(htmlContent);
+        if (typeof selectedPath !== 'string') {
+            console.error('Selected path is not a string:', selectedPath);
+            return;
+        }
+        const fullPath = await join(selectedPath, `frequent-usage-report-${new Date().toISOString().slice(0, 10)}.html`);
+        const normalizedPath = await normalize(fullPath);
+
+        try {
+            console.log('Saving frequent usage report to:', normalizedPath);
+            console.log('HTML content length:', htmlContent.length);
+            await writeFile(normalizedPath, uint8Array);
+            console.log('Frequent usage report saved successfully');
+            ToastService.success(`Отчёт о часто используемых паролях успешно создан! Найдено групп: ${passwordGroups.size}`);
+        } catch (err) {
+            console.error('Error saving frequent usage report:', err);
+            ToastService.danger('Не удалось создать отчёт о часто используемых паролях');
+            throw new Error('Failed to generate frequent usage report');
         }
     }
 
@@ -348,16 +440,91 @@ export class ReportService {
     /**
      * Генерирует отчёт о небезопасных URL в HTML
      */
-    public static async generateUnsafeUrlReport() {
+    // public static async generateUnsafeUrlReport() {
+    //
+    //     const entries = PasswordManagerService.getAllEntries();
+    //     if (entries.length === 0) {
+    //         console.log('Записей не найдено');
+    //         return;
+    //     }
+    //
+    //     const selectedPath = await DialogService.selectPath();
+    //     if(!selectedPath){
+    //         return;
+    //     }
+    //
+    //     const uniqueEntriesMap = new Map<string, typeof entries[0]>();
+    //     entries.forEach(entry => {
+    //         if (entry.id) {
+    //             uniqueEntriesMap.set(entry.id, entry);
+    //         }
+    //     });
+    //
+    //     // Проверяем фильтрацию небезопасных URL
+    //     let unsafeUrls: typeof entries;
+    //     try {
+    //         unsafeUrls = Array.from(uniqueEntriesMap.values()).filter(entry => {
+    //             try {
+    //                 return ReportService.isUrlUnsafe(entry.location.url ? entry.location.url : '', entry.location.domain ? entry.location.domain : '');
+    //             } catch (innerError) {
+    //                 return false;
+    //             }
+    //         });
+    //     } catch (filterError) {
+    //         return;
+    //     }
+    //     if (unsafeUrls.length === 0) {
+    //         return;
+    //     }
+    //
+    //       // Генерируем HTML для каждой небезопасной записи
+    //       const unsafeUrlEntries = unsafeUrls.map(entry => {
+    //           const { reason, suggestions } = ReportService.getUrlSafetyFeedback(entry.location.url ? entry.location.url : '', entry.location.domain ? entry.location.domain : '');
+    //
+    //           return `
+    //       <div class="url-entry">
+    //         <h2>Запись: ${entry.name}</h2>
+    //         <div class="url-details">
+    //           <p><strong>URL:</strong> ${entry.location.url || 'Не указан'}</p>
+    //           <p><strong>Имя пользователя:</strong> ${entry.credentials.username || 'Не указано'}</p>
+    //           <p><strong>Категория:</strong> ${entry.metadata.categoryLabel || 'Все'}</p>
+    //         </div>
+    //         <div class="risk">
+    //           <strong>Почему сайт небезопасен?</strong>
+    //           <p>${reason ? reason : ''}</p>
+    //         </div>
+    //         <div class="recommendations">
+    //           <strong>Рекомендации:</strong>
+    //           <ul>${suggestions.length > 0 ? suggestions.map(s => `<li>${s}</li>`).join('') : ''}</ul>
+    //         </div>
+    //       </div>
+    //     `;
+    //       }).join('');
+    //
+    //     const htmlContent = UnsafeUrlReportTemplate.replace('{{UNSAFE_URL_ENTRIES}}', unsafeUrlEntries);
+    //     const blob = new Blob([htmlContent], { type: 'text/html' });
+    //     const arrayBuffer = await blob.arrayBuffer();
+    //     const uint8Array = new Uint8Array(arrayBuffer);
+    //     const fullPath = `${selectedPath}/unsafe-url-report-${new Date().toISOString().slice(0, 10)}.html`;
+    //
+    //     await invoke<string>(TauriCommands.SAVE_FILE, {
+    //         data: Array.from(uint8Array),
+    //         filePath: fullPath
+    //     });
+    //     ToastService.success("Отчёт о небезопасных сайтах успешно создан!")
+    // }
 
+    public static async generateUnsafeUrlReport(): Promise<void> {
         const entries = PasswordManagerService.getAllEntries();
         if (entries.length === 0) {
             console.log('Записей не найдено');
+            ToastService.warning('Записей не найдено');
             return;
         }
-        
+
         const selectedPath = await DialogService.selectPath();
-        if(!selectedPath){
+        if (!selectedPath) {
+            console.log('No path selected for unsafe URL report');
             return;
         }
 
@@ -368,57 +535,103 @@ export class ReportService {
             }
         });
 
-        // Проверяем фильтрацию небезопасных URL
         let unsafeUrls: typeof entries;
         try {
             unsafeUrls = Array.from(uniqueEntriesMap.values()).filter(entry => {
                 try {
-                    return ReportService.isUrlUnsafe(entry.location.url ? entry.location.url : '', entry.location.domain ? entry.location.domain : '');
+                    return ReportService.isUrlUnsafe(
+                        entry.location.url ? entry.location.url : '',
+                        entry.location.domain ? entry.location.domain : ''
+                    );
                 } catch (innerError) {
+                    console.warn('Error checking URL safety:', innerError);
                     return false;
                 }
             });
         } catch (filterError) {
+            console.error('Error filtering unsafe URLs:', filterError);
+            ToastService.danger('Не удалось обработать небезопасные URL');
             return;
         }
+
         if (unsafeUrls.length === 0) {
+            console.log('Небезопасных URL не найдено');
+            ToastService.warning('Небезопасных URL не найдено');
             return;
         }
 
-          // Генерируем HTML для каждой небезопасной записи
-          const unsafeUrlEntries = unsafeUrls.map(entry => {
-              const { reason, suggestions } = ReportService.getUrlSafetyFeedback(entry.location.url ? entry.location.url : '', entry.location.domain ? entry.location.domain : '');
+        // Экранирование HTML для безопасного вывода
+        const escapeHtml = (unsafe: string | undefined): string => {
+            if (!unsafe) return 'Не указано';
+            return unsafe
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        };
 
-              return `
+        // Генерируем HTML для каждой небезопасной записи
+        const unsafeUrlEntries = unsafeUrls.map(entry => {
+            const { reason, suggestions } = ReportService.getUrlSafetyFeedback(
+                entry.location.url ? entry.location.url : '',
+                entry.location.domain ? entry.location.domain : ''
+            );
+
+            const reasonHtml = reason ? escapeHtml(reason) : 'Причина не указана';
+            const suggestionsHtml = suggestions.length > 0
+                ? suggestions.map(s => `<li>${escapeHtml(s)}</li>`).join('')
+                : '<li>Проверьте сайт на наличие HTTPS и обновите URL.</li>';
+
+            return `
           <div class="url-entry">
-            <h2>Запись: ${entry.name}</h2>
+            <h2>Запись: ${escapeHtml(entry.name ? entry.name : 'Не указан')}</h2>
             <div class="url-details">
-              <p><strong>URL:</strong> ${entry.location.url || 'Не указан'}</p>
-              <p><strong>Имя пользователя:</strong> ${entry.credentials.username || 'Не указано'}</p>
-              <p><strong>Категория:</strong> ${entry.metadata.categoryLabel || 'Все'}</p>
+            <p><strong>URL:</strong> ${escapeHtml(entry.location.url ? entry.location.url : 'Не указан')}</p>
+            <p><strong>Электронная почта:</strong> ${escapeHtml(entry.credentials.email ? entry.credentials.email : 'Не указано')}</p>
+            <p><strong>Имя пользователя:</strong> ${escapeHtml(entry.credentials.username ? entry.credentials.username : 'Не указано')}</p>
+            <p><strong>Номер телефона:</strong> ${escapeHtml(entry.credentials.phoneNumber ? entry.credentials.phoneNumber : 'Не указано')}</p>
+            <p><strong>Пароль:</strong> ${escapeHtml(entry.credentials.password ? entry.credentials.password : 'Не указан')}</p>
+            <p><strong>Категория:</strong> ${escapeHtml(entry.metadata.categoryLabel ? entry.metadata.categoryLabel : 'Все')}</p>
             </div>
             <div class="risk">
               <strong>Почему сайт небезопасен?</strong>
-              <p>${reason ? reason : ''}</p>
+              <p>${reasonHtml}</p>
             </div>
             <div class="recommendations">
               <strong>Рекомендации:</strong>
-              <ul>${suggestions.length > 0 ? suggestions.map(s => `<li>${s}</li>`).join('') : ''}</ul>
+              <ul>${suggestionsHtml}</ul>
             </div>
           </div>
         `;
-          }).join('');
+        }).join('');
+
+        // Подставляем записи в шаблон
+        if (!UnsafeUrlReportTemplate) {
+            console.error('Unsafe URL report template is empty or not loaded');
+            throw new Error('Report template is not available');
+        }
 
         const htmlContent = UnsafeUrlReportTemplate.replace('{{UNSAFE_URL_ENTRIES}}', unsafeUrlEntries);
-        const blob = new Blob([htmlContent], { type: 'text/html' });
-        const arrayBuffer = await blob.arrayBuffer();
-        const uint8Array = new Uint8Array(arrayBuffer);
-        const fullPath = `${selectedPath}/unsafe-url-report-${new Date().toISOString().slice(0, 10)}.html`;
+        const encoder = new TextEncoder();
+        const uint8Array = encoder.encode(htmlContent);
+        if (typeof selectedPath !== 'string') {
+            console.error('Selected path is not a string:', selectedPath);
+            return;
+        }
+        const fullPath = await join(selectedPath, `unsafe-url-report-${new Date().toISOString().slice(0, 10)}.html`);
+        const normalizedPath = await normalize(fullPath);
 
-        await invoke<string>(TauriCommands.SAVE_FILE, {
-            data: Array.from(uint8Array),
-            filePath: fullPath
-        });
-        ToastService.success("Отчёт о небезопасных сайтах успешно создан!")
+        try {
+            console.log('Saving unsafe URL report to:', normalizedPath);
+            console.log('HTML content length:', htmlContent.length);
+            await writeFile(normalizedPath, uint8Array);
+            console.log('Unsafe URL report saved successfully');
+            ToastService.success(`Отчёт о небезопасных сайтах успешно создан! Найдено небезопасных URL: ${unsafeUrls.length}`);
+        } catch (err) {
+            console.error('Error saving unsafe URL report:', err);
+            ToastService.danger('Не удалось создать отчёт о небезопасных сайтах');
+            throw new Error('Failed to generate unsafe URL report');
+        }
     }
 }
