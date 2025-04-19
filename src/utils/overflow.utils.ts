@@ -8,4 +8,6 @@ export function deleteOverflowWindow(){
 export function deleteMarginWindow(){
     document.body.style.margin = "0px";
     document.documentElement.style.margin = "0px";
+    document.body.style.padding = "0px";
+    document.documentElement.style.padding = "0px";
 }

@@ -3,6 +3,6 @@ export interface ReportCard {
     icon: string;
     title: string;
     description: string;
-    action: () => void;
+    action: () => Promise<string>;
     isEnabled?: boolean;
 }

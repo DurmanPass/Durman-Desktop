@@ -7,14 +7,20 @@
     </header>
 
     <main class="reports-page-main-content">
-        <div class="report-cards">
+        <div class="report-cards" *ngIf="!selectedReport">
             <div class="report-card-container" *ngFor="let report of reportCards">
-                <app-report-card [reportCard]="report"/>
+                <app-report-card [reportCard]="report" (click)="generateReport(report)" />
             </div>
+        </div>
+
+        <div class="report-preview" *ngIf="selectedReport && reportHtml">
+            <div class="report-header">
+                <button (click)="clearReport()">Назад к отчётам</button>
+                <button (click)="downloadReport()">Скачать отчёт</button>
+            </div>
+            <div class="report-content" [innerHTML]="reportHtml"></div>
         </div>
     </main>
 
-    <footer class="reports-page-footer">
-
-    </footer>
+    <footer class="reports-page-footer"></footer>
 </div>
