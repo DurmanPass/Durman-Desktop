@@ -10,6 +10,8 @@ import {PasswordEntryInterface} from "../interfaces/data/passwordEntry.interface
 import {FrequentUsageReportTemplate} from "../shared/export-templates/reports/frequent-usage-report-template";
 import {ToastService} from "./notification/toast.service";
 import {DecryptValue} from "../utils/crypto.utils";
+import {join, normalize} from "@tauri-apps/api/path";
+import {writeFile} from "@tauri-apps/plugin-fs";
 
 
 export class ReportService {
@@ -49,9 +51,88 @@ export class ReportService {
     public static getReportById(id: string): ReportCard | undefined {
         return this.reports.find(report => report.id === id);
     }
-    public static async generateWeakPasswordsReport() {
+    // public static async generateWeakPasswordsReport() {
+    //     const selectedPath = await DialogService.selectPath();
+    //     if(!selectedPath){
+    //         return;
+    //     }
+    //
+    //     const passwords = await Promise.all(
+    //         PasswordManagerService.getAllEntries().map(async (entry) => {
+    //             entry.credentials.password = await DecryptValue(
+    //                 entry.credentials.password,
+    //                 entry.credentials.encryption_iv
+    //             );
+    //             return entry;
+    //         })
+    //     );
+    //
+    //     const weakPasswords = passwords.filter(
+    //         (entry) => entry.credentials.passwordStrength && entry.credentials.passwordStrength < 3
+    //     );
+    //
+    //
+    //     if (weakPasswords.length === 0) {
+    //         console.log('Слабых паролей не найдено');
+    //         return;
+    //     }
+    //
+    //     const passwordStrengthService = new PasswordStrengthService();
+    //
+    //     // Генерируем HTML для каждой записи
+    //     const weakPasswordEntries = weakPasswords.map(entry => {
+    //         const feedback = passwordStrengthService.getPasswordFeedback(entry.credentials.password || '');
+    //         const strength = entry.credentials.passwordStrength ?? passwordStrengthService.getPasswordScore(entry.credentials.password || '');
+    //
+    //         // Формируем описание причин слабости
+    //         const warning = feedback.warning ? `Причина: ${feedback.warning}` : 'Причина: Пароль слишком простой или предсказуемый.';
+    //         const suggestions = feedback.suggestions.length > 0
+    //             ? feedback.suggestions.map(s => `<li>${s}</li>`).join('')
+    //             : '<li>Используйте более длинный пароль с буквами, цифрами и символами.</li>';
+    //
+    //         return `
+    //     <div class="password-entry">
+    //       <h2>Запись: ${entry.name}</h2>
+    //       <div class="password-details">
+    //         <p><strong>URL:</strong> ${entry.location.url || 'Не указан'}</p>
+    //         <p><strong>Электронная почта:</strong> ${entry.credentials.email || 'Не указано'}</p>
+    //         <p><strong>Имя пользователя:</strong> ${entry.credentials.username || 'Не указано'}</p>
+    //         <p><strong>Номер телефона:</strong> ${entry.credentials.phoneNumber || 'Не указано'}</p>
+    //         <p><strong>Пароль:</strong> ${entry.credentials.password || 'Не указан'}</p>
+    //         <p><strong>Категория:</strong> ${entry.metadata.categoryLabel || 'Все'}</p>
+    //         <p><strong>Сила пароля:</strong> ${strength} из 4</p>
+    //       </div>
+    //       <div class="feedback">
+    //         <strong>Почему пароль слабый?</strong>
+    //         <p>${warning}</p>
+    //       </div>
+    //       <div class="recommendations">
+    //         <strong>Рекомендации:</strong>
+    //         <ul>${suggestions}</ul>
+    //       </div>
+    //     </div>
+    //   `;
+    //     }).join('');
+    //
+    //     // Подставляем записи в шаблон
+    //     const htmlContent = WeakPasswordsReportTemplate.replace('{{WEAK_PASSWORD_ENTRIES}}', weakPasswordEntries);
+    //     const blob = new Blob([htmlContent], { type: 'text/html' });
+    //     const arrayBuffer = await blob.arrayBuffer();
+    //     const uint8Array = new Uint8Array(arrayBuffer);
+    //     const fullPath = `${selectedPath}/weak-passwords-report-${new Date().toISOString().slice(0, 10)}.html`;
+    //
+    //     // Сохраняем файл через Tauri
+    //     await invoke<string>(TauriCommands.SAVE_FILE, {
+    //         data: Array.from(uint8Array),
+    //         filePath: fullPath
+    //     });
+    //     ToastService.success("Отчёт о слабых паролях успешно создан!")
+    // }
+
+    public static async generateWeakPasswordsReport(): Promise<void> {
         const selectedPath = await DialogService.selectPath();
-        if(!selectedPath){
+        if (!selectedPath) {
+            console.log('No path selected for weak passwords report');
             return;
         }
 
@@ -69,13 +150,24 @@ export class ReportService {
             (entry) => entry.credentials.passwordStrength && entry.credentials.passwordStrength < 3
         );
 
-
         if (weakPasswords.length === 0) {
             console.log('Слабых паролей не найдено');
+            ToastService.warning('Слабых паролей не найдено');
             return;
         }
 
         const passwordStrengthService = new PasswordStrengthService();
+
+        // Экранирование HTML для безопасного вывода
+        const escapeHtml = (unsafe: string | undefined): string => {
+            if (!unsafe) return 'Не указано';
+            return unsafe
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        };
 
         // Генерируем HTML для каждой записи
         const weakPasswordEntries = weakPasswords.map(entry => {
@@ -83,21 +175,21 @@ export class ReportService {
             const strength = entry.credentials.passwordStrength ?? passwordStrengthService.getPasswordScore(entry.credentials.password || '');
 
             // Формируем описание причин слабости
-            const warning = feedback.warning ? `Причина: ${feedback.warning}` : 'Причина: Пароль слишком простой или предсказуемый.';
+            const warning = feedback.warning ? `Причина: ${escapeHtml(feedback.warning)}` : 'Причина: Пароль слишком простой или предсказуемый.';
             const suggestions = feedback.suggestions.length > 0
-                ? feedback.suggestions.map(s => `<li>${s}</li>`).join('')
+                ? feedback.suggestions.map(s => `<li>${escapeHtml(s)}</li>`).join('')
                 : '<li>Используйте более длинный пароль с буквами, цифрами и символами.</li>';
 
             return `
         <div class="password-entry">
-          <h2>Запись: ${entry.name}</h2>
+          <h2>Запись: ${escapeHtml(entry.name ? entry.name : '-')}</h2>
           <div class="password-details">
-            <p><strong>URL:</strong> ${entry.location.url || 'Не указан'}</p>
-            <p><strong>Электронная почта:</strong> ${entry.credentials.email || 'Не указано'}</p>
-            <p><strong>Имя пользователя:</strong> ${entry.credentials.username || 'Не указано'}</p>
-            <p><strong>Номер телефона:</strong> ${entry.credentials.phoneNumber || 'Не указано'}</p>
-            <p><strong>Пароль:</strong> ${entry.credentials.password || 'Не указан'}</p>
-            <p><strong>Категория:</strong> ${entry.metadata.categoryLabel || 'Все'}</p>
+            <p><strong>URL:</strong> ${escapeHtml(entry.location.url ? entry.location.url : 'Не указан')}</p>
+            <p><strong>Электронная почта:</strong> ${escapeHtml(entry.credentials.email ? entry.credentials.email : 'Не указано')}</p>
+            <p><strong>Имя пользователя:</strong> ${escapeHtml(entry.credentials.username ? entry.credentials.username : 'Не указано')}</p>
+            <p><strong>Номер телефона:</strong> ${escapeHtml(entry.credentials.phoneNumber ? entry.credentials.phoneNumber : 'Не указано')}</p>
+            <p><strong>Пароль:</strong> ${escapeHtml(entry.credentials.password ? entry.credentials.password : 'Не указан')}</p>
+            <p><strong>Категория:</strong> ${escapeHtml(entry.metadata.categoryLabel ? entry.metadata.categoryLabel : 'Все')}</p>
             <p><strong>Сила пароля:</strong> ${strength} из 4</p>
           </div>
           <div class="feedback">
@@ -113,18 +205,31 @@ export class ReportService {
         }).join('');
 
         // Подставляем записи в шаблон
-        const htmlContent = WeakPasswordsReportTemplate.replace('{{WEAK_PASSWORD_ENTRIES}}', weakPasswordEntries);
-        const blob = new Blob([htmlContent], { type: 'text/html' });
-        const arrayBuffer = await blob.arrayBuffer();
-        const uint8Array = new Uint8Array(arrayBuffer);
-        const fullPath = `${selectedPath}/weak-passwords-report-${new Date().toISOString().slice(0, 10)}.html`;
+        if (!WeakPasswordsReportTemplate) {
+            console.error('Weak passwords report template is empty or not loaded');
+            throw new Error('Report template is not available');
+        }
 
-        // Сохраняем файл через Tauri
-        await invoke<string>(TauriCommands.SAVE_FILE, {
-            data: Array.from(uint8Array),
-            filePath: fullPath
-        });
-        ToastService.success("Отчёт о слабых паролях успешно создан!")
+        const htmlContent = WeakPasswordsReportTemplate.replace('{{WEAK_PASSWORD_ENTRIES}}', weakPasswordEntries);
+        const encoder = new TextEncoder();
+        const uint8Array = encoder.encode(htmlContent);
+        if (typeof selectedPath !== "string") {
+            return;
+        }
+        const fullPath = await join(selectedPath, `weak-passwords-report-${new Date().toISOString().slice(0, 10)}.html`);
+        const normalizedPath = await normalize(fullPath);
+
+        try {
+            console.log('Saving weak passwords report to:', normalizedPath);
+            console.log('HTML content length:', htmlContent.length);
+            await writeFile(normalizedPath, uint8Array);
+            console.log('Weak passwords report saved successfully');
+            ToastService.success('Отчёт о слабых паролях успешно создан!');
+        } catch (err) {
+            console.error('Error saving weak passwords report:', err);
+            ToastService.danger('Не удалось создать отчёт о слабых паролях');
+            throw new Error('Failed to generate weak passwords report');
+        }
     }
 
     public static async generateFrequentUsageReport() {
