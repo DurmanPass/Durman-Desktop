@@ -16,12 +16,17 @@ export class PasswordExportService {
 
     // Получение данных из PasswordManagerService
     private static async getEntries(): Promise<PasswordEntryInterface[]> {
+        // Создаём глубокую копию записей
+        const entries = JSON.parse(JSON.stringify(PasswordManagerService.getAllEntries())) as PasswordEntryInterface[];
+
         return await Promise.all(
-            PasswordManagerService.getAllEntries().map(async (entry) => {
+            entries.map(async (entry) => {
+                console.log('Before decryption:', entry.credentials.password);
                 entry.credentials.password = await DecryptValue(
                     entry.credentials.password,
                     entry.credentials.encryption_iv
                 );
+                console.log('After decryption:', entry.credentials.password);
                 return entry;
             })
         );

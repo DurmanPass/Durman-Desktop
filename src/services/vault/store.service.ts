@@ -195,7 +195,7 @@ export class StoreService {
                 await this.store.save();
             }
         } catch (e) {
-            ToastService.danger(`Ошибка при сохранении ${key} в Store!`);
+            // ToastService.danger(`Ошибка при сохранении ${key} в Store!`);
             throw e;
         }
     }
@@ -208,7 +208,7 @@ export class StoreService {
             if (!encrypted) return null;
             return await decryptData(encrypted, this.encryptionKey!);
         } catch (e) {
-            ToastService.danger(`Ошибка при получении ${key} из Store!`);
+            // ToastService.danger(`Ошибка при получении ${key} из Store!`);
             return null;
         }
     }
@@ -221,7 +221,7 @@ export class StoreService {
                 await this.store.save();
             }
         } catch (e) {
-            ToastService.danger(`Ошибка при удалении ${key} из Store!`);
+            // ToastService.danger(`Ошибка при удалении ${key} из Store!`);
             throw e;
         }
     }
@@ -234,7 +234,7 @@ export class StoreService {
                 await this.store.save();
             }
         } catch (e) {
-            ToastService.danger('Ошибка при очистке Store!');
+            // ToastService.danger('Ошибка при очистке Store!');
             throw e;
         }
     }
