@@ -113,8 +113,10 @@ export class PasswordExportService {
 
     // Экспорт в защищённый паролем ZIP через Tauri
     public static async exportToZip(filePath: string, password: string, fileName: string = this.baseFilename): Promise<void> {
-        const entries = this.getEntries();
+        const entries = await this.getEntries();
         const jsonData = JSON.stringify(entries, null, 2);
+        console.log(entries);
+        console.log(jsonData);
         const fullPath = `${filePath}/${this.getFileNameWithDate(fileName, EXPORT_PASSWORDS_TYPES.ZIP)}`;
 
         const savedPath = await invoke<string>(TauriCommands.EXPORT_TO_ENCRYPTED_ZIP, {

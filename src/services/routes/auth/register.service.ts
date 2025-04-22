@@ -34,7 +34,7 @@ export class RegisterService {
         this.http.post(ApiRoutes.REGISTER.SET_PASSWORD, data).subscribe({
             next: async (response: any) => {
                 if (response.message === 'User registered successfully' && response.userID) {
-                    await StoreService.save(StoreKeys.USER_ID, response.userID);
+                    // await StoreService.save(StoreKeys.USER_ID, response.userID);
                     ToastService.success('Регистрация прошла успешно!')
                     try {
                         await this.loginService.login(email, masterPassword);
