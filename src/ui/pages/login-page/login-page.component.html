@@ -31,7 +31,7 @@
                     [value]="loginUserData.masterPassword"
             >
             </app-input>
-            <app-text-link (click)="getHint()" text="Получить подсказку"/>
+            <app-text-link *ngIf="loginUserData.masterPassword.length === 0" (click)="getHint()" text="Получить подсказку"/>
         </div>
 
         <app-solid-button (click)="onLogin()" text="Продолжить" *ngIf="validateLoginData.isPasswordValid && validateLoginData.isEmailValid" bgColor="DarkGreen" size="Long"/>

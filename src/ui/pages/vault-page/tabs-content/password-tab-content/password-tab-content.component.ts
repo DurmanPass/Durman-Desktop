@@ -36,6 +36,9 @@ import {DecryptValue} from "../../../../../utils/crypto.utils";
 import {ConfirmModalComponent} from "../../../../components/modals/confirm-modal/confirm-modal.component";
 import {ConfirmModalService} from "../../../../../services/modals/confirm-modal.service";
 import {ModalsConfig} from "../../../../../shared/const/components/modals/modals.config";
+import {
+  RecoveryPasswordsModalComponent
+} from "../../../../components/modals/recovery-passwords-modal/recovery-passwords-modal.component";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -55,7 +58,8 @@ import {ModalsConfig} from "../../../../../shared/const/components/modals/modals
     HttpClientModule,
     ContextMenuComponent,
     ConfirmModalComponent,
-    NgClass
+    NgClass,
+    RecoveryPasswordsModalComponent
   ],
   templateUrl: './password-tab-content.component.html',
   styleUrl: './password-tab-content.component.css'
@@ -76,6 +80,9 @@ export class PasswordTabContentComponent {
     createOrEditCategory: {
       isModalOpen: false,
       mode: CategoryModalModes.CREATE
+    },
+    recoveryPasswords: {
+      isModalOpen: false
     }
   };
 
@@ -370,6 +377,15 @@ export class PasswordTabContentComponent {
     this.modalsControls.createOrEditCategory.isModalOpen = false;
     await this.updateCategories();
   }
+
+  closeRecoveryPasswordsModal() {
+    this.modalsControls.recoveryPasswords.isModalOpen = false;
+  }
+
+  openRecoveryModal(){
+    this.modalsControls.recoveryPasswords.isModalOpen = true;
+  }
+
 
   protected readonly VIEW_MANAGER_MODES = VIEW_MANAGER_MODES;
   protected readonly ThemeColors = ThemeColors;
