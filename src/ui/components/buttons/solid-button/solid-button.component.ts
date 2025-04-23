@@ -22,6 +22,7 @@ export class SolidButtonComponent {
   @Input() size: ButtonsSizesType = DefaultButtonSize;
   @Input() text: string = '';
   @Input() textColor: keyof typeof ThemeColors = 'White';
+  @Input() disabled: boolean = false;
 
   get bgButtonColor() {
     return ButtonsColors[this.bgColor] || ButtonsColors[DefaultButtonColor];
