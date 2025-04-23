@@ -41,7 +41,6 @@ export class PasswordExportService {
     // Экспорт в XLSX
     public static async exportToXlsx(filePath: string, fileName: string = this.baseFilename): Promise<void> {
         const entries = await this.getEntries();
-        console.log(entries);
         const worksheetData = entries.map(entry => ({
             Name: entry.name ? entry.name : '-',
             URL: entry.location.url ? entry.location.url : '-',
@@ -59,7 +58,7 @@ export class PasswordExportService {
         const worksheet = XLSX.utils.json_to_sheet(worksheetData);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Passwords');
-        const excelData = XLSX.write(workbook, { bookType:  EXPORT_PASSWORDS_TYPES.XLSX, type: 'array' }); // Uint8Array
+        const excelData = XLSX.write(workbook, { bookType:  EXPORT_PASSWORDS_TYPES.XLSX, type: 'array' });
         const fullPath = `${filePath}/${this.getFileNameWithDate(fileName, EXPORT_PASSWORDS_TYPES.XLSX)}`;
 
         // Сохраняем файл через Tauri plugin-fs
@@ -115,8 +114,6 @@ export class PasswordExportService {
     public static async exportToZip(filePath: string, password: string, fileName: string = this.baseFilename): Promise<void> {
         const entries = await this.getEntries();
         const jsonData = JSON.stringify(entries, null, 2);
-        console.log(entries);
-        console.log(jsonData);
         const fullPath = `${filePath}/${this.getFileNameWithDate(fileName, EXPORT_PASSWORDS_TYPES.ZIP)}`;
 
         const savedPath = await invoke<string>(TauriCommands.EXPORT_TO_ENCRYPTED_ZIP, {

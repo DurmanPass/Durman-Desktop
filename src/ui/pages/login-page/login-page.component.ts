@@ -13,20 +13,23 @@ import {SolidButtonComponent} from "../../components/buttons/solid-button/solid-
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {LoginService} from "../../../services/routes/auth/login.service";
 import {ToastService} from "../../../services/notification/toast.service";
+import {WindowService} from "../../../services/window.service";
+import {TextLinkComponent} from "../../components/links/text-link/text-link.component";
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [
-      HttpClientModule,
-    StepComponent,
-    NgComponentOutlet,
-    NgIf,
-    HeaderDescriptionComponent,
-    InputComponent,
-    RoundButtonComponent,
-    SolidButtonComponent
-  ],
+    imports: [
+        HttpClientModule,
+        StepComponent,
+        NgComponentOutlet,
+        NgIf,
+        HeaderDescriptionComponent,
+        InputComponent,
+        RoundButtonComponent,
+        SolidButtonComponent,
+        TextLinkComponent
+    ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
 })
@@ -70,5 +73,14 @@ export class LoginPageComponent {
     }
   }
 
+  getHint(){
+    if(!this.validateLoginData.isEmailValid){
+      ToastService.danger("Введите корректную электронную почту!");
+    }
+    //TODO отправить почту по маршрутику
+    ToastService.success("Подсказка была отправлена на вашу электронную почту!")
+  }
+
   protected readonly ThemeColors = ThemeColors;
+    protected readonly WindowService = WindowService;
 }
