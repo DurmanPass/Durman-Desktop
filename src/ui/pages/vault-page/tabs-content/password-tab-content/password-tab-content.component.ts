@@ -176,13 +176,16 @@ export class PasswordTabContentComponent {
 
   onSelectedCategory(category: Category) {
     this.selectedCategoryEntry = category;
+    this.selectedCategory = category.name;
   }
 
-  toggleViewMode(): void {
-    this.PasswordManagerState.viewMode =
-        this.PasswordManagerState.viewMode === VIEW_MANAGER_MODES.TABLE
-            ? VIEW_MANAGER_MODES.CARD
-            : VIEW_MANAGER_MODES.TABLE;
+  toggleViewMode(mode: VIEW_MANAGER_MODES): void {
+    // this.PasswordManagerState.viewMode =
+    //     this.PasswordManagerState.viewMode === VIEW_MANAGER_MODES.TABLE
+    //         ? VIEW_MANAGER_MODES.CARD
+    //         : VIEW_MANAGER_MODES.TABLE;
+
+    this.PasswordManagerState.viewMode = mode;
   }
 
   private async updateEntries() {

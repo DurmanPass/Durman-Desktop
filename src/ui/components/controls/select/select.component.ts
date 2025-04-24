@@ -16,6 +16,7 @@ export class SelectComponent {
   @Input() resetToDefault: boolean = false;
   @Input() disabled: boolean = false;
   @Output() optionSelected = new EventEmitter<string>();
+  @Input() defaultSelected: string = '';
 
   onChange(event: Event): void {
     const target = event.target as HTMLSelectElement;

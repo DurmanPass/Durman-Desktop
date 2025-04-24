@@ -47,6 +47,7 @@ export class PasswordDetailsModalComponent {
   isEditLocalEntry: boolean = false;
   categoryOptions: { label: string; value: string }[] = [];
   @Input() categories: Category[] = []
+  @Input() selectedCategory: string = 'All';
   constructor(private http: HttpClient) {
     this.localEntry = this.createEmptyEntry();
     this.updateCategories();
@@ -216,6 +217,7 @@ export class PasswordDetailsModalComponent {
     switch (fieldId) {
       case 'category_field':
         this.localEntry.metadata.category = event;
+        this.selectedCategory = event;
         break;
       default:
         console.warn(`Unknown field: ${fieldId}`);
@@ -237,6 +239,8 @@ export class PasswordDetailsModalComponent {
     const iv = await this.ivService.generateIv();
     this.localEntry.credentials.password =  await EncryptValue(this.localEntry.credentials.password, iv);
     this.localEntry.credentials.encryption_iv = iv;
+    const selectedOption = this.categoryOptions.find(option => option.label === this.selectedCategory);
+    this.localEntry.metadata.category = selectedOption ? selectedOption.value : '';
     await this.passwordManagerService.createPassword(this.localEntry);
     this.closed.emit();
     this.clearData();

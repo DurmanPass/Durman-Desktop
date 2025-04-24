@@ -1,4 +1,4 @@
 <select (change)="onChange($event)" [disabled]="disabled">
-    <option value="" disabled selected>{{ placeholder }}</option>
-    <option *ngFor="let option of options" [value]="option.value">{{ option.label }}</option>
+    <option value="" disabled [selected]="defaultSelected === 'All' || defaultSelected === ''">{{ placeholder }}</option>
+    <option [selected]="option.label === defaultSelected" *ngFor="let option of options" [value]="option.value">{{ option.label }}</option>
 </select>

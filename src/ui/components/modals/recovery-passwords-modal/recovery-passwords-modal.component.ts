@@ -95,14 +95,11 @@ export class RecoveryPasswordsModalComponent {
       const jsonContent = await readTextFile(this.filePath);
       const entries = this.jsonParserService.parseJsonToPasswordEntries(jsonContent);
 
-      console.log(entries);
-
       // Шифрование паролей
       const encryptedEntries = await Promise.all(
           entries.map(async (entry: PasswordEntryInterface) => {
             if (entry.credentials.password) {
-              const iv = crypto.getRandomValues(new Uint8Array(16)).join('');
-              entry.credentials.encryption_iv = iv;
+              const iv = entry.credentials.encryption_iv;
               entry.credentials.password = await EncryptValue(entry.credentials.password, iv);
             }
             return entry;
