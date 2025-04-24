@@ -10,7 +10,7 @@ export class TreeGraphService {
         const root: TreeNode = {
             id: 'root',
             type: 'root',
-            label: 'All Passwords',
+            label: 'ПАРОЛИ',
             children: [],
             collapsed: false
         };
@@ -19,7 +19,7 @@ export class TreeGraphService {
         const emailMap = new Map<string, TreeNode>();
 
         // Создаём узлы категорий
-        const uniqueCategories = new Set(entries.map(entry => entry.metadata.categoryLabel || 'Без категории'));
+        const uniqueCategories = new Set(entries.map(entry => entry.metadata.categoryLabel || 'Все'));
         uniqueCategories.forEach(category => {
             const nodeId = `category-${category}`;
             const categoryNode: TreeNode = {
@@ -68,7 +68,7 @@ export class TreeGraphService {
             };
 
             // Добавляем пароль в категорию
-            const category = entry.metadata.categoryLabel || 'Без категории';
+            const category = entry.metadata.categoryLabel || 'Все';
             const categoryNode = categoryMap.get(category);
             if (categoryNode) {
                 categoryNode.children!.push(passwordNode);

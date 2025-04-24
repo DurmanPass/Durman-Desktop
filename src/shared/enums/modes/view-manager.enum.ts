@@ -1,5 +1,6 @@
 export enum VIEW_MANAGER_MODES{
     TABLE = 'table',
     CARD = 'card',
-    CANVAS = 'canvas'
+    CANVAS = 'canvas',
+    TREE = 'tree'
 }

@@ -40,6 +40,7 @@ import {
   RecoveryPasswordsModalComponent
 } from "../../../../components/modals/recovery-passwords-modal/recovery-passwords-modal.component";
 import {PasswordCanvasComponent} from "../../../../components/canvas/password-canvas/password-canvas.component";
+import {PasswordTreeComponent} from "../../../../components/tree/password-tree/password-tree.component";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -61,7 +62,8 @@ import {PasswordCanvasComponent} from "../../../../components/canvas/password-ca
     ConfirmModalComponent,
     NgClass,
     RecoveryPasswordsModalComponent,
-    PasswordCanvasComponent
+    PasswordCanvasComponent,
+    PasswordTreeComponent
   ],
   templateUrl: './password-tab-content.component.html',
   styleUrl: './password-tab-content.component.css'
