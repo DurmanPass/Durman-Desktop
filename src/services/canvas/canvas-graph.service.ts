@@ -1,20 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PasswordEntryInterface } from '../../interfaces/data/passwordEntry.interface';
-
-export interface CanvasNode {
-  id: string;
-  type: 'password' | 'category' | 'email';
-  label: string;
-  strength?: number;
-  color?: string;
-  size?: number;
-}
-
-export interface CanvasLink {
-  source: string;
-  target: string;
-  type: 'category' | 'email';
-}
+import {CanvasLink, CanvasNode} from "../../interfaces/components/canvas/password-canvas.interface";
 
 @Injectable({
   providedIn: 'root'
