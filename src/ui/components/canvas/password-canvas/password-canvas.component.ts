@@ -3,6 +3,7 @@ import {PasswordEntryInterface} from "../../../../interfaces/data/passwordEntry.
 import {CanvasLink, CanvasNode} from "../../../../interfaces/components/canvas/password-canvas.interface";
 import {CanvasGraphService} from "../../../../services/canvas/canvas-graph.service";
 import * as d3 from 'd3';
+import {corePath, leafPath} from "../../../../shared/const/svg/svg-path";
 
 @Component({
   selector: 'app-password-canvas',
@@ -76,11 +77,18 @@ export class PasswordCanvasComponent {
         .attr('class', 'node')
         .call(this.drag(this.simulation) as any);
 
-    node.selectAll('circle')
+    // Рендеринг узлов
+    node.selectAll('path')
         .data((d: any) => [d])
-        .join('circle')
-        .attr('r', (d: CanvasNode) => d.size || 10)
-        .attr('fill', (d: CanvasNode) => d.color || '#000');
+        .join('path')
+        .attr('d', (d: CanvasNode) => d.type === 'password' ? leafPath : corePath)
+        .attr('fill', (d: CanvasNode) => d.color || '#000')
+        .attr('transform', (d: CanvasNode) => {
+          const scale = d.type === 'password' ? 0.2 : 0.05; // Масштаб для лепестков и ядер
+          const offsetX = d.type === 'password' ? -2 : -12; // Центрирование по X
+          const offsetY = d.type === 'password' ? -8 : -13; // Центрирование по Y
+          return `scale(${scale}) translate(${offsetX / scale}, ${offsetY / scale})`;
+        });
 
     node.selectAll('text')
         .data((d: any) => [d])

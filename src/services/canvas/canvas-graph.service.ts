@@ -13,7 +13,7 @@ export class CanvasGraphService {
     const emailMap = new Map<string, string>(); // email -> nodeId
 
     // Создаём узлы для категорий
-    const uniqueCategories = new Set(entries.map(entry => entry.metadata.categoryLabel || 'Без категории'));
+    const uniqueCategories = new Set(entries.map(entry => entry.metadata.categoryLabel || 'Все'));
     uniqueCategories.forEach(category => {
       const nodeId = `category-${category}`;
       nodes.push({
@@ -54,7 +54,7 @@ export class CanvasGraphService {
       });
 
       // Связь с категорией
-      const category = entry.metadata.categoryLabel || 'Без категории';
+      const category = entry.metadata.categoryLabel || 'Все';
       const categoryNodeId = categoryMap.get(category);
       if (categoryNodeId) {
         links.push({
