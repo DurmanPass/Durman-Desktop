@@ -14,7 +14,7 @@ export class PieChartService {
         // Группировка данных
         switch (groupBy) {
             case 'category':
-                groupedData = d3.group(entries, d => d.metadata.categoryLabel || 'Без категории');
+                groupedData = d3.group(entries, d => d.metadata.categoryLabel || 'Все');
                 colorScale = d3.scaleOrdinal(d3.schemeCategory10); // Динамическая палитра для категорий
                 break;
             case 'email':

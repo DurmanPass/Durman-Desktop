@@ -42,6 +42,7 @@ import {
 import {PasswordCanvasComponent} from "../../../../components/canvas/password-canvas/password-canvas.component";
 import {PasswordTreeComponent} from "../../../../components/tree/password-tree/password-tree.component";
 import {PasswordTimelineComponent} from "../../../../components/timeline/password-timeline/password-timeline.component";
+import {PasswordPieComponent} from "../../../../components/pie/password-pie/password-pie.component";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -65,7 +66,8 @@ import {PasswordTimelineComponent} from "../../../../components/timeline/passwor
     RecoveryPasswordsModalComponent,
     PasswordCanvasComponent,
     PasswordTreeComponent,
-    PasswordTimelineComponent
+    PasswordTimelineComponent,
+    PasswordPieComponent
   ],
   templateUrl: './password-tab-content.component.html',
   styleUrl: './password-tab-content.component.css'
