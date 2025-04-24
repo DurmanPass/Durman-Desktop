@@ -3,5 +3,6 @@ export enum VIEW_MANAGER_MODES{
     CARD = 'card',
     CANVAS = 'canvas',
     TREE = 'tree',
-    TIMELINE = 'timeline'
+    TIMELINE = 'timeline',
+    PIE = 'pie'
 }
