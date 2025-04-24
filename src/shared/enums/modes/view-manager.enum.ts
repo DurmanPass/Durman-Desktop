@@ -4,5 +4,6 @@ export enum VIEW_MANAGER_MODES{
     CANVAS = 'canvas',
     TREE = 'tree',
     TIMELINE = 'timeline',
-    PIE = 'pie'
+    PIE = 'pie',
+    KANBAN = 'kanban'
 }
