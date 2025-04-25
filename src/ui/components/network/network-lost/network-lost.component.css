@@ -1,0 +1,148 @@
+.network-lost-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    text-align: center;
+}
+
+.content {
+    text-align: center;
+    z-index: 1;
+    padding: 20px;
+}
+
+.title {
+    font-size: 36px;
+    color: #fff;
+    text-shadow: 0 0 10px #6200ea;
+    filter: url(#glow);
+    animation: pulse 2s ease-in-out infinite;
+    margin-bottom: 20px;
+}
+
+.subtitle {
+    font-size: 18px;
+    color: #ecf0f1;
+    margin-bottom: 40px;
+}
+
+.network-indicator {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 100;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes float {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(100vw, -100vh) scale(0.5);
+        opacity: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .title {
+        font-size: 24px;
+    }
+    .subtitle {
+        font-size: 14px;
+    }
+}
+
+.game-container {
+    margin-bottom: 40px;
+}
+
+.game-title {
+    font-size: 24px;
+    color: #2ecc71;
+    margin-bottom: 20px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 80px);
+    gap: 10px;
+    justify-content: center;
+}
+
+.card {
+    width: 80px;
+    height: 80px;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.card.flipped .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card.matched .card-inner {
+    opacity: 0.3;
+}
+
+.card-front,
+.card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.card-front {
+    background: #34495e;
+    border: 2px solid #2ecc71;
+}
+
+.card-back {
+    background: #2c3e50;
+    color: #f1c40f;
+    border: 2px solid #e74c3c;
+    transform: rotateY(180deg);
+}
+
+.restart-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #2ecc71;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.restart-button:hover {
+    background: #27ae60;
+}

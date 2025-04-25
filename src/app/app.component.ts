@@ -27,17 +27,20 @@ import {PasswordManagerService} from "../services/password/password-manager.serv
 import {CategoryService} from "../services/routes/category/category.service";
 import {CategoryLocalService} from "../services/category/category-local.service";
 import {SessionTimeoutService} from "../services/session/session-timeout.service";
+import {NetworkLostComponent} from "../ui/components/network/network-lost/network-lost.component";
+import {NetworkService} from "../services/network.service";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, StartPageComponent, PasswordGeneratePageComponent, VaultPageComponent, FrozenAccountPageComponent, ModalBaseComponent, PasswordDetailsModalComponent, ConfirmModalComponent, HttpClientModule],
+  imports: [CommonModule, RouterOutlet, StartPageComponent, PasswordGeneratePageComponent, VaultPageComponent, FrozenAccountPageComponent, ModalBaseComponent, PasswordDetailsModalComponent, ConfirmModalComponent, HttpClientModule, NetworkLostComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   windowLabel: string = '';
   isLocked: boolean = SecurityLockService.getIsLocked();
+  isOnline$ = NetworkService.getConnectionStatus();
   constructor(appRef: ApplicationRef, injector: EnvironmentInjector, private focusProtection: FocusProtectionService, public screenshotBlocking: ScreenshotBlockingService, private http: HttpClient, private sessionTimeoutService: SessionTimeoutService) {
     ToastService.initialize(appRef, injector);
   }
@@ -48,6 +51,7 @@ export class AppComponent {
   protected passwordManagerService = new PasswordManagerService(this.serverPasswordService);
 
   async ngOnInit(): Promise<void> {
+    NetworkService.initialize();
     await this.categoryLocalService.syncCategories();
     await this.passwordManagerService.syncPasswords();
 
@@ -84,26 +88,5 @@ export class AppComponent {
       alert('Неверный пароль');
     }
   }
-
-  // async testCrypto(): Promise<void> {
-  //   try {
-  //     const plaintext = 'Password123';
-  //     const key = 'j6V%RTaM'; // Ключ 32 байта для AES-256
-  //     const iv = await this.ivService.generateIv(); // Получаем IV
-  //     console.log('iv', iv)
-  //
-  //
-  //     // Шифрование
-  //     const encrypted = await CryptoAesGcmService.encrypt(plaintext, key, iv);
-  //     console.log('Зашифровано:', encrypted);
-  //
-  //     // Расшифровка
-  //     const decrypted = await CryptoAesGcmService.decrypt(encrypted, key, iv);
-  //     console.log('Расшифровано:', decrypted);
-  //   } catch (e) {
-  //     console.error('Ошибка:', e);
-  //   }
-  // }
-
   protected readonly WINDOWS_LABELS = WINDOWS_LABELS;
 }

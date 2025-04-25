@@ -1,0 +1,24 @@
+<div class="network-lost-container" [style.background]="ThemeColors.GradientBluePurple">
+    <div class="content">
+        <h1 class="title">Нет соединения с интернетом</h1>
+        <p class="subtitle">Как только интернет-соединение восстановится, работа продолжится автоматически.</p>
+        <div class="game-container">
+            <h2 class="game-title">Собери пароль!</h2>
+            <div class="cards">
+                <div
+                        *ngFor="let card of cards"
+                        class="card"
+                        [ngClass]="{'flipped': card.isFlipped, 'matched': card.isMatched}"
+                        (click)="flipCard(card)"
+                >
+                    <div class="card-inner">
+                        <div class="card-front"></div>
+                        <div class="card-back">{{ card.symbol }}</div>
+                    </div>
+                </div>
+            </div>
+            <button *ngIf="gameWon" class="restart-button" (click)="resetGame()">Играть снова</button>
+        </div>
+        <app-network-indicator class="network-indicator"></app-network-indicator>
+    </div>
+</div>
