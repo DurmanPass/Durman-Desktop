@@ -16,6 +16,7 @@ import {ToastService} from "../../../services/notification/toast.service";
 import {PasswordService} from "../../../services/routes/password/password.service";
 import {PasswordManagerService} from "../../../services/password/password-manager.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {NetworkIndicatorComponent} from "../../components/indicators/network-indicator/network-indicator.component";
 
 @Component({
   selector: 'app-vault-page',
@@ -27,7 +28,8 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
         HeaderDescriptionComponent,
         ModalBaseComponent,
         PasswordDetailsModalComponent,
-        HelpModalComponent
+        HelpModalComponent,
+        NetworkIndicatorComponent
     ],
   templateUrl: './vault-page.component.html',
   styleUrl: './vault-page.component.css'

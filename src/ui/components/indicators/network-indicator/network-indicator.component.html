@@ -1,0 +1,7 @@
+<div class="network-indicator" [title]="getTooltip()">
+    <div class="globe">
+        <div class="globe-inner" [ngClass]="{'online': (isOnline$ | async), 'offline': !(isOnline$ | async)}">
+            <img [ngClass]="{'online globe-icon': (isOnline$ | async), 'offline globe-icon': !(isOnline$ | async)}" src="assets/icons/network/globe.svg" alt="Network">
+        </div>
+    </div>
+</div>

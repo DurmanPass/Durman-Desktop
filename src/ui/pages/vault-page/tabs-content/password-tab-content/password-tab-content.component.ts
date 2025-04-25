@@ -44,6 +44,9 @@ import {PasswordTreeComponent} from "../../../../components/tree/password-tree/p
 import {PasswordTimelineComponent} from "../../../../components/timeline/password-timeline/password-timeline.component";
 import {PasswordPieComponent} from "../../../../components/pie/password-pie/password-pie.component";
 import {PasswordKanbanComponent} from "../../../../components/kanban/password-kanban/password-kanban.component";
+import {
+  NetworkIndicatorComponent
+} from "../../../../components/indicators/network-indicator/network-indicator.component";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -69,7 +72,8 @@ import {PasswordKanbanComponent} from "../../../../components/kanban/password-ka
     PasswordTreeComponent,
     PasswordTimelineComponent,
     PasswordPieComponent,
-    PasswordKanbanComponent
+    PasswordKanbanComponent,
+    NetworkIndicatorComponent
   ],
   templateUrl: './password-tab-content.component.html',
   styleUrl: './password-tab-content.component.css'
