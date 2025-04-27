@@ -12,19 +12,21 @@ import {LoginSteps, LoginStepsId} from "../../../shared/const/steps/login.steps"
 import {AuthModes} from "../../../shared/enums/modes/auth-modes.enum";
 import {LoginPageComponent} from "../login-page/login-page.component";
 import {RegisterPageComponent} from "../register-page/register-page.component";
+import {AppVersionComponent} from "../../components/version/app-version/app-version.component";
 
 @Component({
   selector: 'app-start-page',
   standalone: true,
-  imports: [
-    SolidButtonComponent,
-    NgOptimizedImage,
-    NgStyle,
-    StepComponent,
-    NgIf,
-    LoginPageComponent,
-    RegisterPageComponent
-  ],
+    imports: [
+        SolidButtonComponent,
+        NgOptimizedImage,
+        NgStyle,
+        StepComponent,
+        NgIf,
+        LoginPageComponent,
+        RegisterPageComponent,
+        AppVersionComponent
+    ],
   templateUrl: './start-page.component.html',
   styleUrl: './start-page.component.css'
 })
