@@ -116,7 +116,7 @@ fn export_to_encrypted_zip(
     Ok(file_name)
 }
 
-use tauri::{Window};
+use tauri::Window;
 use tauri_plugin_global_shortcut::{Code, GlobalShortcutExt, Modifiers, Shortcut};
 
 #[tauri::command]
@@ -172,7 +172,8 @@ fn create_durmanpass_dir() -> Result<(), String> {
     let durmanpass_dir = config_dir.join("com.durmanpass.app");
 
     if !durmanpass_dir.exists() {
-        fs::create_dir_all(&durmanpass_dir).map_err(|e| format!("Failed to create directory: {}", e))?;
+        fs::create_dir_all(&durmanpass_dir)
+            .map_err(|e| format!("Failed to create directory: {}", e))?;
     }
 
     Ok(())
