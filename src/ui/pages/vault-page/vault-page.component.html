@@ -13,8 +13,11 @@
                 {{ tab.title }}
             </div>
         </div>
-        <div class="help" (click)="openHelpModal()">
-            <img src="assets/icons/controls/sidebar/help.svg">
+        <div class="sidebar-footer">
+            <div class="sidebar-help" (click)="openHelpModal()">
+                <img src="assets/icons/controls/sidebar/help.svg">
+            </div>
+            <app-app-version class="sidebar-version"/>
         </div>
         <app-modal-base
                 [isOpen]="modalsControls.help.isModalOpen"

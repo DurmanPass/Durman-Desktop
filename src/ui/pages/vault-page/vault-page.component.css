@@ -13,6 +13,32 @@
     transition: width 0.3s ease-in-out;
 }
 
+.sidebar-footer{
+    width: 100%;
+    height: 20vh;
+    position: relative;
+}
+
+.sidebar-version{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.sidebar-help{
+    position: absolute;
+    display: inline-flex;
+    bottom: 10px;
+    left: 10px;
+    cursor: pointer;
+}
+
+.sidebar-help img{
+    width: 20px;
+    height: 20px;
+}
+
 .sidebar.closed {
     width: 0;
     padding: 0;
@@ -54,6 +80,7 @@
     padding-top: 30px;
 
     width: 100%;
+    height: 39vw;
 }
 
 .tabs div {
@@ -102,18 +129,6 @@
 }
 
 .sidebar-logo img{
-    width: 20px;
-    height: 20px;
-}
-
-.help{
-    position: fixed;
-    bottom: 10px;
-    left: 10px;
-    cursor: pointer;
-}
-
-.help img{
     width: 20px;
     height: 20px;
 }

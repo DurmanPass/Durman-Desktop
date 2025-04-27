@@ -17,6 +17,7 @@ import {PasswordService} from "../../../services/routes/password/password.servic
 import {PasswordManagerService} from "../../../services/password/password-manager.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {NetworkIndicatorComponent} from "../../components/indicators/network-indicator/network-indicator.component";
+import {AppVersionComponent} from "../../components/version/app-version/app-version.component";
 
 @Component({
   selector: 'app-vault-page',
@@ -29,7 +30,8 @@ import {NetworkIndicatorComponent} from "../../components/indicators/network-ind
         ModalBaseComponent,
         PasswordDetailsModalComponent,
         HelpModalComponent,
-        NetworkIndicatorComponent
+        NetworkIndicatorComponent,
+        AppVersionComponent
     ],
   templateUrl: './vault-page.component.html',
   styleUrl: './vault-page.component.css'
