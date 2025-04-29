@@ -12,17 +12,18 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '19'
+          node-version: '20'
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+          target: x86_64-pc-windows-msvc
       - name: Build Tauri app
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
         run: |
           npm install
-          npm run tauri build -- --target windows-x86_64
+          npm run tauri build -- --target x86_64-pc-windows-msvc
       - name: Verify artifacts exist
         run: |
           dir src-tauri/target/release/bundle
