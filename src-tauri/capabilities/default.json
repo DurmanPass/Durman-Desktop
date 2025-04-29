@@ -25,6 +25,10 @@
     "store:allow-set",
     "store:allow-get",
     "store:allow-delete",
-    "store:allow-clear"
+    "store:allow-clear",
+    "updater:allow-check",
+    "updater:allow-download",
+    "updater:allow-download-and-install",
+    "updater:allow-install"
   ]
 }
