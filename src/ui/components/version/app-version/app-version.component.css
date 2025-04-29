@@ -35,3 +35,45 @@
         font-size: 14px;
     }
 }
+
+.check-update {
+    padding: 4px 8px;
+    background: #2ecc71;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.check-update:hover {
+    background: #27ae60;
+}
+
+.check-update:disabled {
+    background: #7f8c8d;
+    cursor: not-allowed;
+}
+
+@keyframes subtle-pulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+@media (max-width: 600px) {
+    .version-container {
+        padding: 6px 12px;
+        gap: 8px;
+    }
+    .version-text {
+        font-size: 14px;
+    }
+    .update-text {
+        font-size: 12px;
+    }
+    .check-update {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+}

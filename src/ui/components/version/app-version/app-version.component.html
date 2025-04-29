@@ -1,3 +1,19 @@
+<!--<div class="version-container" [style.background]="ThemeColors.Transparent">-->
+<!--    <span class="version-text">v{{ version$ | async }}</span>-->
+<!--</div>-->
+
 <div class="version-container" [style.background]="ThemeColors.Transparent">
     <span class="version-text">v{{ version$ | async }}</span>
+    <ng-container>
+        <button
+                class="check-update"
+                [disabled]="isChecking"
+                (click)="updateStatus?.available ? installUpdate() : checkForUpdates()"
+        >
+            {{ isChecking ? 'Проверка...' : updateStatus?.available ? 'Установить v' + updateStatus?.version : 'Проверить обновления' }}
+        </button>
+        <span *ngIf="updateStatus?.available" class="update-text">
+            Доступно обновление: v{{ updateStatus?.version}}
+        </span>
+    </ng-container>
 </div>
