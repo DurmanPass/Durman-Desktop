@@ -8,11 +8,6 @@ on:
 jobs:
   build-and-release:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        target: [windows-x86_64]
-        artifact: [durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip]
-
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -27,17 +22,17 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
         run: |
           npm install
-          npm run tauri build -- --target ${{ matrix.target }}
+          npm run tauri build -- --target windows-x86_64
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.artifact }}
-          path: src-tauri/target/release/bundle/${{ matrix.artifact }}
+          name: durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip
+          path: src-tauri/target/release/bundle/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip
       - name: Upload signature
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.artifact }}.sig
-          path: src-tauri/target/release/bundle/${{ matrix.artifact }}.sig
+          name: durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip.sig
+          path: src-tauri/target/release/bundle/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip.sig
 
   create-release:
     runs-on: ubuntu-latest
