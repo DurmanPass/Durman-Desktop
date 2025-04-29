@@ -7,20 +7,11 @@ on:
 
 jobs:
   build-and-release:
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        include:
-          - os: ubuntu-latest
-            target: linux-x86_64
-            artifact: durmanpass_${{ github.ref_name }}_amd64.AppImage.tar.gz
-          - os: windows-latest
-            target: windows-x86_64
-            artifact: durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip
-          - os: macos-latest
-            target: darwin-x86_64
-            artifact: durmanpass_${{ github.ref_name }}_x64.dmg
+        target: [windows-x86_64]
+        artifact: [durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip]
 
     steps:
       - uses: actions/checkout@v3
@@ -31,24 +22,12 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - name: Install dependencies (Linux)
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.0-dev build-essential curl wget libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
       - name: Build Tauri app
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
         run: |
           npm install
           npm run tauri build -- --target ${{ matrix.target }}
-      - name: Sign binary
-        env:
-          MINISIGN_PRIVATE_KEY: ${{ secrets.MINISIGN_PRIVATE_KEY }}
-        run: |
-          curl -L -o minisign.tar.gz https://github.com/jedisct1/minisign/releases/download/0.10/minisign-0.10.tar.gz
-          tar -xzf minisign.tar.gz
-          cd minisign-0.10
-          make
-          ./minisign -Sm ../src-tauri/target/release/bundle/${{ matrix.artifact }} -x ../${{ matrix.artifact }}.sig
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
@@ -58,7 +37,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.artifact }}.sig
-          path: ${{ matrix.artifact }}.sig
+          path: src-tauri/target/release/bundle/${{ matrix.artifact }}.sig
 
   create-release:
     runs-on: ubuntu-latest
@@ -79,14 +58,6 @@ jobs:
               "windows-x86_64": {
                 "signature": "$(cat artifacts/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip.sig)",
                 "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/${{ github.ref_name }}/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip"
-              },
-              "darwin-x86_64": {
-                "signature": "$(cat artifacts/durmanpass_${{ github.ref_name }}_x64.dmg/durmanpass_${{ github.ref_name }}_x64.dmg.sig)",
-                "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/${{ github.ref_name }}/durmanpass_${{ github.ref_name }}_x64.dmg"
-              },
-              "linux-x86_64": {
-                "signature": "$(cat artifacts/durmanpass_${{ github.ref_name }}_amd64.AppImage.tar.gz/durmanpass_${{ github.ref_name }}_amd64.AppImage.tar.gz.sig)",
-                "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/${{ github.ref_name }}/durmanpass_${{ github.ref_name }}_amd64.AppImage.tar.gz"
               }
             }
           }' > latest.json
@@ -95,8 +66,6 @@ jobs:
         with:
           files: |
             artifacts/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip
-            artifacts/durmanpass_${{ github.ref_name }}_x64.dmg/durmanpass_${{ github.ref_name }}_x64.dmg
-            artifacts/durmanpass_${{ github.ref_name }}_amd64.AppImage.tar.gz/durmanpass_${{ github.ref_name }}_amd64.AppImage.tar.gz
             latest.json
           body: "Release notes for ${{ github.ref_name }}"
         env:
