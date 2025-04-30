@@ -151,9 +151,11 @@ jobs:
       - name: Upload artifact
         run: |
           $VERSION = "${{ github.ref_name }}" -replace '^v',''
-          echo "Uploading artifact with version: $VERSION"
-          echo "name=durmanpass_$VERSION_x64_en-US.msi.zip" >> $env:GITHUB_ENV
-          echo "path=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_$VERSION_x64_en-US.msi.zip" >> $env:GITHUB_ENV
+          Write-Output "Uploading artifact with version: $VERSION"
+          Write-Output "name=durmanpass_${VERSION}_x64_en-US.msi.zip" | Add-Content -Path $env:GITHUB_ENV
+          Write-Output "path=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_${VERSION}_x64_en-US.msi.zip" | Add-Content -Path $env:GITHUB_ENV
+          Write-Output "Checking path existence:"
+          Get-ChildItem -Path "src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_${VERSION}_x64_en-US.msi.zip"
         shell: pwsh
       - name: Upload artifact action
         uses: actions/upload-artifact@v4
@@ -163,9 +165,11 @@ jobs:
       - name: Upload signature
         run: |
           $VERSION = "${{ github.ref_name }}" -replace '^v',''
-          echo "Uploading signature with version: $VERSION"
-          echo "name_sig=durmanpass_$VERSION_x64_en-US.msi.zip.sig" >> $env:GITHUB_ENV
-          echo "path_sig=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_$VERSION_x64_en-US.msi.zip.sig" >> $env:GITHUB_ENV
+          Write-Output "Uploading signature with version: $VERSION"
+          Write-Output "name_sig=durmanpass_${VERSION}_x64_en-US.msi.zip.sig" | Add-Content -Path $env:GITHUB_ENV
+          Write-Output "path_sig=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_${VERSION}_x64_en-US.msi.zip.sig" | Add-Content -Path $env:GITHUB_ENV
+          Write-Output "Checking path existence:"
+          Get-ChildItem -Path "src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_${VERSION}_x64_en-US.msi.zip.sig"
         shell: pwsh
       - name: Upload signature action
         uses: actions/upload-artifact@v4
