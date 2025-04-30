@@ -122,10 +122,6 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set version
-        run: |
-          echo "version=${{ github.ref_name }}" | sed 's/^v//' >> $GITHUB_ENV
-          echo "Set version: ${{ env.version }}"
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -144,18 +140,23 @@ jobs:
         run: |
           npm install
           npm run tauri build -- --target x86_64-pc-windows-msvc
+          dir src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi
+          echo Creating zip from msi
+          Compress-Archive -Path src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${{ github.ref_name }}-replace '^v',''_x64_en-US.msi -DestinationPath src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${{ github.ref_name }}-replace '^v',''_x64_en-US.msi.zip
+          dir src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi
+        shell: pwsh
       - name: Verify artifacts exist
         run: |
-          dir src-tauri\target\x86_64-pc-windows-msvc\release\bundle
+          dir src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi
         shell: cmd
       - name: Upload artifact
         run: |
           $VERSION = "${{ github.ref_name }}" -replace '^v',''
           Write-Output "Uploading artifact with version: $VERSION"
-          Write-Output "name=durmanpass_${VERSION}_x64_en-US.msi.zip" | Add-Content -Path $env:GITHUB_ENV
-          Write-Output "path=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_${VERSION}_x64_en-US.msi.zip" | Add-Content -Path $env:GITHUB_ENV
+          Write-Output "name=DurmanPass_${VERSION}_x64_en-US.msi.zip" | Add-Content -Path $env:GITHUB_ENV
+          Write-Output "path=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${VERSION}_x64_en-US.msi.zip" | Add-Content -Path $env:GITHUB_ENV
           Write-Output "Checking path existence:"
-          Get-ChildItem -Path "src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_${VERSION}_x64_en-US.msi.zip"
+          Get-ChildItem -Path "src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${VERSION}_x64_en-US.msi.zip"
         shell: pwsh
       - name: Upload artifact action
         uses: actions/upload-artifact@v4
@@ -166,16 +167,17 @@ jobs:
         run: |
           $VERSION = "${{ github.ref_name }}" -replace '^v',''
           Write-Output "Uploading signature with version: $VERSION"
-          Write-Output "name_sig=durmanpass_${VERSION}_x64_en-US.msi.zip.sig" | Add-Content -Path $env:GITHUB_ENV
-          Write-Output "path_sig=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_${VERSION}_x64_en-US.msi.zip.sig" | Add-Content -Path $env:GITHUB_ENV
+          Write-Output "name_sig=DurmanPass_${VERSION}_x64_en-US.msi.zip.sig" | Add-Content -Path $env:GITHUB_ENV
+          Write-Output "path_sig=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${VERSION}_x64_en-US.msi.sig" | Add-Content -Path $env:GITHUB_ENV
           Write-Output "Checking path existence:"
-          Get-ChildItem -Path "src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_${VERSION}_x64_en-US.msi.zip.sig"
+          Get-ChildItem -Path "src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${VERSION}_x64_en-US.msi.sig"
         shell: pwsh
       - name: Upload signature action
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.name_sig }}
           path: ${{ env.path_sig }}
+
 
   create-release:
     runs-on: ubuntu-latest
