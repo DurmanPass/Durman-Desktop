@@ -73,14 +73,18 @@
 #          path: artifacts
 #      - name: Generate latest.json
 #        run: |
+#          VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
+#          PUB_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+#          SIGNATURE=$(cat artifacts/durmanpass_$VERSION_x64_en-US.msi.zip.sig/durmanpass_$VERSION_x64_en-US.msi.zip.sig || echo "Signature not found")
+#          echo "Generating latest.json with version: $VERSION"
 #          echo '{
-#            "version": "${{ env.version }}",
+#            "version": "'"$VERSION"'",
 #            "notes": "${{ env.notes }}",
-#            "pub_date": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'",
+#            "pub_date": "'"$PUB_DATE"'",
 #            "platforms": {
 #              "windows-x86_64": {
-#                "signature": "'$(cat artifacts/durmanpass_${{ env.version }}_x64_en-US.msi.zip.sig/durmanpass_${{ env.version }}_x64_en-US.msi.zip.sig)'",
-#                "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/${{ github.ref_name }}/durmanpass_${{ env.version }}_x64_en-US.msi.zip"
+#                "signature": "'"$SIGNATURE"'",
+#                "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/${{ github.ref_name }}/durmanpass_'"$VERSION"'_x64_en-US.msi.zip"
 #              }
 #            }
 #          }' > latest.json
@@ -145,15 +149,27 @@ jobs:
           dir src-tauri\target\x86_64-pc-windows-msvc\release\bundle
         shell: cmd
       - name: Upload artifact
+        run: |
+          VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
+          echo "Uploading artifact with version: $VERSION"
+          echo "name=durmanpass_$VERSION_x64_en-US.msi.zip" >> $GITHUB_ENV
+          echo "path=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_$VERSION_x64_en-US.msi.zip" >> $GITHUB_ENV
+      - name: Upload artifact action
         uses: actions/upload-artifact@v4
         with:
-          name: durmanpass_${{ env.version }}_x64_en-US.msi.zip
-          path: src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_${{ env.version }}_x64_en-US.msi.zip
+          name: ${{ env.name }}
+          path: ${{ env.path }}
       - name: Upload signature
+        run: |
+          VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
+          echo "Uploading signature with version: $VERSION"
+          echo "name_sig=durmanpass_$VERSION_x64_en-US.msi.zip.sig" >> $GITHUB_ENV
+          echo "path_sig=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_$VERSION_x64_en-US.msi.zip.sig" >> $GITHUB_ENV
+      - name: Upload signature action
         uses: actions/upload-artifact@v4
         with:
-          name: durmanpass_${{ env.version }}_x64_en-US.msi.zip.sig
-          path: src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_${{ env.version }}_x64_en-US.msi.zip.sig
+          name: ${{ env.name_sig }}
+          path: ${{ env.path_sig }}
 
   create-release:
     runs-on: ubuntu-latest
@@ -203,11 +219,18 @@ jobs:
           git commit -m "Update latest.json for release ${{ env.version }}"
           git push origin main
       - name: Create Release
+        run: |
+          VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
+          echo "Creating release with version: $VERSION"
+          echo "msi_zip=artifacts/durmanpass_$VERSION_x64_en-US.msi.zip/durmanpass_$VERSION_x64_en-US.msi.zip" >> $GITHUB_ENV
+          echo "msi_zip_sig=artifacts/durmanpass_$VERSION_x64_en-US.msi.zip.sig/durmanpass_$VERSION_x64_en-US.msi.zip.sig" >> $GITHUB_ENV
+          echo "body=Release notes for $VERSION" >> $GITHUB_ENV
+      - name: Create Release action
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            artifacts/durmanpass_${{ env.version }}_x64_en-US.msi.zip/durmanpass_${{ env.version }}_x64_en-US.msi.zip
-            latest.json
-          body: "Release notes for ${{ env.version }}"
+            ${{ env.msi_zip }}
+            ${{ env.msi_zip_sig }}
+          body: ${{ env.body }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
