@@ -1,11 +1,11 @@
 {
-  "version": "",
+  "version": "0.1.32",
   "notes": "Release notes for ",
-  "pub_date": "2025-04-30T19:33:24Z",
+  "pub_date": "2025-04-30T23:09:44Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "",
-      "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/v0.1.27/durmanpass__x64_en-US.msi.zip"
+      "signature": "Signature not found",
+      "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/v0.1.32/durmanpass_0.1.32_x64_en-US.msi.zip"
     }
   }
 }
