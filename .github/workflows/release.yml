@@ -160,6 +160,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout main
+          git pull origin main
           git add latest.json
           git commit -m "Update latest.json for release ${{ env.version }}"
           git push origin main
