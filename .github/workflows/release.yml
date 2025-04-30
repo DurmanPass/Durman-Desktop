@@ -18,6 +18,11 @@
 #        with:
 #          toolchain: stable
 #          target: x86_64-pc-windows-msvc
+#      - name: Debug signing key
+#        run: |
+#          echo TAURI_SIGNING_PRIVATE_KEY starts with: ${TAURI_SIGNING_PRIVATE_KEY}
+#          echo "TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${TAURI_SIGNING_PRIVATE_KEY_PASSWORD}"
+#        shell: cmd
 #      - name: Build Tauri app
 #        env:
 #          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
@@ -94,13 +99,12 @@ jobs:
           target: x86_64-pc-windows-msvc
       - name: Debug signing key
         run: |
-          echo "TAURI_SIGNING_PRIVATE_KEY starts with: ${TAURI_SIGNING_PRIVATE_KEY}"
+          echo "TAURI_SIGNING_PRIVATE_KEY starts with: ${TAURI_SIGNING_PRIVATE_KEY:0:20}"
           echo "TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${TAURI_SIGNING_PRIVATE_KEY_PASSWORD}"
         shell: cmd
       - name: Build Tauri app
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         run: |
           npm install
           npm run tauri build -- --target x86_64-pc-windows-msvc
