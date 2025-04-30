@@ -150,10 +150,11 @@ jobs:
         shell: cmd
       - name: Upload artifact
         run: |
-          VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
+          $VERSION = "${{ github.ref_name }}" -replace '^v',''
           echo "Uploading artifact with version: $VERSION"
-          echo "name=durmanpass_$VERSION_x64_en-US.msi.zip" >> $GITHUB_ENV
-          echo "path=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_$VERSION_x64_en-US.msi.zip" >> $GITHUB_ENV
+          echo "name=durmanpass_$VERSION_x64_en-US.msi.zip" >> $env:GITHUB_ENV
+          echo "path=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_$VERSION_x64_en-US.msi.zip" >> $env:GITHUB_ENV
+        shell: pwsh
       - name: Upload artifact action
         uses: actions/upload-artifact@v4
         with:
@@ -161,10 +162,11 @@ jobs:
           path: ${{ env.path }}
       - name: Upload signature
         run: |
-          VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
+          $VERSION = "${{ github.ref_name }}" -replace '^v',''
           echo "Uploading signature with version: $VERSION"
-          echo "name_sig=durmanpass_$VERSION_x64_en-US.msi.zip.sig" >> $GITHUB_ENV
-          echo "path_sig=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_$VERSION_x64_en-US.msi.zip.sig" >> $GITHUB_ENV
+          echo "name_sig=durmanpass_$VERSION_x64_en-US.msi.zip.sig" >> $env:GITHUB_ENV
+          echo "path_sig=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_$VERSION_x64_en-US.msi.zip.sig" >> $env:GITHUB_ENV
+        shell: pwsh
       - name: Upload signature action
         uses: actions/upload-artifact@v4
         with:
