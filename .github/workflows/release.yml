@@ -21,7 +21,6 @@
 #      - name: Debug signing key
 #        run: |
 #          echo "TAURI_SIGNING_PRIVATE_KEY starts with: ${TAURI_SIGNING_PRIVATE_KEY:0:20}"
-#          echo "TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${TAURI_SIGNING_PRIVATE_KEY_PASSWORD}"
 #        shell: cmd
 #      - name: Build Tauri app
 #        env:
@@ -31,18 +30,18 @@
 #          npm run tauri build -- --target x86_64-pc-windows-msvc
 #      - name: Verify artifacts exist
 #        run: |
-#          dir src-tauri/target/release/bundle
+#          dir src-tauri\target\x86_64-pc-windows-msvc\release\bundle
 #        shell: cmd
 #      - name: Upload artifact
 #        uses: actions/upload-artifact@v4
 #        with:
 #          name: durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip
-#          path: src-tauri/target/release/bundle/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip
+#          path: src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip
 #      - name: Upload signature
 #        uses: actions/upload-artifact@v4
 #        with:
 #          name: durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip.sig
-#          path: src-tauri/target/release/bundle/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip.sig
+#          path: src-tauri\target\x86_64-pc-windows-msvc\release\bundle\durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip.sig
 #
 #  create-release:
 #    runs-on: ubuntu-latest
@@ -82,6 +81,9 @@ on:
   push:
     tags:
       - 'v*'
+
+permissions:
+  contents: write
 
 jobs:
   build-and-release:
@@ -130,6 +132,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+      - name: Debug artifact structure
+        run: |
+          ls -R artifacts
       - name: Generate latest.json
         run: |
           echo '{
@@ -138,7 +143,7 @@ jobs:
             "pub_date": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
             "platforms": {
               "windows-x86_64": {
-                "signature": "$(cat artifacts/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip.sig)",
+                "signature": "$(cat artifacts/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip.sig/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip.sig)",
                 "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/${{ github.ref_name }}/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip"
               }
             }
