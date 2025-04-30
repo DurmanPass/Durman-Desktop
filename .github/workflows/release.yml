@@ -132,9 +132,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
-      - name: Debug artifact structure
-        run: |
-          ls -R artifacts
       - name: Generate latest.json
         run: |
           echo '{
