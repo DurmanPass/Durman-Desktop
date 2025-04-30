@@ -79,7 +79,7 @@ name: Release
 
 on:
   push:
-    tags:
+    tags:п
       - '*'
 
 permissions:
