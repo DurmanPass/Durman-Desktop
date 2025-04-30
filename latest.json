@@ -1,0 +1,11 @@
+{
+  "version": "",
+  "notes": "Release notes for ",
+  "pub_date": "2025-04-30T19:33:24Z",
+  "platforms": {
+    "windows-x86_64": {
+      "signature": "",
+      "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/v0.1.27/durmanpass__x64_en-US.msi.zip"
+    }
+  }
+}
