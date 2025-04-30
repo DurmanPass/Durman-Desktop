@@ -79,8 +79,8 @@ name: Release
 
 on:
   push:
-    tags:п
-      - '*'
+    tags:
+      - 'v*'
 
 permissions:
   contents: write
@@ -128,6 +128,9 @@ jobs:
     needs: build-and-release
     steps:
       - uses: actions/checkout@v4
+      - name: Set version
+        run: |
+          echo "version=${{ github.ref_name }}" | sed 's/^v//' >> $GITHUB_ENV
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
@@ -135,13 +138,13 @@ jobs:
       - name: Generate latest.json
         run: |
           echo '{
-            "version": "${{ github.ref_name }}",
-            "notes": "Release notes for ${{ github.ref_name }}",
+            "version": "${{ env.version }}",
+            "notes": "Release notes for ${{ env.version }}",
             "pub_date": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
             "platforms": {
               "windows-x86_64": {
-                "signature": "$(cat artifacts/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip.sig/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip.sig)",
-                "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/${{ github.ref_name }}/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip"
+                "signature": "$(cat artifacts/durmanpass_${{ env.version }}_x64_en-US.msi.zip.sig/durmanpass_${{ env.version }}_x64_en-US.msi.zip.sig)",
+                "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/${{ github.ref_name }}/durmanpass_${{ env.version }}_x64_en-US.msi.zip"
               }
             }
           }' > latest.json
@@ -149,8 +152,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            artifacts/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip/durmanpass_${{ github.ref_name }}_x64_en-US.msi.zip
+            artifacts/durmanpass_${{ env.version }}_x64_en-US.msi.zip/durmanpass_${{ env.version }}_x64_en-US.msi.zip
             latest.json
-          body: "Release notes for ${{ github.ref_name }}"
+          body: "Release notes for ${{ env.version }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
