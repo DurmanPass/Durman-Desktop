@@ -43,7 +43,7 @@
   "plugins": {
     "updater": {
       "active": true,
-      "pubkey": "RWSWIRaHXpqDhsnh82EXKA+IzO+9IY6Pk2pTQqQp/DYKsilYWWRUev2r",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDIwMkZCM0VDQjA1OTQ5OUEKUldTYVNWbXc3TE12SUZTTUk2aTF6dDRHSlFRc25HWEU1UkJLUTdoeWNQZERya2J5VjRHbVR3VGMK",
       "endpoints": [
         "https://raw.githubusercontent.com/DurmanPass/Durman-Desktop/main/latest.json"
       ],
