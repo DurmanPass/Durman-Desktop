@@ -4,8 +4,8 @@
   "pub_date": "2025-05-01T16:01:53Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "Signature not found",
-      "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/v0.1.38/DurmanPass_0.1.38_x64_en-US.msi"
+      "signature": "https://github.com/DurmanPass/Durman-Desktop/releases/download/v0.1.38/DurmanPass_0.1.38_x64_en-US.msi.sig",
+      "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/v0.1.38/DurmanPass_0.1.38_x64_en-US.msi.zip"
     }
   }
 }
