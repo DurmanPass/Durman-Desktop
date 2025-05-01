@@ -107,6 +107,143 @@
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+#name: Release
+#
+#on:
+#  push:
+#    tags:
+#      - 'v*'
+#
+#permissions:
+#  contents: write
+#
+#jobs:
+#  build-and-release:
+#    runs-on: windows-latest
+#    steps:
+#      - uses: actions/checkout@v4
+#      - uses: actions/setup-node@v4
+#        with:
+#          node-version: '20'
+#      - name: Install Rust
+#        uses: actions-rs/toolchain@v1
+#        with:
+#          toolchain: stable
+#          target: x86_64-pc-windows-msvc
+#      - name: Debug signing key
+#        run: |
+#          echo "TAURI_SIGNING_PRIVATE_KEY starts with: ${TAURI_SIGNING_PRIVATE_KEY:0:20}"
+#        shell: cmd
+#      - name: Build Tauri app
+#        env:
+#          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+#        run: |
+#          npm install
+#          npm run tauri build -- --target x86_64-pc-windows-msvc
+#          $VERSION = "${{ github.ref_name }}" -replace '^v',''
+#          Write-Output "Creating zip from msi for version: $VERSION"
+#          Compress-Archive -Path src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${VERSION}_x64_en-US.msi -DestinationPath src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${VERSION}_x64_en-US.msi.zip
+#          Write-Output "Listing msi directory:"
+#          Get-ChildItem -Path src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi
+#        shell: pwsh
+#      - name: Verify artifacts exist
+#        run: |
+#          dir src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi
+#        shell: cmd
+#      - name: Upload artifact
+#        run: |
+#          $VERSION = "${{ github.ref_name }}" -replace '^v',''
+#          Write-Output "Uploading artifact with version: $VERSION"
+#          Write-Output "name=DurmanPass_${VERSION}_x64_en-US.msi.zip" | Add-Content -Path $env:GITHUB_ENV
+#          Write-Output "path=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${VERSION}_x64_en-US.msi.zip" | Add-Content -Path $env:GITHUB_ENV
+#          Write-Output "Checking path existence:"
+#          Get-ChildItem -Path "src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${VERSION}_x64_en-US.msi.zip"
+#        shell: pwsh
+#      - name: Upload artifact action
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: ${{ env.name }}
+#          path: ${{ env.path }}
+#      - name: Upload signature
+#        run: |
+#          $VERSION = "${{ github.ref_name }}" -replace '^v',''
+#          Write-Output "Uploading signature with version: $VERSION"
+#          Write-Output "name_sig=DurmanPass_${VERSION}_x64_en-US.msi.zip.sig" | Add-Content -Path $env:GITHUB_ENV
+#          Write-Output "path_sig=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${VERSION}_x64_en-US.msi.sig" | Add-Content -Path $env:GITHUB_ENV
+#          Write-Output "Checking path existence:"
+#          Get-ChildItem -Path "src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${VERSION}_x64_en-US.msi.sig"
+#        shell: pwsh
+#      - name: Upload signature action
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: ${{ env.name_sig }}
+#          path: ${{ env.path_sig }}
+#
+#
+#  create-release:
+#    runs-on: ubuntu-latest
+#    needs: build-and-release
+#    steps:
+#      - uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0
+#      - name: Set version
+#        run: |
+#          echo "version=${{ github.ref_name }}" | sed 's/^v//' >> $GITHUB_ENV
+#          echo "Set version: ${{ env.version }}"
+#      - name: Get release notes
+#        id: get-release-notes
+#        run: |
+#          NOTES=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+#            "https://api.github.com/repos/DurmanPass/Durman-Desktop/releases/tags/${{ github.ref_name }}" | jq -r '.body // "Release notes for ${{ env.version }}"')
+#          echo "notes=$NOTES" >> $GITHUB_ENV
+#      - name: Download artifacts
+#        uses: actions/download-artifact@v4
+#        with:
+#          path: artifacts
+#      - name: Generate latest.json
+#        run: |
+#          VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
+#          PUB_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+#          SIGNATURE=$(cat artifacts/durmanpass_$VERSION_x64_en-US.msi.zip.sig/durmanpass_$VERSION_x64_en-US.msi.zip.sig || echo "Signature not found")
+#          echo "Generating latest.json with version: $VERSION"
+#          echo '{
+#            "version": "'"$VERSION"'",
+#            "notes": "${{ env.notes }}",
+#            "pub_date": "'"$PUB_DATE"'",
+#            "platforms": {
+#              "windows-x86_64": {
+#                "signature": "'"$SIGNATURE"'",
+#                "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/${{ github.ref_name }}/durmanpass_'"$VERSION"'_x64_en-US.msi.zip"
+#              }
+#            }
+#          }' > latest.json
+#      - name: Commit latest.json to repository
+#        run: |
+#          git config user.name "github-actions[bot]"
+#          git config user.email "github-actions[bot]@users.noreply.github.com"
+#          git checkout main
+#          git pull origin main
+#          git add latest.json
+#          git commit -m "Update latest.json for release ${{ env.version }}"
+#          git push origin main
+#      - name: Create Release
+#        run: |
+#          VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
+#          echo "Creating release with version: $VERSION"
+#          echo "msi_zip=artifacts/durmanpass_$VERSION_x64_en-US.msi.zip/durmanpass_$VERSION_x64_en-US.msi.zip" >> $GITHUB_ENV
+#          echo "msi_zip_sig=artifacts/durmanpass_$VERSION_x64_en-US.msi.zip.sig/durmanpass_$VERSION_x64_en-US.msi.zip.sig" >> $GITHUB_ENV
+#          echo "body=Release notes for $VERSION" >> $GITHUB_ENV
+#      - name: Create Release action
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          files: |
+#            ${{ env.msi_zip }}
+#            ${{ env.msi_zip_sig }}
+#          body: ${{ env.body }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 name: Release
 
 on:
@@ -187,16 +324,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Set version
-        run: |
-          echo "version=${{ github.ref_name }}" | sed 's/^v//' >> $GITHUB_ENV
-          echo "Set version: ${{ env.version }}"
       - name: Get release notes
         id: get-release-notes
         run: |
+          VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
           NOTES=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/DurmanPass/Durman-Desktop/releases/tags/${{ github.ref_name }}" | jq -r '.body // "Release notes for ${{ env.version }}"')
+            "https://api.github.com/repos/DurmanPass/Durman-Desktop/releases/tags/${{ github.ref_name }}" | jq -r '.body // "Release notes for '$VERSION'"')
           echo "notes=$NOTES" >> $GITHUB_ENV
+          echo "Release notes: $NOTES"
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
@@ -205,7 +340,7 @@ jobs:
         run: |
           VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
           PUB_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          SIGNATURE=$(cat artifacts/durmanpass_$VERSION_x64_en-US.msi.zip.sig/durmanpass_$VERSION_x64_en-US.msi.zip.sig || echo "Signature not found")
+          SIGNATURE=$(cat artifacts/DurmanPass_$VERSION_x64_en-US.msi.zip.sig/DurmanPass_$VERSION_x64_en-US.msi.sig || echo "Signature not found")
           echo "Generating latest.json with version: $VERSION"
           echo '{
             "version": "'"$VERSION"'",
@@ -214,7 +349,7 @@ jobs:
             "platforms": {
               "windows-x86_64": {
                 "signature": "'"$SIGNATURE"'",
-                "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/${{ github.ref_name }}/durmanpass_'"$VERSION"'_x64_en-US.msi.zip"
+                "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/${{ github.ref_name }}/DurmanPass_'"$VERSION"'_x64_en-US.msi.zip"
               }
             }
           }' > latest.json
@@ -231,8 +366,8 @@ jobs:
         run: |
           VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
           echo "Creating release with version: $VERSION"
-          echo "msi_zip=artifacts/durmanpass_$VERSION_x64_en-US.msi.zip/durmanpass_$VERSION_x64_en-US.msi.zip" >> $GITHUB_ENV
-          echo "msi_zip_sig=artifacts/durmanpass_$VERSION_x64_en-US.msi.zip.sig/durmanpass_$VERSION_x64_en-US.msi.zip.sig" >> $GITHUB_ENV
+          echo "msi_zip=artifacts/DurmanPass_$VERSION_x64_en-US.msi.zip/DurmanPass_$VERSION_x64_en-US.msi.zip" >> $GITHUB_ENV
+          echo "msi_zip_sig=artifacts/DurmanPass_$VERSION_x64_en-US.msi.zip.sig/DurmanPass_$VERSION_x64_en-US.msi.sig" >> $GITHUB_ENV
           echo "body=Release notes for $VERSION" >> $GITHUB_ENV
       - name: Create Release action
         uses: softprops/action-gh-release@v1
