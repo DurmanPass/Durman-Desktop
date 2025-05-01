@@ -366,15 +366,18 @@ jobs:
         run: |
           VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
           echo "Creating release with version: $VERSION"
-          echo "msi_zip=artifacts/DurmanPass_$VERSION_x64_en-US.msi.zip/DurmanPass_$VERSION_x64_en-US.msi.zip" >> $GITHUB_ENV
-          echo "msi_zip_sig=artifacts/DurmanPass_$VERSION_x64_en-US.msi.zip.sig/DurmanPass_$VERSION_x64_en-US.msi.sig" >> $GITHUB_ENV
+          echo "msi_zip=artifacts/DurmanPass_${VERSION}_x64_en-US.msi.zip/DurmanPass_${VERSION}_x64_en-US.msi.zip" >> $GITHUB_ENV
+          echo "msi_zip_sig=artifacts/DurmanPass_${VERSION}_x64_en-US.msi.zip.sig/DurmanPass_${VERSION}_x64_en-US.msi.sig" >> $GITHUB_ENV
           echo "body=Release notes for $VERSION" >> $GITHUB_ENV
+          echo "Debug: msi_zip=$msi_zip"
+          echo "Debug: msi_zip_sig=$msi_zip_sig"
       - name: Create Release action
         uses: softprops/action-gh-release@v1
         with:
           files: |
             ${{ env.msi_zip }}
             ${{ env.msi_zip_sig }}
+            latest.json
           body: ${{ env.body }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
