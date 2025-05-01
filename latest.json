@@ -5,7 +5,7 @@
   "platforms": {
     "windows-x86_64": {
       "signature": "Signature not found",
-      "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/v0.1.38/DurmanPass_0.1.38_x64_en-US.msi.zip"
+      "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/v0.1.38/DurmanPass_0.1.38_x64_en-US.msi"
     }
   }
 }
