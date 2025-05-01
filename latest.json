@@ -1,0 +1,11 @@
+{
+  "version": "0.1.36",
+  "notes": "Release notes for 0.1.36",
+  "pub_date": "2025-05-01T14:36:48Z",
+  "platforms": {
+    "windows-x86_64": {
+      "signature": "Signature not found",
+      "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/v0.1.36/DurmanPass_0.1.36_x64_en-US.msi.zip"
+    }
+  }
+}
