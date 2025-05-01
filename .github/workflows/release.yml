@@ -140,10 +140,11 @@ jobs:
         run: |
           npm install
           npm run tauri build -- --target x86_64-pc-windows-msvc
-          dir src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi
-          echo Creating zip from msi
-          Compress-Archive -Path src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${{ github.ref_name }}-replace '^v',''_x64_en-US.msi -DestinationPath src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${{ github.ref_name }}-replace '^v',''_x64_en-US.msi.zip
-          dir src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi
+          $VERSION = "${{ github.ref_name }}" -replace '^v',''
+          Write-Output "Creating zip from msi for version: $VERSION"
+          Compress-Archive -Path src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${VERSION}_x64_en-US.msi -DestinationPath src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${VERSION}_x64_en-US.msi.zip
+          Write-Output "Listing msi directory:"
+          Get-ChildItem -Path src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi
         shell: pwsh
       - name: Verify artifacts exist
         run: |
