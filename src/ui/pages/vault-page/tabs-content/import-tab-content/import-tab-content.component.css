@@ -119,6 +119,8 @@ tr:last-child td {
 table {
     border-collapse: collapse;
     overflow: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 th, td {
