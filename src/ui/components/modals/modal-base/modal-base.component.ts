@@ -17,6 +17,7 @@ export class ModalBaseComponent {
   @Input() contentBackgroundColor: string | keyof typeof ThemeColors = '#2f134e';
   @Input() contentBorderRadius: string = '8px';
   @Input() isDraggable: boolean = false;
+  @Input() position: string = 'absolute';
   @Output() closed = new EventEmitter<void>();
 
   @ViewChild('modalContent', { static: false }) modalContent!: ElementRef<HTMLDivElement>;

@@ -73,7 +73,7 @@ jobs:
         run: |
           $VERSION = "${{ github.ref_name }}" -replace '^v',''
           Write-Output "Uploading signature with version: $VERSION"
-          Write-Output "name_sig=DurmanPass_${VERSION}_x64_en-US.msi.zip.sig" | Add-Content -Path $env:GITHUB_ENV
+          Write-Output "name_sig=DurmanPass_${VERSION}_x64_en-US.msi.sig" | Add-Content -Path $env:GITHUB_ENV
           Write-Output "path_sig=src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${VERSION}_x64_en-US.msi.sig" | Add-Content -Path $env:GITHUB_ENV
           Write-Output "Checking path existence:"
           Get-ChildItem -Path "src-tauri\target\x86_64-pc-windows-msvc\release\bundle\msi\DurmanPass_${VERSION}_x64_en-US.msi.sig"
@@ -135,7 +135,7 @@ jobs:
           VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
           echo "Creating release with version: $VERSION"
           echo "msi_zip=artifacts/DurmanPass_${VERSION}_x64_en-US.msi.zip/DurmanPass_${VERSION}_x64_en-US.msi.zip" >> $GITHUB_ENV
-          echo "msi_zip_sig=artifacts/DurmanPass_${VERSION}_x64_en-US.msi.zip.sig/DurmanPass_${VERSION}_x64_en-US.msi.sig" >> $GITHUB_ENV
+          echo "msi_zip_sig=artifacts/DurmanPass_${VERSION}_x64_en-US.msi.sig/DurmanPass_${VERSION}_x64_en-US.msi.sig" >> $GITHUB_ENV
           echo "msi_file=artifacts/DurmanPass_${VERSION}_x64_en-US.msi/DurmanPass_${VERSION}_x64_en-US.msi" >> $GITHUB_ENV
           echo "body=Release notes for $VERSION" >> $GITHUB_ENV
           echo "Debug: msi_zip=$msi_zip"

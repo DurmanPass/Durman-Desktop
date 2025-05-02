@@ -1,15 +1,34 @@
-<div class="version-container" [style.background]="ThemeColors.Transparent">
-    <span class="version-text">v{{ version$ | async }}</span>
-    <ng-container>
-        <button
-                class="check-update"
-                [disabled]="isChecking"
-                (click)="updateStatus?.available ? installUpdate() : checkForUpdates()"
-        >
-            {{ isChecking ? 'Проверка...' : updateStatus?.available ? 'Установить v' + updateStatus?.version : 'Проверить обновления' }}
-        </button>
-        <span *ngIf="updateStatus?.available" class="update-text">
-            Доступно обновление: v{{ updateStatus?.version}}
-        </span>
-    </ng-container>
+<!--<div class="version-container" [style.background]="ThemeColors.Transparent">-->
+<!--    <span class="version-text">v{{ version$ | async }}</span>-->
+<!--    <ng-container>-->
+<!--        <button-->
+<!--                class="check-update"-->
+<!--                [disabled]="isChecking"-->
+<!--                (click)="updateStatus?.available ? installUpdate() : checkForUpdates()"-->
+<!--        >-->
+<!--            {{ isChecking ? 'Проверка...' : updateStatus?.available ? 'Установить v' + updateStatus?.version : 'Проверить обновления' }}-->
+<!--        </button>-->
+<!--        <span *ngIf="updateStatus?.available" class="update-text">-->
+<!--            Доступно обновление: v{{ updateStatus?.version}}-->
+<!--        </span>-->
+<!--    </ng-container>-->
+<!--</div>-->
+
+<div class="version-container" [style.background]="ThemeColors.Transparent" (click)="openVersionModal()">
+  <span class="version-text" [ngClass]="{
+    'version-up-to-date': !updateStatus?.available && !isChecking,
+    'version-outdated': updateStatus?.available
+  }">
+    v{{ version$ | async }}
+  </span>
 </div>
+<app-modal-base
+        [isOpen]="modalsControls.versionModal.isModalOpen"
+        [closeOnOverlayClick]="true"
+        [contentBorderRadius]="'12px'"
+        (closed)="closeVersionModal()"
+        [isDraggable]="true"
+        position="fixed"
+>
+    <app-version-modal [updateStatus]="updateStatus"/>
+</app-modal-base>

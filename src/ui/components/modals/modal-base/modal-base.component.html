@@ -1,4 +1,4 @@
-<div class="modal-overlay" *ngIf="isOpen" (click)="onOverlayClick($event)" (mousemove)="onDrag($event)" (mouseup)="stopDragging()">
+<div class="modal-overlay" *ngIf="isOpen" (click)="onOverlayClick($event)" (mousemove)="onDrag($event)" (mouseup)="stopDragging()" [style.position]="position">
     <div #modalContent class="modal-content" [style.background]="contentBackgroundColor" [style.border-radius]="contentBorderRadius">
         <div class="drag-handle" *ngIf="isDraggable" (mousedown)="startDragging($event)"></div>
         <button class="close-button" (click)="closeModal()">✕</button>
