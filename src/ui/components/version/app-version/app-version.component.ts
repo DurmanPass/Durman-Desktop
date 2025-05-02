@@ -25,6 +25,7 @@ export class AppVersionComponent {
     this.version$.subscribe(version => {
       console.log('AppVersionComponent: Current version:', version);
     });
+    this.checkForUpdates();
   }
 
   checkForUpdates(): void {
