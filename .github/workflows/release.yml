@@ -108,7 +108,7 @@ jobs:
         run: |
           VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
           PUB_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          SIGNATURE=$(cat artifacts/DurmanPass_${VERSION}_x64_en-US.msi.sig/DurmanPass_${VERSION}_x64_en-US.msi.sig || echo "Signature not found")
+          SIGNATURE=$(cat artifacts/DurmanPass_${VERSION}_x64_en-US.msi.zip.sig || echo "Signature not found")
           echo "Generating latest.json with version: $VERSION"
           echo '{
             "version": "'"$VERSION"'",
