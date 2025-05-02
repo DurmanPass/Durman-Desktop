@@ -108,7 +108,7 @@ jobs:
         run: |
           VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
           PUB_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          SIGNATURE=$(cat artifacts/DurmanPass_$VERSION_x64_en-US.msi.zip.sig/DurmanPass_$VERSION_x64_en-US.msi.sig || echo "Signature not found")
+          SIGNATURE=$(cat artifacts/DurmanPass_$VERSION_x64_en-US.msi.zip.sig/DurmanPass_$VERSION_x64_en-US.msi.sig)
           echo "Generating latest.json with version: $VERSION"
           echo '{
             "version": "'"$VERSION"'",
@@ -117,7 +117,7 @@ jobs:
             "platforms": {
               "windows-x86_64": {
                 "signature": "'"$SIGNATURE"'",
-                "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/${{ github.ref_name }}/DurmanPass_'"$VERSION"'_x64_en-US.msi.zip"
+                "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/${{ github.ref_name }}/DurmanPass_'"$VERSION"'_x64_en-US.msi"
               }
             }
           }' > latest.json

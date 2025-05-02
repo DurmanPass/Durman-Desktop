@@ -45,6 +45,8 @@ export class UpdateService {
                     return of(false);
                 }
 
+                console.log(update);
+
                 let downloaded = 0;
                 let contentLength = 0;
 
