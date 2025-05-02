@@ -1,0 +1,95 @@
+.welcome-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: black;
+    z-index: 1000;
+    animation: fadeOut 0.5s ease-in-out 2s forwards;
+}
+
+.background-glow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+            circle at 30% 30%,
+            rgba(255, 147, 41, 0.3) 0%,
+            transparent 50%
+    ),
+    radial-gradient(
+            circle at 70% 70%,
+            rgba(138, 43, 226, 0.3) 0%,
+            transparent 50%
+    );
+    animation: glowPulse 4s ease-in-out infinite;
+}
+
+.welcome-gif {
+    width: 300px;
+    height: 300px;
+    object-fit: contain;
+}
+
+.welcome-text {
+    margin-top: 20px;
+    font-size: 48px;
+    font-weight: bold;
+    color: #ecf0f1;
+    text-transform: uppercase;
+    display: flex;
+    gap: 10px;
+}
+
+.char {
+    opacity: 0;
+    animation: glowIn 0.5s ease-in-out forwards;
+    text-shadow: 0 0 10px #ff9329, 0 0 20px #8a2be2;
+}
+
+@keyframes glowIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+        text-shadow: none;
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        text-shadow: 0 0 10px #ff9329, 0 0 20px #8a2be2;
+    }
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+@media (max-width: 600px) {
+    .welcome-gif {
+        width: 200px;
+        height: 200px;
+    }
+    .welcome-text {
+        font-size: 32px;
+        gap: 5px;
+    }
+}

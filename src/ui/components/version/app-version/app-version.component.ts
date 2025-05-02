@@ -23,46 +23,10 @@ import {VersionModalComponent} from "../../modals/version-modal/version-modal.co
   styleUrl: './app-version.component.css'
 })
 export class AppVersionComponent {
-  // version$ = this.versionService.getAppVersion();
-  // updateStatus: UpdateStatus | null = null;
-  // isChecking = false;
-  // constructor(private versionService: VersionService, private updateService: UpdateService) {}
-  //
-  // ngOnInit(): void {
-  //   this.version$.subscribe(version => {
-  //     console.log('AppVersionComponent: Current version:', version);
-  //   });
-  //   this.checkForUpdates();
-  // }
-  //
-  // checkForUpdates(): void {
-  //   this.isChecking = true;
-  //   this.updateService.checkForUpdates().subscribe(status => {
-  //     this.updateStatus = status;
-  //     this.isChecking = false;
-  //     if (status.available) {
-  //       console.log(`Update available: v${status.version}`);
-  //     }
-  //   });
-  // }
-  //
-  // installUpdate(): void {
-  //   if (this.updateStatus?.available) {
-  //     this.isChecking = true;
-  //     this.updateService.installUpdate().subscribe(success => {
-  //       this.isChecking = false;
-  //       if (success) {
-  //         console.log('Update installed successfully');
-  //       }
-  //     });
-  //   }
-  // }
-  //
-  // protected readonly ThemeColors = ThemeColors;
-
   version$ = this.versionService.getAppVersion();
   updateStatus: UpdateStatus | null = null;
   isChecking = false;
+  isMajorOrMinorUpdate = false;
 
   modalsControls = {
     versionModal: {
@@ -90,6 +54,12 @@ export class AppVersionComponent {
         this.isChecking = false;
         if (status.available) {
           console.log(`Update available: v${status.version}`);
+          this.version$.subscribe(currentVersion => {
+            this.isMajorOrMinorUpdate = this.compareVersions(currentVersion, status.version);
+            if (this.isMajorOrMinorUpdate) {
+              this.openVersionModal();
+            }
+          });
         }
       },
       error: (error) => {
@@ -99,12 +69,25 @@ export class AppVersionComponent {
     });
   }
 
+  compareVersions(currentVersion: string, newVersion: string): boolean {
+    const currentParts = currentVersion.split('.').map(Number);
+    const newParts = newVersion.split('.').map(Number);
+
+    // Проверяем мажорную или минорную версию
+    if (currentParts[0] < newParts[0] || currentParts[1] < newParts[1]) {
+      return true; // Мажорное или минорное обновление
+    }
+    return false; // Патч-обновление
+  }
+
   openVersionModal() {
     this.modalsControls.versionModal.isModalOpen = true;
   }
 
   closeVersionModal(){
-    this.modalsControls.versionModal.isModalOpen = false;
+    if (!this.isMajorOrMinorUpdate) {
+      this.modalsControls.versionModal.isModalOpen = false;
+    }
   }
 
   protected readonly ThemeColors = ThemeColors;

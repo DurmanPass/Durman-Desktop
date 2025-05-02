@@ -29,11 +29,12 @@ import {CategoryLocalService} from "../services/category/category-local.service"
 import {SessionTimeoutService} from "../services/session/session-timeout.service";
 import {NetworkLostComponent} from "../ui/components/network/network-lost/network-lost.component";
 import {NetworkService} from "../services/network.service";
+import {WelcomeAnimationComponent} from "../ui/components/animation/welcome-animation/welcome-animation.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, StartPageComponent, PasswordGeneratePageComponent, VaultPageComponent, FrozenAccountPageComponent, ModalBaseComponent, PasswordDetailsModalComponent, ConfirmModalComponent, HttpClientModule, NetworkLostComponent],
+  imports: [CommonModule, RouterOutlet, StartPageComponent, PasswordGeneratePageComponent, VaultPageComponent, FrozenAccountPageComponent, ModalBaseComponent, PasswordDetailsModalComponent, ConfirmModalComponent, HttpClientModule, NetworkLostComponent, WelcomeAnimationComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -41,6 +42,7 @@ export class AppComponent {
   windowLabel: string = '';
   isLocked: boolean = SecurityLockService.getIsLocked();
   isOnline$ = NetworkService.getConnectionStatus();
+  showWelcomeAnimation: boolean = false;
   constructor(appRef: ApplicationRef, injector: EnvironmentInjector, private focusProtection: FocusProtectionService, public screenshotBlocking: ScreenshotBlockingService, private http: HttpClient, private sessionTimeoutService: SessionTimeoutService) {
     ToastService.initialize(appRef, injector);
   }
@@ -50,21 +52,55 @@ export class AppComponent {
   protected serverPasswordService = new PasswordService(this.http);
   protected passwordManagerService = new PasswordManagerService(this.serverPasswordService);
 
+  // async ngOnInit(): Promise<void> {
+  //   NetworkService.initialize();
+  //   await this.categoryLocalService.syncCategories();
+  //   await this.passwordManagerService.syncPasswords();
+  //
+  //   await StoreService.initialize();
+  //   await AppdataService.ensureDurmanpassDir();
+  //
+  //   this.windowLabel = await WindowService.getWindowLabel();
+  //
+  //   if (this.windowLabel === WINDOWS_LABELS.MAIN) {
+  //     this.showWelcomeAnimation = true;
+  //   }
+  //
+  //   if(this.windowLabel === WINDOWS_LABELS.VAULT){
+  //     if (!this.sessionTimeoutService.isSessionTimerStarted()) {
+  //       this.sessionTimeoutService.startSessionTimer();
+  //     }
+  //   }
+  //   SecurityLockService.initialize();
+  //
+  //   SettingsService.loadSettings();
+  //
+  //
+  //   setInterval(() => {
+  //     this.isLocked = SecurityLockService.getIsLocked();
+  //   }, 1000);
+  // }
+
   async ngOnInit(): Promise<void> {
-    NetworkService.initialize();
+
     await this.categoryLocalService.syncCategories();
     await this.passwordManagerService.syncPasswords();
 
-    await StoreService.initialize();
-    await AppdataService.ensureDurmanpassDir();
-
     this.windowLabel = await WindowService.getWindowLabel();
+
+    if (this.windowLabel === WINDOWS_LABELS.MAIN) {
+      this.showWelcomeAnimation = true;
+    }
 
     if(this.windowLabel === WINDOWS_LABELS.VAULT){
       if (!this.sessionTimeoutService.isSessionTimerStarted()) {
         this.sessionTimeoutService.startSessionTimer();
       }
     }
+    await StoreService.initialize();
+    await AppdataService.ensureDurmanpassDir();
+    NetworkService.initialize();
+
     SecurityLockService.initialize();
 
     SettingsService.loadSettings();
@@ -73,6 +109,10 @@ export class AppComponent {
     setInterval(() => {
       this.isLocked = SecurityLockService.getIsLocked();
     }, 1000);
+  }
+
+  onAnimationComplete(): void {
+    this.showWelcomeAnimation = false;
   }
 
   private ivService = new IvService(this.http)

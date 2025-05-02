@@ -23,7 +23,8 @@
                     (click)="installUpdate()"
             >
                 <span *ngIf="!isDownloading">Загрузить новую версию</span>
-                <span *ngIf="isDownloading" class="progress-text">{{ downloadProgress }}%</span>
+<!--                <span *ngIf="isDownloading" class="progress-text">{{ downloadProgress }}%</span>-->
+                <span *ngIf="isDownloading" class="progress-text">Загрузка...</span>
                 <div class="progress-bar" [style.width]="downloadProgress + '%'"></div>
             </button>
         </div>
