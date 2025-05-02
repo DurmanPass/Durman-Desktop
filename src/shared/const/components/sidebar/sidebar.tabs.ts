@@ -22,7 +22,7 @@ export const SidebarTabs: SidebarTab[] = [
     { id: "home", title: "Главная", content: HomeTabContentComponent },
     { id: "password", title: "Пароли", content: PasswordTabContentComponent },
     { id: "report", title: "Отчёты", content: ReportsTabContentComponent },
-    // { id: "import", title: "Импорт", content: ImportTabContentComponent },
+    { id: "import", title: "Импорт", content: ImportTabContentComponent },
     { id: "settings", title: "Настройки", content: SettingsTabContentComponent },
     { id: "account", title: "Аккаунт", content: AccountTabContentComponent },
 ];

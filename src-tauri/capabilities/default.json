@@ -29,6 +29,119 @@
     "updater:allow-check",
     "updater:allow-download",
     "updater:allow-download-and-install",
-    "updater:allow-install"
+    "updater:allow-install",
+    {
+      "identifier": "fs:scope",
+      "allow": [
+        {
+          "path": "$APPDATA"
+        },
+        {
+          "path": "$APPDATA/**"
+        },
+        {
+          "path": "$APPDATA/*"
+        },
+        {
+          "path": "$APPDATA/"
+        },
+        {
+          "path": "$LOCALAPPDATA/**"
+        },
+        {
+          "path": "$DOCUMENT/*"
+        },
+        {
+          "path": "$DOCUMENT/"
+        },
+        {
+          "path": "$DOCUMENT"
+        },
+        {
+          "path": "$DOWNLOAD/**"
+        },
+        {
+          "path": "$DOWNLOAD/*"
+        },
+        {
+          "path": "$DOWNLOAD/"
+        },
+        {
+          "path": "$DOWNLOAD"
+        },
+        {
+          "path": "$AUDIO/**"
+        },
+        {
+          "path": "$AUDIO/*"
+        },
+        {
+          "path": "$AUDIO/"
+        },
+        {
+          "path": "$AUDIO"
+        },
+        {
+          "path": "$DESKTOP/**"
+        },
+        {
+          "path": "$DESKTOP/*"
+        },
+        {
+          "path": "$DESKTOP/"
+        },
+        {
+          "path": "$DESKTOP"
+        },
+        {
+          "path": "$HOME/**"
+        },
+        {
+          "path": "$HOME/*"
+        },
+        {
+          "path": "$HOME/"
+        },
+        {
+          "path": "$HOME"
+        },
+        {
+          "path": "$PICTURE/**"
+        },
+        {
+          "path": "$PICTURE/*"
+        },
+        {
+          "path": "$PICTURE/"
+        },
+        {
+          "path": "$PICTURE"
+        },
+        {
+          "path": "$PUBLIC/**"
+        },
+        {
+          "path": "$PUBLIC/*"
+        },
+        {
+          "path": "$PUBLIC/"
+        },
+        {
+          "path": "$PUBLIC"
+        },
+        {
+          "path": "$VIDEO/**"
+        },
+        {
+          "path": "$VIDEO/*"
+        },
+        {
+          "path": "$VIDEO/"
+        },
+        {
+          "path": "$VIDEO"
+        }
+      ]
+    }
   ]
 }
