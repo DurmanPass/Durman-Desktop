@@ -82,7 +82,6 @@ export class AppComponent {
   // }
 
   async ngOnInit(): Promise<void> {
-
     await this.categoryLocalService.syncCategories();
     await this.passwordManagerService.syncPasswords();
 
@@ -93,6 +92,7 @@ export class AppComponent {
     }
 
     if(this.windowLabel === WINDOWS_LABELS.VAULT){
+
       if (!this.sessionTimeoutService.isSessionTimerStarted()) {
         this.sessionTimeoutService.startSessionTimer();
       }

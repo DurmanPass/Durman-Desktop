@@ -165,6 +165,13 @@ fn initialize_screenshot_blocking(window: Window) -> Result<(), String> {
     Ok(())
 }
 use std::fs;
+use rusqlite::Connection;
+use serde::{Deserialize, Serialize};
+use tempfile::NamedTempFile;
+use winapi::um::wincrypt::DATA_BLOB;
+use winapi::um::dpapi::CryptUnprotectData;
+
+
 // Команда для создания папки durmanpass
 #[tauri::command]
 fn create_durmanpass_dir() -> Result<(), String> {
@@ -177,6 +184,228 @@ fn create_durmanpass_dir() -> Result<(), String> {
     }
 
     Ok(())
+}
+
+#[derive(Serialize, Deserialize)]
+struct BrowserPassword {
+    website: String,
+    username: String,
+    password: String,
+}
+
+// #[tauri::command]
+// fn get_browser_passwords() -> Result<Vec<BrowserPassword>, String> {
+//     // Путь к базе Chrome (Windows)
+//     let local_app_data = std::env::var("LOCALAPPDATA")
+//         .map_err(|e| format!("Failed to get LOCALAPPDATA: {}", e))?;
+//     let chrome_db_path = format!(
+//         "{}\\Google\\Chrome\\User Data\\Default\\Login Data",
+//         local_app_data
+//     );
+//
+//     // Проверяем существование файла
+//     if !Path::new(&chrome_db_path).exists() {
+//         return Err("Chrome Login Data file not found. Ensure Chrome is installed.".to_string());
+//     }
+//
+//     // Создаём временную копию базы
+//     let temp_file = NamedTempFile::new()
+//         .map_err(|e| format!("Failed to create temp file: {}", e))?;
+//     let temp_db_path = temp_file.path().to_string_lossy().to_string();
+//     fs::copy(&chrome_db_path, &temp_db_path)
+//         .map_err(|e| format!("Failed to copy Login Data to temp file: {}", e))?;
+//
+//     // Открываем SQLite базу
+//     let conn = Connection::open(&temp_db_path)
+//         .map_err(|e| format!("Failed to open Chrome database: {}", e))?;
+//
+//     // Запрос к таблице logins
+//     let mut stmt = conn
+//         .prepare("SELECT origin_url, username_value, password_value FROM logins")
+//         .map_err(|e| format!("Failed to prepare query: {}", e))?;
+//
+//     let password_iter = stmt
+//         .query_map([], |row| {
+//             let website: String = row.get(0)?;
+//             let username: String = row.get(1)?;
+//             let encrypted_password: Vec<u8> = row.get(2)?;
+//
+//             // Подготовка входных данных для CryptUnprotectData
+//             let mut in_blob = DATA_BLOB {
+//                 cbData: encrypted_password.len() as u32,
+//                 pbData: encrypted_password.as_ptr() as *mut u8,
+//             };
+//             let mut out_blob = DATA_BLOB {
+//                 cbData: 0,
+//                 pbData: std::ptr::null_mut(),
+//             };
+//
+//             // Вызов CryptUnprotectData
+//             let result = unsafe {
+//                 CryptUnprotectData(
+//                     &mut in_blob,
+//                     std::ptr::null_mut(),
+//                     std::ptr::null_mut(),
+//                     std::ptr::null_mut(),
+//                     std::ptr::null_mut(),
+//                     0,
+//                     &mut out_blob
+//                 )
+//             };
+//
+//             if result == 0 {
+//                 return Err(rusqlite::Error::InvalidColumnName(
+//                     "CryptUnprotectData failed".to_string()
+//                 ));
+//             }
+//
+//             // Извлечение расшифрованных данных
+//             let decrypted_data = unsafe {
+//                 std::slice::from_raw_parts(out_blob.pbData, out_blob.cbData as usize)
+//             };
+//
+//             let password = String::from_utf8(decrypted_data.to_vec())
+//                 .map_err(|e| rusqlite::Error::InvalidColumnName(format!("Invalid UTF-8: {}", e)))?;
+//
+//             // Освобождение памяти
+//             unsafe {
+//                 winapi::um::winbase::LocalFree(out_blob.pbData as *mut _);
+//             }
+//
+//             Ok(BrowserPassword {
+//                 website,
+//                 username,
+//                 password,
+//             })
+//         })
+//         .map_err(|e| format!("Failed to query passwords: {}", e))?;
+//
+//     // Собираем результаты
+//     let mut passwords = Vec::new();
+//     for password in password_iter {
+//         passwords.push(password.map_err(|e| format!("Error processing password: {}", e))?);
+//     }
+//
+//     // Удаляем временный файл
+//     temp_file
+//         .close()
+//         .map_err(|e| format!("Failed to delete temp file: {}", e))?;
+//
+//     if passwords.is_empty() {
+//         return Err("No passwords found in Chrome database.".to_string());
+//     }
+//
+//     Ok(passwords)
+// }
+
+#[tauri::command]
+fn get_browser_passwords() -> Result<Vec<BrowserPassword>, String> {
+    // Путь к базе Chrome (Windows)
+    let local_app_data = std::env::var("LOCALAPPDATA")
+        .map_err(|e| format!("Failed to get LOCALAPPDATA: {}", e))?;
+    let chrome_db_path = format!(
+        "{}\\Google\\Chrome\\User Data\\Default\\Login Data",
+        local_app_data
+    );
+
+    // Проверяем существование файла
+    if !Path::new(&chrome_db_path).exists() {
+        return Err("Chrome Login Data file not found. Ensure Chrome is installed.".to_string());
+    }
+
+    // Создаём временную копию базы
+    let temp_file = NamedTempFile::new()
+        .map_err(|e| format!("Failed to create temp file: {}", e))?;
+    let temp_db_path = temp_file.path().to_string_lossy().to_string();
+    fs::copy(&chrome_db_path, &temp_db_path)
+        .map_err(|e| format!("Failed to copy Login Data to temp file: {}", e))?;
+
+    // Открываем SQLite базу
+    let conn = Connection::open(&temp_db_path)
+        .map_err(|e| format!("Failed to open Chrome database: {}", e))?;
+
+    // Запрос к таблице logins
+    let mut stmt = conn
+        .prepare("SELECT origin_url, username_value, password_value FROM logins")
+        .map_err(|e| format!("Failed to prepare query: {}", e))?;
+
+    let password_iter = stmt
+        .query_map([], |row| {
+            let website: String = row.get(0)?;
+            let username: String = row.get(1)?;
+            let encrypted_password: Vec<u8> = row.get(2)?;
+
+            // Подготовка входных данных для CryptUnprotectData
+            let mut in_blob = DATA_BLOB {
+                cbData: encrypted_password.len() as u32,
+                pbData: encrypted_password.as_ptr() as *mut u8,
+            };
+            let mut out_blob = DATA_BLOB {
+                cbData: 0,
+                pbData: std::ptr::null_mut(),
+            };
+
+            // Вызов CryptUnprotectData
+            let result = unsafe {
+                CryptUnprotectData(
+                    &mut in_blob,
+                    std::ptr::null_mut(),
+                    std::ptr::null_mut(),
+                    std::ptr::null_mut(),
+                    std::ptr::null_mut(),
+                    0,
+                    &mut out_blob
+                )
+            };
+
+            if result == 0 {
+                return Err(rusqlite::Error::InvalidColumnName(
+                    "CryptUnprotectData failed".to_string()
+                ));
+            }
+
+            // Извлечение расшифрованных данных
+            let decrypted_data = unsafe {
+                std::slice::from_raw_parts(out_blob.pbData, out_blob.cbData as usize)
+            };
+            let password = String::from_utf8(decrypted_data.to_vec())
+                .map_err(|e| rusqlite::Error::InvalidColumnName(format!("Invalid UTF-8: {}", e)))?;
+
+            // Освобождение памяти
+            unsafe {
+                winapi::um::winbase::LocalFree(out_blob.pbData as *mut _);
+            }
+
+            Ok(BrowserPassword {
+                website,
+                username,
+                password,
+            })
+        })
+        .map_err(|e| format!("Failed to query passwords: {}", e))?;
+
+    // Собираем результаты
+    let mut passwords = Vec::new();
+    for password in password_iter {
+        passwords.push(password.map_err(|e| format!("Error processing password: {}", e))?);
+    }
+
+    // Явно освобождаем stmt, чтобы снять заимствование conn
+    drop(stmt);
+
+    // Явно закрываем соединение SQLite
+    drop(conn);
+
+    // Удаляем временный файл
+    temp_file
+        .close()
+        .map_err(|e| format!("Failed to delete temp file: {}", e))?;
+
+    if passwords.is_empty() {
+        return Err("No passwords found in Chrome database.".to_string());
+    }
+
+    Ok(passwords)
 }
 
 fn main() {
@@ -195,7 +424,8 @@ fn main() {
             save_file,
             initialize_screenshot_blocking,
             create_durmanpass_dir,
-            close_all_windows
+            close_all_windows,
+            get_browser_passwords
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

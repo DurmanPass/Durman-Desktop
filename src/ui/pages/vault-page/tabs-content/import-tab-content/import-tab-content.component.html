@@ -1,0 +1,38 @@
+<div class="import-page">
+    <header class="import-page-header">
+        <app-header-description
+                title="Импорт паролей"
+                description="Легко перенесите свои пароли из браузера или документа в DurmanPass. Нажмите кнопку ниже, чтобы автоматически извлечь сохранённые пароли и безопасно интегрировать их в ваш менеджер паролей."
+        />
+    </header>
+    <div class="import-content">
+        <button
+                class="import-button"
+                [disabled]="isLoading"
+                (click)="importPasswords()"
+        >
+            {{ isLoading ? 'Импорт...' : 'Импортировать пароли из Chrome' }}
+        </button>
+        <div class="error-message" *ngIf="error">
+            {{ error }}
+        </div>
+        <div class="passwords-table" *ngIf="passwords.length > 0">
+            <table>
+                <thead>
+                <tr>
+                    <th>Сайт</th>
+                    <th>Имя пользователя</th>
+                    <th>Пароль</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let password of passwords">
+                    <td>{{ password.website }}</td>
+                    <td>{{ password.username }}</td>
+                    <td>{{ password.password }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
