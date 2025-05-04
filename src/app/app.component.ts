@@ -109,10 +109,8 @@ export class AppComponent {
     SettingsService.loadSettings();
 
 
-
-
     setInterval(() => {
-      if(this.isLoading){this.isLoading = false;}
+      this.isLoading = false;
       this.isLocked = SecurityLockService.getIsLocked();
     }, 1000);
   }

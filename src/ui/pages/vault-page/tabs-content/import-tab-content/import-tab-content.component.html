@@ -2,7 +2,7 @@
     <header class="import-page-header">
         <app-header-description
                 title="Импорт паролей"
-                description="Легко перенесите свои пароли из браузера в DurmanPass. Загрузите CSV-файл, экспортированный из Chrome, Firefox или Yandex, выберите нужные записи и перенесите их."
+                description="Легко перенесите свои пароли из браузера в DurmanPass. Загрузите CSV-файл, экспортированный из Chrome, Firefox, Opera или Yandex, выберите нужные записи и перенесите их."
         />
     </header>
     <div class="import-content">
@@ -13,9 +13,9 @@
         >
             {{ isLoading ? 'Загрузка...' : 'Загрузить CSV-файл' }}
         </button>
-        <div class="error-message" *ngIf="error">
-            {{ error }}
-        </div>
+<!--        <div class="error-message" *ngIf="error">-->
+<!--            {{ error }}-->
+<!--        </div>-->
         <div class="passwords-table" *ngIf="passwords.length > 0">
             <table>
                 <thead>
