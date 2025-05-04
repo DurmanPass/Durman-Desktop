@@ -2,7 +2,7 @@
     <div class="background-glow"></div>
     <img src="assets/animations/gif/welcome.gif" alt="Welcome Animation" class="welcome-gif" />
     <div class="welcome-text" *ngIf="showText">
-    <span *ngFor="let char of 'привет'.split(''); let i = index" class="char" [style.animationDelay]="i * 0.1 + 's'">
+    <span *ngFor="let char of 'привет'.split(''); let i = index" class="char" [style.animationDelay]="i * 0.05 + 's'">
       {{ char }}
     </span>
     </div>

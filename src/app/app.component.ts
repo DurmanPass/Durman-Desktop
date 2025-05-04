@@ -30,11 +30,12 @@ import {SessionTimeoutService} from "../services/session/session-timeout.service
 import {NetworkLostComponent} from "../ui/components/network/network-lost/network-lost.component";
 import {NetworkService} from "../services/network.service";
 import {WelcomeAnimationComponent} from "../ui/components/animation/welcome-animation/welcome-animation.component";
+import {PreloaderComponent} from "../ui/components/loaders/preloader/preloader.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, StartPageComponent, PasswordGeneratePageComponent, VaultPageComponent, FrozenAccountPageComponent, ModalBaseComponent, PasswordDetailsModalComponent, ConfirmModalComponent, HttpClientModule, NetworkLostComponent, WelcomeAnimationComponent],
+  imports: [CommonModule, RouterOutlet, StartPageComponent, PasswordGeneratePageComponent, VaultPageComponent, FrozenAccountPageComponent, ModalBaseComponent, PasswordDetailsModalComponent, ConfirmModalComponent, HttpClientModule, NetworkLostComponent, WelcomeAnimationComponent, PreloaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -43,6 +44,7 @@ export class AppComponent {
   isLocked: boolean = SecurityLockService.getIsLocked();
   isOnline$ = NetworkService.getConnectionStatus();
   showWelcomeAnimation: boolean = false;
+  isLoading: boolean = true;
   constructor(appRef: ApplicationRef, injector: EnvironmentInjector, private focusProtection: FocusProtectionService, public screenshotBlocking: ScreenshotBlockingService, private http: HttpClient, private sessionTimeoutService: SessionTimeoutService) {
     ToastService.initialize(appRef, injector);
   }
@@ -97,6 +99,7 @@ export class AppComponent {
         this.sessionTimeoutService.startSessionTimer();
       }
     }
+
     await StoreService.initialize();
     await AppdataService.ensureDurmanpassDir();
     NetworkService.initialize();
@@ -106,7 +109,10 @@ export class AppComponent {
     SettingsService.loadSettings();
 
 
+
+
     setInterval(() => {
+      if(this.isLoading){this.isLoading = false;}
       this.isLocked = SecurityLockService.getIsLocked();
     }, 1000);
   }

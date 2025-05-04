@@ -1,27 +1,58 @@
-<ng-container *ngIf="isOnline$ | async; else networkLost">
-    <ng-container *ngIf="showWelcomeAnimation && windowLabel === WINDOWS_LABELS.MAIN">
-        <app-welcome-animation (animationComplete)="onAnimationComplete()" />
-    </ng-container>
+<!--<ng-container *ngIf="isOnline$ | async; else networkLost">-->
+<!--    <ng-container *ngIf="showWelcomeAnimation && windowLabel === WINDOWS_LABELS.MAIN">-->
+<!--        <app-welcome-animation (animationComplete)="onAnimationComplete()" />-->
+<!--    </ng-container>-->
 
-    <ng-container *ngIf="!showWelcomeAnimation">
-        <ng-container *ngIf="windowLabel === WINDOWS_LABELS.MAIN">
-            <app-start-page />
+<!--    <ng-container *ngIf="!showWelcomeAnimation">-->
+<!--        <ng-container *ngIf="windowLabel === WINDOWS_LABELS.MAIN">-->
+<!--            <app-start-page />-->
+<!--        </ng-container>-->
+<!--    </ng-container>-->
+
+<!--    <ng-container *ngIf="windowLabel === WINDOWS_LABELS.PASSWORD_GENERATE">-->
+<!--        <app-password-generate-page/>-->
+<!--    </ng-container>-->
+
+<!--    <ng-container *ngIf="windowLabel === WINDOWS_LABELS.VAULT && !isLocked">-->
+<!--        <app-vault-page/>-->
+<!--    </ng-container>-->
+
+<!--    <ng-container *ngIf="isLocked">-->
+<!--        <app-frozen-account-page (unlock)="unlockAccount($event)"/>-->
+<!--    </ng-container>-->
+<!--</ng-container>-->
+
+<!--<ng-template #networkLost>-->
+<!--    <app-network-lost/>-->
+<!--</ng-template>-->
+
+<app-preloader *ngIf="isLoading"/>
+<ng-container *ngIf="!isLoading">
+    <ng-container *ngIf="isOnline$ | async; else networkLost">
+        <ng-container *ngIf="showWelcomeAnimation && windowLabel === WINDOWS_LABELS.MAIN">
+            <app-welcome-animation (animationComplete)="onAnimationComplete()" />
+        </ng-container>
+
+        <ng-container *ngIf="!showWelcomeAnimation">
+            <ng-container *ngIf="windowLabel === WINDOWS_LABELS.MAIN">
+                <app-start-page />
+            </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="windowLabel === WINDOWS_LABELS.PASSWORD_GENERATE">
+            <app-password-generate-page />
+        </ng-container>
+
+        <ng-container *ngIf="windowLabel === WINDOWS_LABELS.VAULT && !isLocked">
+            <app-vault-page />
+        </ng-container>
+
+        <ng-container *ngIf="isLocked">
+            <app-frozen-account-page (unlock)="unlockAccount($event)" />
         </ng-container>
     </ng-container>
 
-    <ng-container *ngIf="windowLabel === WINDOWS_LABELS.PASSWORD_GENERATE">
-        <app-password-generate-page/>
-    </ng-container>
-
-    <ng-container *ngIf="windowLabel === WINDOWS_LABELS.VAULT && !isLocked">
-        <app-vault-page/>
-    </ng-container>
-
-    <ng-container *ngIf="isLocked">
-        <app-frozen-account-page (unlock)="unlockAccount($event)"/>
-    </ng-container>
+    <ng-template #networkLost>
+        <app-network-lost />
+    </ng-template>
 </ng-container>
-
-<ng-template #networkLost>
-    <app-network-lost/>
-</ng-template>
