@@ -47,6 +47,8 @@ import {PasswordKanbanComponent} from "../../../../components/kanban/password-ka
 import {
   NetworkIndicatorComponent
 } from "../../../../components/indicators/network-indicator/network-indicator.component";
+import {StoreService} from "../../../../../services/vault/store.service";
+import {StoreKeys} from "../../../../../shared/const/vault/store.keys";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -207,7 +209,6 @@ export class PasswordTabContentComponent {
         this.PasswordManagerState.sortCriterion,
         this.PasswordManagerState.sortOrder
     );
-
     entries.map(async entry => {
       let category = await this.categoryLocalService.getCategoryById(entry.metadata.category ? entry.metadata.category : '');
       entry.metadata.categoryLabel = category.name;
