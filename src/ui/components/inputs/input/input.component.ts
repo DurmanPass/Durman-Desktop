@@ -21,6 +21,7 @@ export class InputComponent {
   @Input() borderColor?: keyof typeof ThemeColors; // Цвет границы
   @Input() backgroundColor?: keyof typeof ThemeColors; // Цвет фона
   @Input() placeholder: string = ''; // Плейсхолдер
+  @Input() placeholderRequire: boolean = false;
   @Input() label?: string; // Текст label
   @Input() labelSide: LabelSideType = DefaultLabelSide; // Расположение label
   @Input() value: string = '';
