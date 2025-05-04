@@ -63,8 +63,9 @@
 .entries-action-btns{
     display: flex;
     flex-direction: row;
-    gap: 20px;
+    gap: max(5px);
     justify-content: center;
+    margin: auto;
 }
 
 .entries-action-btns img{
