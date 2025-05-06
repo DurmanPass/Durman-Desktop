@@ -49,6 +49,8 @@ import {
 } from "../../../../components/indicators/network-indicator/network-indicator.component";
 import {StoreService} from "../../../../../services/vault/store.service";
 import {StoreKeys} from "../../../../../shared/const/vault/store.keys";
+import {PasswordStrengthService} from "../../../../../services/password/password-strength.service";
+import {PreloaderComponent} from "../../../../components/loaders/preloader/preloader.component";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -75,7 +77,8 @@ import {StoreKeys} from "../../../../../shared/const/vault/store.keys";
     PasswordTimelineComponent,
     PasswordPieComponent,
     PasswordKanbanComponent,
-    NetworkIndicatorComponent
+    NetworkIndicatorComponent,
+    PreloaderComponent
   ],
   templateUrl: './password-tab-content.component.html',
   styleUrl: './password-tab-content.component.css'
@@ -118,6 +121,7 @@ export class PasswordTabContentComponent {
   selectedCategoryEntry: Category | null = null;
   exportPath: string = '';
   selectedPasswordEntry: PasswordEntryInterface | null = null;
+  isLoading: boolean = false;
 
   exportOptions = [
     { value: EXPORT_PASSWORDS_TYPES.XLSX, label: 'XLSX' },
@@ -152,7 +156,8 @@ export class PasswordTabContentComponent {
   }
 
   constructor(
-      private http: HttpClient
+      private http: HttpClient,
+      private passwordStrengthService: PasswordStrengthService
   ) {}
 
   protected categoryService = new CategoryService(this.http)
@@ -166,10 +171,12 @@ export class PasswordTabContentComponent {
 
 
   async ngOnInit() {
+    this.isLoading = true;
     await this.categoryLocalService.syncCategories();
     await this.updateCategories();
     await this.updateEntries();
-    this.updateStats();
+    await this.updateStats();
+    this.isLoading = false;
   }
 
   async onSearchQueryChange(query: string) {
@@ -232,13 +239,13 @@ export class PasswordTabContentComponent {
     this.filteredEntries = entries;
   }
 
-  private updateStats(): void {
+  private async updateStats() {
     const entries = PasswordManagerService.getAllEntries();
     this.stats = {
       total: entries.length,
       favorites: entries.filter(e => e.security.isFavorite).length,
       weak: entries.filter(e => e.credentials.passwordStrength != null && e.credentials.passwordStrength < 3).length,
-      frequent: entries.filter(e => e.metadata.usageCount !== null && e.metadata.usageCount > 5).length
+      frequent: await this.passwordStrengthService.getReusedPasswordsCount()
     };
   }
 
