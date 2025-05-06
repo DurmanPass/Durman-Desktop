@@ -165,7 +165,13 @@ fn initialize_screenshot_blocking(window: Window) -> Result<(), String> {
     Ok(())
 }
 use std::fs;
-
+use aes_gcm::{Aes256Gcm, Key, KeyInit, Nonce};
+use aes_gcm::aead::Aead;
+use base64::Engine;
+use base64::engine::general_purpose;
+use image::ImageBuffer;
+use rand::Rng;
+use tauri::image::JsImage::Rgba;
 
 // Команда для создания папки durmanpass
 #[tauri::command]

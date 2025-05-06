@@ -138,8 +138,23 @@ export class PasswordStrengthService {
      * Подсчитывает количество переиспользуемых паролей (паролей, которые встречаются более одного раза)
      * @returns Количество переиспользуемых паролей
      */
-    getReusedPasswordsCount(): number {
-        const entries = PasswordManagerService.getAllEntries();
+    async getReusedPasswordsCount(): Promise<number> {
+        // Создаём глубокую копию записей
+        const entries = JSON.parse(JSON.stringify(PasswordManagerService.getAllEntries())) as PasswordEntryInterface[];
+
+        // Расшифровываем пароли
+        const passwords = await Promise.all(
+            entries.map(async (entry) => {
+                console.log('Before decryption:', entry.credentials.password);
+                entry.credentials.password = await DecryptValue(
+                    entry.credentials.password,
+                    entry.credentials.encryption_iv
+                );
+                console.log('After decryption:', entry.credentials.password);
+                return entry;
+            })
+        );
+
         if (entries.length === 0) return 0;
 
         // Фильтруем по уникальным ID
@@ -154,17 +169,20 @@ export class PasswordStrengthService {
         if (uniqueEntries.length === 0) return 0;
 
         // Подсчитываем частоту появления каждого пароля
-        const passwordFrequency = new Map<string, number>();
+        const passwordFrequency = new Map<string, { count: number, entries: PasswordEntryInterface[] }>();
         uniqueEntries.forEach(entry => {
             const password = entry.credentials.password || '';
-            passwordFrequency.set(password, (passwordFrequency.get(password) || 0) + 1);
+            const current = passwordFrequency.get(password) || { count: 0, entries: [] };
+            current.count += 1;
+            current.entries.push(entry);
+            passwordFrequency.set(password, current);
         });
 
-        // Подсчитываем пароли, которые встречаются более одного раза
+        // Считаем количество паролей, используемых более одного раза
         let reusedCount = 0;
-        passwordFrequency.forEach((count, password) => {
-            if (count > 1 && password !== '') { // Исключаем пустые пароли
-                reusedCount += count; // Добавляем все записи с переиспользуемым паролем
+        passwordFrequency.forEach((data, password) => {
+            if (data.count > 1 && password !== '') {
+                reusedCount++;
             }
         });
 

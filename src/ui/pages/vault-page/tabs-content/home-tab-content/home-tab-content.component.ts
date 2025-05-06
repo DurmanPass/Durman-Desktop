@@ -54,7 +54,7 @@ export class HomeTabContentComponent {
         { id: 'reused', score: 0, color: "Grey" },
     ];
 
-    private updatePasswordInfo(): void {
+    private async updatePasswordInfo() {
         this.passwordsInfo = [
             {
                 id: 'all',
@@ -68,7 +68,7 @@ export class HomeTabContentComponent {
             },
             {
                 id: 'reused',
-                score: this.passwordStrengthService.getReusedPasswordsCount(),
+                score: await this.passwordStrengthService.getReusedPasswordsCount(),
                 color: "Grey"
             },
         ];
