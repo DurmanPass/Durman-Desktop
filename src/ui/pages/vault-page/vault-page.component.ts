@@ -18,6 +18,8 @@ import {PasswordManagerService} from "../../../services/password/password-manage
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {NetworkIndicatorComponent} from "../../components/indicators/network-indicator/network-indicator.component";
 import {AppVersionComponent} from "../../components/version/app-version/app-version.component";
+import {ProfileService} from "../../../services/routes/profile/profile.service";
+import {ProfileLocalService} from "../../../services/profile/profile-local.service";
 
 @Component({
   selector: 'app-vault-page',
@@ -31,7 +33,8 @@ import {AppVersionComponent} from "../../components/version/app-version/app-vers
         PasswordDetailsModalComponent,
         HelpModalComponent,
         NetworkIndicatorComponent,
-        AppVersionComponent
+        AppVersionComponent,
+        HttpClientModule
     ],
   templateUrl: './vault-page.component.html',
   styleUrl: './vault-page.component.css'
@@ -47,6 +50,12 @@ export class VaultPageComponent {
             isModalOpen: false
         }
     }
+
+    constructor(private http: HttpClient) {
+    }
+
+    private profileService = new ProfileService(this.http);
+    private profileLocalService = new ProfileLocalService(this.profileService);
 
     closeHelpModal(){
         this.modalsControls.help.isModalOpen = false;
@@ -65,6 +74,7 @@ export class VaultPageComponent {
   }
 
     async ngOnInit() {
+        await this.profileLocalService.syncProfile();
         deleteOverflowWindow();
     }
 

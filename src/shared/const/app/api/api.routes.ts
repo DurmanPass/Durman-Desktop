@@ -26,5 +26,9 @@ export const ApiRoutes = {
         GET_PASSWORD_BY_ID: (id: string) => ApiSettings.apiUrl + `/passwords/${id}`,
         UPDATE_PASSWORD: (id: string) => ApiSettings.apiUrl + `/passwords/${id}`,
         DELETE_PASSWORD: (id: string) => ApiSettings.apiUrl + `/passwords/${id}`,
+    },
+    USER: {
+        GET_PROFILE: ApiSettings.apiUrl + '/user',
+        DELETE_PROFILE: ApiSettings.apiUrl + '/user'
     }
 };

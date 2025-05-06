@@ -183,7 +183,7 @@ export class PasswordTabContentComponent {
     this.PasswordManagerState.searchQuery = query;
     await this.updateCategories();
     await this.updateEntries();
-    this.updateStats();
+    await this.updateStats();
   }
 
   async selectCategory(category: string) {

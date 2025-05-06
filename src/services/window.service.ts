@@ -33,7 +33,21 @@ export class WindowService {
         await invoke(TauriCommands.WINDOW_SERVICE.CLOSE_ALL_WINDOWS_EXCEPT_VAULT_WINDOW);
     }
 
+    static async closeAllWindowsExMain(){
+        await invoke(TauriCommands.WINDOW_SERVICE.CLOSE_ALL_WINDOWS_EXCEPT_MAIN_WINDOW);
+    }
+
+
     static async closeCurrentWindow(): Promise<void> {
         await invoke(TauriCommands.WINDOW_SERVICE.CLOSE_CURRENT_WINDOW);
+    }
+
+    static async restartApp(): Promise<void> {
+        try {
+            await invoke(TauriCommands.WINDOW_SERVICE.RESTART_APP);
+        } catch (error) {
+            console.error('Error restarting app:', error);
+            throw error;
+        }
     }
 }

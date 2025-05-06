@@ -8,34 +8,35 @@
 
     <main class="account-page-main-content">
         <div class="main-user-data">
-            <div class="account-additional-data">
-                <div class="icon-data">
-                    <div class="icon" [style.background]="colorData.colorIcon">
-                        {{ userData.email.slice(0, 2) }}
-                    </div>
-                </div>
-            </div>
+<!--            <div class="account-additional-data">-->
+<!--                <div class="icon-data">-->
+<!--                    <div class="icon" [style.background]="colorData.colorIcon">-->
+<!--                        {{ userData.email.slice(0, 2) }}-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="account-main-data">
-                <app-input
-                        label="Имя пользователя"
-                        labelSide="Top"
-                        size="Long"
-                        borderColor="White"
-                        [value]="userData.username"
-                />
+<!--                <app-input-->
+<!--                        label="Имя пользователя"-->
+<!--                        labelSide="Top"-->
+<!--                        size="Long"-->
+<!--                        borderColor="White"-->
+<!--                        [value]="userData.username"-->
+<!--                />-->
                 <app-input
                         label="Электронная почта"
                         labelSide="Top"
                         size="Long"
                         borderColor="White"
                         [value]="userData.email"
+                        [isEditable]="false"
                 />
             </div>
         </div>
-        <div class="account-fingerprint">
-            <app-header-description titleType="h3" title="Отпечаток вашего аккаунта:"/>
-            <span class="fingerprint-text" [style.color]="colorData.colorFingerprint">{{userData.fingerprint}}</span>
-        </div>
+<!--        <div class="account-fingerprint">-->
+<!--            <app-header-description titleType="h3" title="Отпечаток вашего аккаунта:"/>-->
+<!--            <span class="fingerprint-text" [style.color]="colorData.colorFingerprint">{{userData.fingerprint}}</span>-->
+<!--        </div>-->
     </main>
 
     <footer class="account-page-footer">
@@ -51,6 +52,7 @@
                     text="Удалить аккаунт"
                     bgColor="DarkRed"
                     size="MediumLong"
+                    (click)="deleteProfile()"
             />
         </div>
     </footer>

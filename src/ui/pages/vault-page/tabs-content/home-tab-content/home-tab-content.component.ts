@@ -16,6 +16,8 @@ import {UserDataService} from "../../../../../services/user/user-data.service";
 import {PasswordService} from "../../../../../services/routes/password/password.service";
 import {PasswordManagerService} from "../../../../../services/password/password-manager.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {ProfileService} from "../../../../../services/routes/profile/profile.service";
+import {ProfileLocalService} from "../../../../../services/profile/profile-local.service";
 
 @Component({
   selector: 'app-home-tab-content',
@@ -32,8 +34,11 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
   styleUrl: './home-tab-content.component.css'
 })
 export class HomeTabContentComponent {
+    private profileService = new ProfileService(this.http);
+    private profileLocalService = new ProfileLocalService(this.profileService);
+
     securityLevel: number = 0;
-    userEmail: string = UserDataService.getEmail();
+    userEmail: string = '';
     greeting = getRandomGreetingHomeTab(this.userEmail);
     newPasswordActionInfo = {
         title: getRandomPasswordText().title,
@@ -46,6 +51,8 @@ export class HomeTabContentComponent {
     protected passwordStrengthService = new PasswordStrengthService();
     protected serverPasswordService = new PasswordService(this.http);
     protected passwordManagerService = new PasswordManagerService(this.serverPasswordService);
+
+
 
 
     passwordsInfo: PasswordInfo[] = [
@@ -75,7 +82,9 @@ export class HomeTabContentComponent {
     }
 
     async ngOnInit() {
-        this.updatePasswordInfo();
+        this.userEmail = (await this.profileLocalService.getProfile())?.email || '';
+        this.greeting = getRandomGreetingHomeTab(this.userEmail);
+        await this.updatePasswordInfo();
         this.securityLevel = this.passwordStrengthService.getOverallPasswordStrengthPercentage();
     }
 

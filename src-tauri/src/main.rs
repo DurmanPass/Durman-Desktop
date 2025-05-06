@@ -45,12 +45,41 @@ async fn create_vault_window(handle: AppHandle) {
     new_window.show().unwrap();
 }
 
+
+#[tauri::command]
+async fn create_main_window(handle: AppHandle) {
+    let new_window = WebviewWindowBuilder::new(
+        &handle,
+        "main",
+        WebviewUrl::App("index.html".into()),
+    )
+        .title("DurmanPass - Менеджер паролей")
+        .maximized(true)
+        .build()
+        .expect("Ошибка при создании окна");
+
+    new_window.show().unwrap();
+}
+
 #[tauri::command]
 fn close_all_except_vault_window(app: AppHandle) {
     let windows = app.windows(); // Получаем все окна приложения
 
     for (label, window) in windows {
         if label != "vault-window" {
+            window.close().unwrap_or_else(|err| {
+                eprintln!("Ошибка при закрытии окна {}: {:?}", label, err);
+            });
+        }
+    }
+}
+
+#[tauri::command]
+fn close_all_except_main_window(app: AppHandle) {
+    let windows = app.windows(); // Получаем все окна приложения
+
+    for (label, window) in windows {
+        if label != "main" {
             window.close().unwrap_or_else(|err| {
                 eprintln!("Ошибка при закрытии окна {}: {:?}", label, err);
             });
@@ -72,6 +101,11 @@ fn close_all_windows(app: AppHandle) {
 #[tauri::command]
 fn close_current_window(window: tauri::Window) {
     window.close().unwrap();
+}
+
+#[tauri::command]
+fn restart_app(app: AppHandle) {
+    app.restart();
 }
 
 use std::fs::File;
@@ -283,7 +317,9 @@ fn main() {
             save_file,
             initialize_screenshot_blocking,
             create_durmanpass_dir,
-            close_all_windows
+            close_all_windows,
+            close_all_except_main_window,
+            restart_app
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
