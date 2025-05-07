@@ -31,7 +31,23 @@
                     [value]="loginUserData.masterPassword"
             >
             </app-input>
-            <app-text-link *ngIf="loginUserData.masterPassword.length === 0" (click)="getHint()" text="Получить подсказку"/>
+            <app-text-link *ngIf="loginUserData.masterPassword.length === 0 && hint.mode == HintModes.NONE" (click)="getHint()" text="Получить подсказку"/>
+            <ng-container *ngIf="hint.mode == HintModes.REQUEST">
+                <app-input
+                        type="number"
+                        [borderColor]="validateLoginData.isPasswordValid ? 'DarkGreen' : 'White'"
+                        backgroundColor="Transparent"
+                        placeholder="Введите код с почты..."
+                        size="Medium"
+                        (valueChange)="onHintCodeChange($event)"
+                        [value]="hint.code"
+                >
+                </app-input>
+                <app-solid-button (click)="onConfirmHintCode(hintRequest.uuid, hint.code)" text="Подтвердить код" bgColor="DarkGreen" size="MediumLong"/>
+            </ng-container>
+            <ng-container *ngIf="hint.mode == HintModes.SHOW">
+                <span class="hint">Подсказка к паролю: <span class="hint-text">{{hint.value}}</span></span>
+            </ng-container>
         </div>
 
         <app-solid-button (click)="onLogin()" text="Продолжить" *ngIf="validateLoginData.isPasswordValid && validateLoginData.isEmailValid" bgColor="DarkGreen" size="Long"/>

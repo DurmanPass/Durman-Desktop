@@ -15,6 +15,9 @@ import {LoginService} from "../../../services/routes/auth/login.service";
 import {ToastService} from "../../../services/notification/toast.service";
 import {WindowService} from "../../../services/window.service";
 import {TextLinkComponent} from "../../components/links/text-link/text-link.component";
+import {HintService} from "../../../services/routes/hint/hint.service";
+import {RequestHintResponse} from "../../../interfaces/data/hint.interface";
+import {HintModes} from "../../../shared/enums/modes/hint.modes.enum";
 
 @Component({
   selector: 'app-login-page',
@@ -46,7 +49,19 @@ export class LoginPageComponent {
     isPasswordValid: false
   }
 
+  hint = {
+    code: '',
+    mode: HintModes.NONE,
+    value: ''
+  }
+
+  hintRequest: RequestHintResponse = {
+    message: '',
+    uuid: ''
+  };
+
   private loginService = new LoginService(this.http)
+  private hintService = new HintService(this.http);
 
   constructor(private http: HttpClient) {
   }
@@ -73,14 +88,25 @@ export class LoginPageComponent {
     }
   }
 
-  getHint(){
+  onHintCodeChange(hintCode: string){
+    this.hint.code = hintCode;
+  }
+
+  async onConfirmHintCode(uuid: string, code: string){
+    const hint = await this.hintService.getHint(uuid, code);
+    this.hint.value = hint.password_hint;
+    this.hint.mode = HintModes.SHOW;
+  }
+
+  async getHint(){
     if(!this.validateLoginData.isEmailValid){
       ToastService.danger("Введите корректную электронную почту!");
     }
-    //TODO отправить почту по маршрутику
-    ToastService.success("Подсказка была отправлена на вашу электронную почту!")
+    this.hintRequest = await this.hintService.requestHint(this.loginUserData.email);
+    this.hint.mode = HintModes.REQUEST;
   }
 
   protected readonly ThemeColors = ThemeColors;
     protected readonly WindowService = WindowService;
+  protected readonly HintModes = HintModes;
 }

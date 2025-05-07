@@ -72,7 +72,7 @@ export class SettingsService {
             this.http.patch(ApiRoutes.SETTINGS.PATCH_SETTINGS, settings, { headers }).pipe(
                 map((response: any) => {
                     if (response.message) {
-                        ToastService.success('Настройки успешно обновлены!');
+                        // ToastService.success('Настройки успешно обновлены!');
                         return response.message as string;
                     } else if (response.error) {
                         throw new Error(response.error);

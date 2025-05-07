@@ -35,5 +35,9 @@ export const ApiRoutes = {
         GET_SETTINGS: ApiSettings.apiUrl + '/settings',
         UPDATE_SETTINGS: ApiSettings.apiUrl + '/settings',
         PATCH_SETTINGS: ApiSettings.apiUrl + '/settings'
+    },
+    HINT: {
+        REQUEST_HINT: ApiSettings.apiUrl + '/request-hint',
+        GET_HINT: ApiSettings.apiUrl + '/get-hint'
     }
 };
