@@ -30,5 +30,10 @@ export const ApiRoutes = {
     USER: {
         GET_PROFILE: ApiSettings.apiUrl + '/user',
         DELETE_PROFILE: ApiSettings.apiUrl + '/user'
+    },
+    SETTINGS: {
+        GET_SETTINGS: ApiSettings.apiUrl + '/settings',
+        UPDATE_SETTINGS: ApiSettings.apiUrl + '/settings',
+        PATCH_SETTINGS: ApiSettings.apiUrl + '/settings'
     }
 };
