@@ -8,7 +8,6 @@ import {PasswordGeneratePageComponent} from "../ui/pages/password-generate-page/
 import {VaultPageComponent} from "../ui/pages/vault-page/vault-page.component";
 import {FrozenAccountPageComponent} from "../ui/pages/frozen-account-page/frozen-account-page.component";
 import {SecurityLockService} from "../services/security/security-lock.service";
-import {SettingsService} from "../services/settings/app-settings.service";
 import {ModalBaseComponent} from "../ui/components/modals/modal-base/modal-base.component";
 import {
     PasswordDetailsModalComponent
@@ -31,6 +30,8 @@ import {NetworkLostComponent} from "../ui/components/network/network-lost/networ
 import {NetworkService} from "../services/network.service";
 import {WelcomeAnimationComponent} from "../ui/components/animation/welcome-animation/welcome-animation.component";
 import {PreloaderComponent} from "../ui/components/loaders/preloader/preloader.component";
+import {SettingsLocalService} from "../services/settings/app-settings.service";
+import {SettingsService} from "../services/routes/settings/settings.service";
 
 @Component({
   selector: 'app-root',
@@ -53,6 +54,9 @@ export class AppComponent {
   protected categoryLocalService = new CategoryLocalService(this.categoryService);
   protected serverPasswordService = new PasswordService(this.http);
   protected passwordManagerService = new PasswordManagerService(this.serverPasswordService);
+
+  protected settingsService = new SettingsService(this.http);
+  protected settingsLocalService = new SettingsLocalService(this.settingsService);
 
   // async ngOnInit(): Promise<void> {
   //   NetworkService.initialize();
@@ -106,7 +110,7 @@ export class AppComponent {
 
     SecurityLockService.initialize();
 
-    SettingsService.loadSettings();
+    this.settingsLocalService.loadSettings();
 
 
     setInterval(() => {

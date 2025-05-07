@@ -13,7 +13,9 @@ import {
 import {NgIf} from "@angular/common";
 import {PasswordStrengthService} from "../../../services/password/password-strength.service";
 import {ToastService} from "../../../services/notification/toast.service";
-import {SettingsService} from "../../../services/settings/app-settings.service";
+import {SettingsLocalService} from "../../../services/settings/app-settings.service";
+import {SettingsService} from "../../../services/routes/settings/settings.service";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 
 @Component({
   selector: 'app-password-generate-page',
@@ -24,7 +26,8 @@ import {SettingsService} from "../../../services/settings/app-settings.service";
     SolidButtonComponent,
     CheckboxComponent,
     PasswordStrengthBarComponent,
-    NgIf
+    NgIf,
+      HttpClientModule
   ],
   templateUrl: './password-generate-page.component.html',
   styleUrl: './password-generate-page.component.css'
@@ -46,6 +49,12 @@ export class PasswordGeneratePageComponent {
   }
   private passwordGenerator = new PasswordGenerator();
   private passwordStrengthService = new PasswordStrengthService();
+
+  constructor(private http: HttpClient) {
+  }
+
+  protected settingsService = new SettingsService(this.http);
+  protected settingsLocalService = new SettingsLocalService(this.settingsService);
 
   onPasswordChange(value: string){
     this.onStrengthChange(value);
@@ -89,7 +98,7 @@ export class PasswordGeneratePageComponent {
 
   copyPasswordToClipboard(){
     ToastService.success('Пароль скопирован в буфер обмена!');
-    copyToClipboard(this.password, SettingsService.getClearBuffer(), SettingsService.getClearBufferTimeout());
+    copyToClipboard(this.password, this.settingsLocalService.getClearBuffer(), this.settingsLocalService.getClearBufferTimeout());
   }
 
   generate() {

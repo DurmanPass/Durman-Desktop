@@ -1,8 +1,13 @@
-import { AppSettings } from "../../interfaces/data/appSettings.interface";
+import { Injectable } from '@angular/core';
+import {AppSettings, ServerSettings} from "../../interfaces/data/appSettings.interface";
+import {SettingsService} from "../routes/settings/settings.service";
 
-export class SettingsService {
+@Injectable({
+    providedIn: 'root'
+})
+export class SettingsLocalService {
     private static readonly SETTINGS_KEY = 'app_settings';
-    private static settings: AppSettings = {
+    private settings: AppSettings = {
         general: {
             highContrastMode: false,
             hideFlowerStrengthWidget: true
@@ -18,9 +23,17 @@ export class SettingsService {
         }
     };
 
-    // Загрузка настроек из localStorage
-    public static loadSettings(): void {
-        const storedSettings = localStorage.getItem(this.SETTINGS_KEY);
+    constructor(
+        private settingsService: SettingsService,
+    ) {
+        this.loadSettings();
+    }
+
+    /**
+     * Загружает настройки из localStorage
+     */
+    public loadSettings(): void {
+        const storedSettings = localStorage.getItem(SettingsLocalService.SETTINGS_KEY);
         if (storedSettings) {
             try {
                 const parsedSettings = JSON.parse(storedSettings);
@@ -35,71 +48,175 @@ export class SettingsService {
         }
     }
 
-    // Сохранение настроек в localStorage
-    public static saveSettings(): void {
-        localStorage.setItem(this.SETTINGS_KEY, JSON.stringify(this.settings));
+    /**
+     * Сохраняет настройки в localStorage
+     */
+    private async saveSettings() {
+        localStorage.setItem(SettingsLocalService.SETTINGS_KEY, JSON.stringify(this.settings));
+        await this.settingsService.updateSettings(this.toServerSettings(this.settings));
     }
 
-    // Получение всех настроек
-    public static getAllSettings(): AppSettings {
+    /**
+     * Преобразует локальные настройки в серверный формат
+     */
+    private toServerSettings(settings: AppSettings): ServerSettings {
         return {
-            general: { ...this.settings.general },
-            security: { ...this.settings.security }
+            hide_password_strength_widget: settings.general.hideFlowerStrengthWidget,
+            hide_passwords: settings.security.hidePasswords,
+            clear_buffer: settings.security.buffer.clearBuffer,
+            lock_timeout_min: settings.security.lockTimeout
         };
+    }
+
+    /**
+     * Преобразует серверные настройки в локальный формат
+     */
+    private toLocalSettings(serverSettings: ServerSettings): AppSettings {
+        return {
+            general: {
+                ...this.settings.general,
+                hideFlowerStrengthWidget: serverSettings.hide_password_strength_widget
+            },
+            security: {
+                ...this.settings.security,
+                hidePasswords: serverSettings.hide_passwords,
+                lockTimeout: serverSettings.lock_timeout_min,
+                buffer: {
+                    ...this.settings.security.buffer,
+                    clearBuffer: serverSettings.clear_buffer
+                }
+            }
+        };
+    }
+
+    /**
+     * Синхронизирует настройки с сервером
+     */
+    async syncSettings(): Promise<void> {
+        try {
+            const serverSettings = await this.settingsService.getSettings();
+            this.settings = this.toLocalSettings(serverSettings);
+            this.saveSettings();
+        } catch (e) {
+            console.error('Не удалось синхронизировать настройки с сервером:', e);
+            // this.toastService.danger('Не удалось синхронизировать настройки с сервером!');
+        }
+    }
+
+    /**
+     * Получает настройки
+     * @param forceSync Принудительная синхронизация с сервером
+     * @returns Локальные или серверные настройки
+     */
+    async getSettings(forceSync: boolean = false): Promise<AppSettings> {
+        if (forceSync || !this.settings) {
+            await this.syncSettings();
+        }
+        return { ...this.settings };
+    }
+
+    /**
+     * Обновляет все настройки
+     * @param settings Новые настройки
+     */
+    async updateSettings(settings: AppSettings): Promise<void> {
+        try {
+            const serverSettings = this.toServerSettings(settings);
+            await this.settingsService.updateSettings(serverSettings);
+            this.settings = { ...settings };
+            this.saveSettings();
+        } catch (e) {
+            throw e instanceof Error ? e : new Error('Не удалось обновить настройки');
+        }
+    }
+
+    /**
+     * Частично обновляет настройки
+     * @param partialSettings
+     */
+    async patchSettings(partialSettings: Partial<ServerSettings>): Promise<void> {
+        try {
+            await this.settingsService.patchSettings(partialSettings);
+            const currentServerSettings = this.toServerSettings(this.settings);
+            const updatedServerSettings = { ...currentServerSettings, ...partialSettings };
+            this.settings = this.toLocalSettings(updatedServerSettings);
+            this.saveSettings();
+        } catch (e) {
+            throw e instanceof Error ? e : new Error('Не удалось обновить настройки');
+        }
+    }
+
+    /**
+     * Получение всех настроек
+     */
+    getAllSettings(): AppSettings {
+        return { ...this.settings };
     }
 
     // Геттеры и сеттеры для general
 
-    public static getHighContrastMode(): boolean {
+    getHighContrastMode(): boolean {
         return this.settings.general.highContrastMode;
     }
-    public static setHighContrastMode(enabled: boolean): void {
+
+    setHighContrastMode(enabled: boolean): void {
         this.settings.general.highContrastMode = enabled;
         this.saveSettings();
     }
 
-    public static getHideFlowerStrengthWidget(): boolean {
+    getHideFlowerStrengthWidget(): boolean {
         return this.settings.general.hideFlowerStrengthWidget;
     }
-    public static setHideFlowerStrengthWidget(enabled: boolean): void {
+
+    async setHideFlowerStrengthWidget(enabled: boolean) {
         this.settings.general.hideFlowerStrengthWidget = enabled;
-        this.saveSettings();
+        await this.saveSettings();
     }
 
     // Геттеры и сеттеры для security
 
-    public static getLockTimeout(): number {
+    getLockTimeout(): number {
         return this.settings.security.lockTimeout;
     }
-    public static setLockTimeout(minutes: number): void {
+
+    async setLockTimeout(minutes: number) {
         this.settings.security.lockTimeout = Math.max(1, Math.min(60, minutes));
-        this.saveSettings();
+        await this.saveSettings();
     }
 
-    public static getHidePasswords(): boolean {
+    getHidePasswords(): boolean {
         return this.settings.security.hidePasswords;
     }
-    public static setHidePasswords(hide: boolean): void {
+
+    async setHidePasswords(hide: boolean) {
         this.settings.security.hidePasswords = hide;
-        this.saveSettings();
+        await this.saveSettings();
     }
 
-    public static getTwoFactorEnabled(): boolean {
+    getTwoFactorEnabled(): boolean {
         return this.settings.security.twoFactorEnabled;
     }
-    public static setTwoFactorEnabled(enabled: boolean): void {
+
+    async setTwoFactorEnabled(enabled: boolean) {
         this.settings.security.twoFactorEnabled = enabled;
-        this.saveSettings();
+        await this.saveSettings();
     }
 
-    public static getClearBuffer(): boolean {
+    getClearBuffer(): boolean {
         return this.settings.security.buffer.clearBuffer;
     }
-    public static setClearBuffer(enabled: boolean): void {
+
+    async setClearBuffer(enabled: boolean) {
         this.settings.security.buffer.clearBuffer = enabled;
-        this.saveSettings();
+        await this.saveSettings();
     }
-    public static getClearBufferTimeout(): number {
+
+    getClearBufferTimeout(): number {
         return this.settings.security.buffer.clearBufferTimeout;
+    }
+
+    async setClearBufferTimeout(timeout: number) {
+        this.settings.security.buffer.clearBufferTimeout = Math.max(1000, Math.min(60000, timeout));
+        await this.saveSettings();
     }
 }

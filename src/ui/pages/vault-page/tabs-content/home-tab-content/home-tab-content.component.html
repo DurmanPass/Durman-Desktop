@@ -8,7 +8,7 @@
     </div>
 
     <div class="home-tab-top-widgets">
-        <app-flower-strength-widget *ngIf="SettingsService.getHideFlowerStrengthWidget()" [securityLevel]="securityLevel"/>
+        <app-flower-strength-widget *ngIf="settingsLocalService.getHideFlowerStrengthWidget()" [securityLevel]="securityLevel"/>
 
         <app-widget-base
                 [title]="'Генератор паролей'"

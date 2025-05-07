@@ -10,7 +10,7 @@ import {SelectComponent} from "../../controls/select/select.component";
 import {CategoryManagerService} from "../../../../services/password/category-manager.service";
 import {CheckboxComponent} from "../../controls/checkbox/checkbox.component";
 import {PasswordStrengthService} from "../../../../services/password/password-strength.service";
-import {SettingsService} from "../../../../services/settings/app-settings.service";
+import {SettingsLocalService} from "../../../../services/settings/app-settings.service";
 import {ToastService} from "../../../../services/notification/toast.service";
 import {DecryptValue, EncryptValue} from "../../../../utils/crypto.utils";
 import {PasswordService} from "../../../../services/routes/password/password.service";
@@ -20,6 +20,7 @@ import {IvService} from "../../../../services/routes/iv.service";
 import {CategoryService} from "../../../../services/routes/category/category.service";
 import {CategoryLocalService} from "../../../../services/category/category-local.service";
 import {Category} from "../../../../interfaces/data/category.interface";
+import {SettingsService} from "../../../../services/routes/settings/settings.service";
 
 @Component({
   selector: 'app-password-details-modal',
@@ -58,6 +59,9 @@ export class PasswordDetailsModalComponent {
   protected ivService = new IvService(this.http);
   @Input() categoryService: CategoryService = new CategoryService(this.http);
   @Input() categoryLocalService: CategoryLocalService = new CategoryLocalService(this.categoryService);
+
+  protected settingsService = new SettingsService(this.http);
+  protected settingsLocalService = new SettingsLocalService(this.settingsService);
 
   async ngOnChanges() {
     if (this.mode === PasswordDetailsModalModes.CREATE) {
@@ -148,7 +152,7 @@ export class PasswordDetailsModalComponent {
 
   copyToClipboard(value: string): void {
     if (value) {
-      copyToClipboard(value, SettingsService.getClearBuffer(), SettingsService.getClearBufferTimeout());
+      copyToClipboard(value, this.settingsLocalService.getClearBuffer(), this.settingsLocalService.getClearBufferTimeout());
       ToastService.success('Скопировано в буфер обмена!')
     }
   }

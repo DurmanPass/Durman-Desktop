@@ -1,5 +1,3 @@
-import {SettingsService} from "../settings/app-settings.service";
-
 export class SecurityLockService {
     private static isLocked: boolean = false;
     // private static readonly LOCK_TIMEOUT_MS: number = Number(SettingsService.getLockTimeout()) * 60 * 1000;

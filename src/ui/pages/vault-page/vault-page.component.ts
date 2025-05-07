@@ -20,6 +20,8 @@ import {NetworkIndicatorComponent} from "../../components/indicators/network-ind
 import {AppVersionComponent} from "../../components/version/app-version/app-version.component";
 import {ProfileService} from "../../../services/routes/profile/profile.service";
 import {ProfileLocalService} from "../../../services/profile/profile-local.service";
+import {SettingsService} from "../../../services/routes/settings/settings.service";
+import {SettingsLocalService} from "../../../services/settings/app-settings.service";
 
 @Component({
   selector: 'app-vault-page',
@@ -57,6 +59,9 @@ export class VaultPageComponent {
     private profileService = new ProfileService(this.http);
     private profileLocalService = new ProfileLocalService(this.profileService);
 
+    protected settingsService = new SettingsService(this.http);
+    protected settingsLocalService = new SettingsLocalService(this.settingsService);
+
     closeHelpModal(){
         this.modalsControls.help.isModalOpen = false;
     }
@@ -75,6 +80,7 @@ export class VaultPageComponent {
 
     async ngOnInit() {
         await this.profileLocalService.syncProfile();
+        await this.settingsLocalService.syncSettings();
         deleteOverflowWindow();
     }
 

@@ -10,7 +10,7 @@ import {NgForOf, NgIf} from "@angular/common";
 import {PasswordsInfoWidgets} from "../../../../../shared/const/components/widgets/passwords-info.widget";
 import {PasswordInfo} from "../../../../../interfaces/data/passwordsInfo.interface";
 import {WindowService} from "../../../../../services/window.service";
-import {SettingsService} from "../../../../../services/settings/app-settings.service";
+import {SettingsLocalService} from "../../../../../services/settings/app-settings.service";
 import {PasswordStrengthService} from "../../../../../services/password/password-strength.service";
 import {UserDataService} from "../../../../../services/user/user-data.service";
 import {PasswordService} from "../../../../../services/routes/password/password.service";
@@ -18,6 +18,7 @@ import {PasswordManagerService} from "../../../../../services/password/password-
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {ProfileService} from "../../../../../services/routes/profile/profile.service";
 import {ProfileLocalService} from "../../../../../services/profile/profile-local.service";
+import {SettingsService} from "../../../../../services/routes/settings/settings.service";
 
 @Component({
   selector: 'app-home-tab-content',
@@ -51,6 +52,9 @@ export class HomeTabContentComponent {
     protected passwordStrengthService = new PasswordStrengthService();
     protected serverPasswordService = new PasswordService(this.http);
     protected passwordManagerService = new PasswordManagerService(this.serverPasswordService);
+
+    protected settingsService = new SettingsService(this.http);
+    protected settingsLocalService = new SettingsLocalService(this.settingsService);
 
 
 
@@ -95,5 +99,4 @@ export class HomeTabContentComponent {
 
     protected readonly PasswordsInfoWidgets = PasswordsInfoWidgets;
     protected readonly WindowService = WindowService;
-    protected readonly SettingsService = SettingsService;
 }

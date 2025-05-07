@@ -25,7 +25,7 @@ import {CategoryModalModes} from "../../../../../shared/enums/modes/modals/categ
 import {CategoryModalComponent} from "../../../../components/modals/category-modal/category-modal.component";
 import {EntriesTableComponent} from "../../../../components/tables/entries-table/entries-table.component";
 import {ToastService} from "../../../../../services/notification/toast.service";
-import {SettingsService} from "../../../../../services/settings/app-settings.service";
+import {SettingsLocalService} from "../../../../../services/settings/app-settings.service";
 import {Category} from "../../../../../interfaces/data/category.interface";
 import {CategoryService} from "../../../../../services/routes/category/category.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
@@ -51,6 +51,7 @@ import {StoreService} from "../../../../../services/vault/store.service";
 import {StoreKeys} from "../../../../../shared/const/vault/store.keys";
 import {PasswordStrengthService} from "../../../../../services/password/password-strength.service";
 import {PreloaderComponent} from "../../../../components/loaders/preloader/preloader.component";
+import {SettingsService} from "../../../../../services/routes/settings/settings.service";
 
 @Component({
   selector: 'app-password-tab-content',
@@ -165,6 +166,9 @@ export class PasswordTabContentComponent {
   protected serverPasswordService = new PasswordService(this.http);
   protected passwordManagerService = new PasswordManagerService(this.serverPasswordService);
 
+  protected settingsService = new SettingsService(this.http);
+  protected settingsLocalService = new SettingsLocalService(this.settingsService);
+
   private injector = inject(EnvironmentInjector);
 
   selectedEntryIds: string[] = [];
@@ -272,8 +276,8 @@ export class PasswordTabContentComponent {
       const decrypted = await DecryptValue(entry.credentials.password, entry.credentials.encryption_iv ? entry.credentials.encryption_iv : '');
       copyToClipboard(
           decrypted,
-          SettingsService.getClearBuffer(),
-          SettingsService.getClearBufferTimeout()
+          this.settingsLocalService.getClearBuffer(),
+          this.settingsLocalService.getClearBufferTimeout()
       );
       ToastService.success('Пароль был успешно скопирован в буфер обмена!');
     }

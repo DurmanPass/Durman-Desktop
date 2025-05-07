@@ -62,15 +62,17 @@
                     <span>Двухфакторная аутентификация</span>
                     <app-solid-button
                             *ngIf="!appSettings.security.twoFactorEnabled"
-                            text="Настроить"
+                            text="Включить"
                             bgColor="DarkGreen"
                             size="SmallLong"
+                            (click)="toggleTwoFactorEnabled(true)"
                     />
                     <app-solid-button
                             *ngIf="appSettings.security.twoFactorEnabled"
                             text="Отключить"
                             bgColor="DarkRed"
                             size="SmallLong"
+                            (click)="toggleTwoFactorEnabled(false)"
                     />
                 </div>
             </div>

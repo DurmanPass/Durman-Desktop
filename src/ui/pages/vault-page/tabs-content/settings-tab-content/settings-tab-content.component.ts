@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {SettingsService} from "../../../../../services/settings/app-settings.service";
+import {SettingsLocalService} from "../../../../../services/settings/app-settings.service";
 import {AppSettings} from "../../../../../interfaces/data/appSettings.interface";
 import {ChipsComponent} from "../../../../components/controls/chips/chips.component";
 import {NgIf} from "@angular/common";
@@ -9,6 +9,8 @@ import {CheckboxComponent} from "../../../../components/controls/checkbox/checkb
 import {InputComponent} from "../../../../components/inputs/input/input.component";
 import {SolidButtonComponent} from "../../../../components/buttons/solid-button/solid-button.component";
 import {SecurityLockService} from "../../../../../services/security/security-lock.service";
+import {SettingsService} from "../../../../../services/routes/settings/settings.service";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 
 @Component({
   selector: 'app-settings-tab-content',
@@ -19,44 +21,59 @@ import {SecurityLockService} from "../../../../../services/security/security-loc
     HeaderDescriptionComponent,
     CheckboxComponent,
     InputComponent,
-    SolidButtonComponent
+    SolidButtonComponent,
+      HttpClientModule
   ],
   templateUrl: './settings-tab-content.component.html',
   styleUrl: './settings-tab-content.component.css'
 })
 export class SettingsTabContentComponent {
-  appSettings: AppSettings = SettingsService.getAllSettings();
+
+  constructor(private http: HttpClient) {
+  }
+
+  protected settingsService = new SettingsService(this.http);
+  protected settingsLocalService = new SettingsLocalService(this.settingsService);
+
+
+
+  appSettings: AppSettings = this.settingsLocalService.getAllSettings();
   settingCategories: string[] = [SETTINGS_MODES.GENERAL.label, SETTINGS_MODES.SECURITY.label];
   selectedCategory: string = SETTINGS_MODES.GENERAL.label;
 
-  updateLockTimeout(event: string): void {
+  async ngOnInit(){
+    await this.settingsLocalService.syncSettings();
+    this.appSettings = await this.settingsLocalService.getSettings();
+  }
+
+  async updateLockTimeout(event: string) {
     const value = Number(event);
-    SettingsService.setLockTimeout(value);
+    await this.settingsLocalService.setLockTimeout(value);
     this.appSettings.security.lockTimeout = value;
   }
 
-  toggleHidePasswords(event: boolean): void {
-    SettingsService.setHidePasswords(event);
+  async toggleHidePasswords(event: boolean) {
+    await this.settingsLocalService.setHidePasswords(event);
     this.appSettings.security.hidePasswords = event;
   }
 
-  toggleClearBuffer(event: boolean): void {
-    SettingsService.setClearBuffer(event);
+  async toggleClearBuffer(event: boolean) {
+    await this.settingsLocalService.setClearBuffer(event);
     this.appSettings.security.buffer.clearBuffer = event;
   }
 
-  toggleTwoFactorEnabled(event: boolean): void {
-    SettingsService.setTwoFactorEnabled(event);
+  async toggleTwoFactorEnabled(event: boolean) {
+    await this.settingsLocalService.setTwoFactorEnabled(event);
     this.appSettings.security.twoFactorEnabled = event;
   }
 
   toggleHighContrastMode(event: boolean): void {
-    SettingsService.setHighContrastMode(event);
+    this.settingsLocalService.setHighContrastMode(event);
     this.appSettings.general.highContrastMode = event;
   }
 
-  toggleHideFlowerStrengthWidget(event: boolean): void {
-    SettingsService.setHideFlowerStrengthWidget(event);
+  async toggleHideFlowerStrengthWidget(event: boolean) {
+    await this.settingsLocalService.setHideFlowerStrengthWidget(event);
     this.appSettings.general.hideFlowerStrengthWidget = event;
   }
 
@@ -66,5 +83,5 @@ export class SettingsTabContentComponent {
 
   protected readonly SETTINGS_MODES = SETTINGS_MODES;
   protected readonly SecurityLockService = SecurityLockService;
-  protected readonly SettingsService = SettingsService;
+  protected readonly SettingsService = SettingsLocalService;
 }
