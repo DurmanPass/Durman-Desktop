@@ -11,6 +11,10 @@ import {SolidButtonComponent} from "../../../../components/buttons/solid-button/
 import {SecurityLockService} from "../../../../../services/security/security-lock.service";
 import {SettingsService} from "../../../../../services/routes/settings/settings.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {HintModes} from "../../../../../shared/enums/modes/hint.modes.enum";
+import {TwoFAService} from "../../../../../services/routes/twoFA/twoFA.service";
+import {TwoFaModes} from "../../../../../shared/enums/modes/twoFa.modes.enum";
+import {Disable2FAResponse, Enable2FAResponse} from "../../../../../interfaces/data/twoFA.interface";
 
 @Component({
   selector: 'app-settings-tab-content',
@@ -34,7 +38,17 @@ export class SettingsTabContentComponent {
 
   protected settingsService = new SettingsService(this.http);
   protected settingsLocalService = new SettingsLocalService(this.settingsService);
+  protected twoFaService = new TwoFAService(this.http);
 
+  twoFa = {
+    mode: TwoFaModes.NONE,
+    code: '',
+  }
+
+  twoFaResponse: Disable2FAResponse | Enable2FAResponse = {
+    message: '',
+    uuid: ''
+  }
 
 
   appSettings: AppSettings = this.settingsLocalService.getAllSettings();
@@ -62,11 +76,6 @@ export class SettingsTabContentComponent {
     this.appSettings.security.buffer.clearBuffer = event;
   }
 
-  async toggleTwoFactorEnabled(event: boolean) {
-    await this.settingsLocalService.setTwoFactorEnabled(event);
-    this.appSettings.security.twoFactorEnabled = event;
-  }
-
   toggleHighContrastMode(event: boolean): void {
     this.settingsLocalService.setHighContrastMode(event);
     this.appSettings.general.highContrastMode = event;
@@ -81,7 +90,48 @@ export class SettingsTabContentComponent {
     this.selectedCategory = category;
   }
 
+  async toggleTwoFactorEnabled(event: boolean) {
+    await this.settingsLocalService.setTwoFactorEnabled(event);
+    this.appSettings.security.twoFactorEnabled = event;
+  }
+
+  async enable2FA(){
+    this.twoFaResponse = await this.twoFaService.enable2FA();
+    this.twoFa.mode = TwoFaModes.ENABLE;
+  }
+
+  async confirmEnable2FA(){
+    await this.twoFaService.confirmEnable2FA(this.twoFaResponse.uuid, this.twoFa.code);
+    await this.toggleTwoFactorEnabled(true);
+    this.twoFa.mode = TwoFaModes.NONE;
+  }
+
+  async disable2FA(){
+    this.twoFaResponse = await this.twoFaService.disable2FA();
+    this.twoFa.mode = TwoFaModes.DISABLE;
+  }
+
+  async confirmDisable2FA(){
+    await this.twoFaService.confirmDisable2FA(this.twoFaResponse.uuid, this.twoFa.code);
+    await this.toggleTwoFactorEnabled(false);
+    this.twoFa.mode = TwoFaModes.NONE;
+  }
+
+  async onConfirm2FA(){
+    if(this.twoFa.mode === TwoFaModes.ENABLE){
+      await this.confirmEnable2FA();
+      return;
+    }
+    await this.confirmDisable2FA();
+  }
+
+  onTwoFaCodeChange(value: string){
+    this.twoFa.code = value;
+  }
+
   protected readonly SETTINGS_MODES = SETTINGS_MODES;
   protected readonly SecurityLockService = SecurityLockService;
   protected readonly SettingsService = SettingsLocalService;
+  protected readonly HintModes = HintModes;
+  protected readonly TwoFaModes = TwoFaModes;
 }

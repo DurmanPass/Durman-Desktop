@@ -59,21 +59,36 @@
                     />
                 </div>
                 <div class="setting">
-                    <span>Двухфакторная аутентификация</span>
-                    <app-solid-button
-                            *ngIf="!appSettings.security.twoFactorEnabled"
-                            text="Включить"
-                            bgColor="DarkGreen"
-                            size="SmallLong"
-                            (click)="toggleTwoFactorEnabled(true)"
-                    />
-                    <app-solid-button
-                            *ngIf="appSettings.security.twoFactorEnabled"
-                            text="Отключить"
-                            bgColor="DarkRed"
-                            size="SmallLong"
-                            (click)="toggleTwoFactorEnabled(false)"
-                    />
+                    <ng-container *ngIf="twoFa.mode == TwoFaModes.NONE">
+                        <span>Двухфакторная аутентификация</span>
+                        <app-solid-button
+                                *ngIf="!appSettings.security.twoFactorEnabled"
+                                text="Включить"
+                                bgColor="DarkGreen"
+                                size="SmallLong"
+                                (click)="enable2FA()"
+                        />
+                        <app-solid-button
+                                *ngIf="appSettings.security.twoFactorEnabled"
+                                text="Отключить"
+                                bgColor="DarkRed"
+                                size="SmallLong"
+                                (click)="disable2FA()"
+                        />
+                    </ng-container>
+                    <ng-container *ngIf="twoFa.mode != TwoFaModes.NONE">
+                        <app-input
+                                type="number"
+                                [borderColor]="'White'"
+                                backgroundColor="Transparent"
+                                placeholder="Введите код с почты..."
+                                size="Medium"
+                                (valueChange)="onTwoFaCodeChange($event)"
+                                [value]="twoFa.code"
+                        >
+                        </app-input>
+                        <app-solid-button (click)="onConfirm2FA()" text="Подтвердить код" bgColor="DarkGreen" size="MediumLong"/>
+                    </ng-container>
                 </div>
             </div>
         </div>

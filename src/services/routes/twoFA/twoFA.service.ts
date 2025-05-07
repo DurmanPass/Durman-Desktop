@@ -55,9 +55,11 @@ export class TwoFAService {
                         ToastService.success('Двухфакторная аутентификация успешно включена!');
                         return response as Confirm2FAResponse;
                     } else if (response.error) {
-                        throw new Error(response.error);
+                        return response.error as Confirm2FAResponse;
+                        // throw new Error(response.error);
                     } else {
-                        throw new Error('Некорректный ответ сервера');
+                        return response.error as Confirm2FAResponse;
+                        // throw new Error('Некорректный ответ сервера');
                     }
                 })
             )
