@@ -1,6 +1,6 @@
 <div class="steps-container">
     <div class="navigation-left">
-        <app-solid-button text="Назад" *ngIf="currentStep > 0" (click)="previousStep()" bgColor="DarkOrange"/>
+<!--        <app-solid-button text="Назад" *ngIf="currentStep > 0" (click)="previousStep()" bgColor="DarkOrange"/>-->
         <app-solid-button text="Пропустить" *ngIf="steps[currentStep]?.skip" (click)="skipStep()" bgColor="DarkGreen" />
 <!--        <app-text-link *ngIf="currentStep > 0" (click)="previousStep()" text="Назад" [color]="ThemeColors.Primary"/>-->
 <!--        <app-text-link *ngIf="steps[currentStep]?.skip" (click)="skipStep()" text="Пропустить" [color]="ThemeColors.Primary"/>-->
