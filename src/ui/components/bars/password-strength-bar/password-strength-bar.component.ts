@@ -5,6 +5,7 @@ import {
   DefaultPasswordStrengthSize, PasswordStrengthBarSizes,
   PasswordStrengthSizesType
 } from "../../../../shared/const/components/sizes/passwordStrengthSizes";
+import {PasswordStrengthTranslation} from "../../../../shared/const/translation/password-strength.translation";
 
 @Component({
   selector: 'app-password-strength-bar',
@@ -24,7 +25,8 @@ export class PasswordStrengthBarComponent {
   @Output() strengthChanged = new EventEmitter<number>();
 
   strength: number = 0;
-  feedback: any = '';
+  feedback: any = null;
+  translatedFeedback: { warning: string; suggestions: string[] } | null = null;
 
   constructor(private passwordStrengthService: PasswordStrengthService) {}
 
@@ -38,13 +40,61 @@ export class PasswordStrengthBarComponent {
     if (!this.password) {
       this.strength = 0;
       this.feedback = null;
+      this.translatedFeedback = null;
     } else {
       const result = this.passwordStrengthService.evaluatePassword(this.password);
-      this.strengthChanged.emit(this.strength);
       this.strength = result.score;
       this.feedback = result.feedback;
+      this.translateFeedback();
+      this.strengthChanged.emit(this.strength);
     }
-    this.strengthChanged.emit(this.strength);
+  }
+
+  private getWarningKey(text: string): keyof typeof PasswordStrengthTranslation.warnings | null {
+    for (const [key, value] of Object.entries(PasswordStrengthTranslation.warnings)) {
+      if (value.en === text) {
+        return key as keyof typeof PasswordStrengthTranslation.warnings;
+      }
+    }
+    return null;
+  }
+
+  private getSuggestionKey(text: string): keyof typeof PasswordStrengthTranslation.suggestions | null {
+    for (const [key, value] of Object.entries(PasswordStrengthTranslation.suggestions)) {
+      if (value.en === text) {
+        return key as keyof typeof PasswordStrengthTranslation.suggestions;
+      }
+    }
+    return null;
+  }
+
+  private translateFeedback(): void {
+    if (!this.feedback) {
+      this.translatedFeedback = null;
+      return;
+    }
+
+    const warningText = this.feedback.warning || '';
+    const warningKey = this.getWarningKey(warningText);
+    const translatedWarning = warningKey && PasswordStrengthTranslation.warnings[warningKey]
+        ? PasswordStrengthTranslation.warnings[warningKey].ru
+        : warningText;
+
+    const translatedSuggestions = (this.feedback.suggestions || []).map((suggestion: string) => {
+      const suggestionKey = this.getSuggestionKey(suggestion);
+      return suggestionKey && PasswordStrengthTranslation.suggestions[suggestionKey]
+          ? PasswordStrengthTranslation.suggestions[suggestionKey].ru
+          : suggestion;
+    });
+
+    console.log('Raw feedback:', this.feedback);
+    console.log('Translated warning:', translatedWarning);
+    console.log('Translated suggestions:', translatedSuggestions);
+
+    this.translatedFeedback = {
+      warning: translatedWarning,
+      suggestions: translatedSuggestions
+    };
   }
 
   getGradient(score: number): string {
