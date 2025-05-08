@@ -30,17 +30,44 @@ async fn create_password_generate_window(handle: AppHandle) {
     new_window.show().unwrap();
 }
 
+// #[tauri::command]
+// async fn create_vault_window(handle: AppHandle) {
+//     let new_window = WebviewWindowBuilder::new(
+//         &handle,
+//         "vault-window",
+//         WebviewUrl::App("index.html".into()),
+//     )
+//     .title("DurmanPass - Менеджер паролей")
+//     .maximized(true)
+//     .build()
+//     .expect("Ошибка при создании окна");
+//
+//     new_window.show().unwrap();
+// }
+
 #[tauri::command]
 async fn create_vault_window(handle: AppHandle) {
+    // Получаем текущий монитор
+    let monitor = handle
+        .primary_monitor()
+        .expect("Не удалось получить основной монитор")
+        .expect("Основной монитор не найден");
+
+    // Получаем размер экрана
+    let size = monitor.size();
+    let width = size.width as f64 * 0.5; // 50% от ширины
+    let height = size.height as f64 * 0.5; // 50% от высоты
+
     let new_window = WebviewWindowBuilder::new(
         &handle,
         "vault-window",
         WebviewUrl::App("index.html".into()),
     )
-    .title("DurmanPass - Менеджер паролей")
-    .maximized(true)
-    .build()
-    .expect("Ошибка при создании окна");
+        .title("DurmanPass - Менеджер паролей")
+        .maximized(true)
+        .min_inner_size(width, height) // Устанавливаем минимальный размер
+        .build()
+        .expect("Ошибка при создании окна");
 
     new_window.show().unwrap();
 }

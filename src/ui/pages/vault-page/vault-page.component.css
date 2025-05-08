@@ -9,7 +9,6 @@
     height: 100vh;
     background-color: #2c2c2c;
     color: white;
-    /*padding: 20px;*/
     transition: width 0.3s ease-in-out;
 }
 
@@ -142,4 +141,51 @@
 
 .sidebar-quit{
     position: absolute;
+}
+
+@media screen and (max-width: 1000px) {
+    .sidebar {
+        width: 25vw;
+    }
+
+    .content {
+        width: 75vw;
+    }
+
+    .toggle-btn {
+        left: 27vw; /* Учитываем новую ширину sidebar (30vw - 3vw отступа) */
+    }
+
+    .sidebar.closed + .content .toggle-btn {
+        left: 10px;
+    }
+
+    .sidebar.closed .content {
+        width: 100vw;
+        padding-left: 20px;
+    }
+
+    .tabs {
+        height: 50vw; /* Увеличиваем высоту табов для лучшей читаемости */
+    }
+
+    .tabs div {
+        padding: 15px 20px; /* Уменьшаем отступы для компактности */
+        font-size: 14px; /* Уменьшаем шрифт */
+    }
+
+    .sidebar-logo {
+        padding-left: 15px;
+        gap: 8px;
+    }
+
+    .sidebar-footer{
+        width: 100%;
+        height: 2vh;
+        position: relative;
+    }
+
+    .toggle-btn{
+        left: 15vw;
+    }
 }
