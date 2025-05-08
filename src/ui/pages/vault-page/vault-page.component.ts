@@ -22,6 +22,8 @@ import {ProfileService} from "../../../services/routes/profile/profile.service";
 import {ProfileLocalService} from "../../../services/profile/profile-local.service";
 import {SettingsService} from "../../../services/routes/settings/settings.service";
 import {SettingsLocalService} from "../../../services/settings/app-settings.service";
+import {SolidButtonComponent} from "../../components/buttons/solid-button/solid-button.component";
+import {WindowService} from "../../../services/window.service";
 
 @Component({
   selector: 'app-vault-page',
@@ -36,7 +38,8 @@ import {SettingsLocalService} from "../../../services/settings/app-settings.serv
         HelpModalComponent,
         NetworkIndicatorComponent,
         AppVersionComponent,
-        HttpClientModule
+        HttpClientModule,
+        SolidButtonComponent
     ],
   templateUrl: './vault-page.component.html',
   styleUrl: './vault-page.component.css'
@@ -86,4 +89,5 @@ export class VaultPageComponent {
 
 
   protected readonly ThemeColors = ThemeColors;
+    protected readonly WindowService = WindowService;
 }

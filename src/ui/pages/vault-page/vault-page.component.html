@@ -12,6 +12,10 @@
                 <img [src]="'assets/icons/controls/sidebar/tabs/' + tab.id + '.svg'" alt="tab.id"/>
                 {{ tab.title }}
             </div>
+            <div class="tab" [style.color]="'red'" (click)="WindowService.restartApp()">
+                <img [src]="'assets/icons/controls/sidebar/tabs/logout.svg'"/>
+                Выход
+            </div>
         </div>
         <div class="sidebar-footer">
             <div class="sidebar-help" (click)="openHelpModal()">
