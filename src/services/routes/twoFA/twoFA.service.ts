@@ -6,6 +6,9 @@ import { ApiRoutes } from '../../../shared/const/app/api/api.routes';
 import { withTokenRefresh } from '../../../utils/http.utils';
 import { RefreshTokenService } from '../auth/refresh-token.service';
 import { Enable2FAResponse, Confirm2FAPayload, Confirm2FAResponse, Disable2FAResponse, Verify2FAPayload, Verify2FAResponse } from '../../../interfaces/data/twoFA.interface';
+import {StoreService} from "../../vault/store.service";
+import {StoreKeys} from "../../../shared/const/vault/store.keys";
+import {WindowService} from "../../window.service";
 
 @Injectable({
     providedIn: 'root'
@@ -117,16 +120,26 @@ export class TwoFAService {
      * Верифицирует двухфакторную аутентификацию
      * @param userID ID пользователя
      * @param code Код 2FA
+     * @param password пароль
      * @returns Токены и сообщение об успешной верификации
      * @throws Ошибка, если запрос неуспешен
      */
-    async verify2FA(userID: string, code: string): Promise<Verify2FAResponse> {
+    async verify2FA(userID: string, code: string, password: string): Promise<Verify2FAResponse> {
         const payload: Verify2FAPayload = { userID, code };
         // @ts-ignore
         return this.http.post(ApiRoutes.TWO_FA.VERIFY_2FA, payload).pipe(
-            map((response: any) => {
+            map(async (response: any) => {
                 if (response.accessToken && response.message && response.refreshToken) {
                     ToastService.success('Верификация 2FA прошла успешно!');
+                    await StoreService.save(StoreKeys.REFRESH_TOKEN, response.refreshToken);
+                    await StoreService.save(StoreKeys.ACCESS_TOKEN, response.accessToken);
+                    await StoreService.save(StoreKeys.USER_ID, userID);
+                    await StoreService.save(StoreKeys.MASTER_PASSWORD, password);
+                    await WindowService.openVaultWindow();
+                    setTimeout(async () => {
+                        await WindowService.closeAllWindowsExVault();
+                    }, 100);
+                    ToastService.success('Вход выполнен успешно!');
                     return response as Verify2FAResponse;
                 } else if (response.error) {
                     throw new Error(response.error);

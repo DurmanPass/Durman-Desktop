@@ -1,0 +1,22 @@
+<div class="twoFA-page">
+    <div class="twoFA-content">
+        <app-header-description
+                title="Двухфакторная аутентификация"
+                description="Пожалуйста, введите код отправленный на вашу электронную почту."
+        />
+
+        <div class="twoFA-content-inputs">
+            <app-input
+                    type="number"
+                    [borderColor]="'White'"
+                    backgroundColor="Transparent"
+                    placeholder="Введите код с почты..."
+                    size="Medium"
+                    (valueChange)="onTwoFaCodeChange($event)"
+                    [value]="twoFAcode"
+            >
+            </app-input>
+            <app-solid-button (click)="onVerifyTwoFA()" text="Подтвердить код" bgColor="DarkGreen" size="Long"/>
+        </div>
+    </div>
+</div>

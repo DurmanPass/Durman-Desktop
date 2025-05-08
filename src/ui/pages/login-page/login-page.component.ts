@@ -1,8 +1,7 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {LoginSteps, LoginStepsId} from "../../../shared/const/steps/login.steps";
+import {LoginSteps} from "../../../shared/const/steps/login.steps";
 import {StepComponent} from "../../components/steps/step/step.component";
 import {NgComponentOutlet, NgIf} from "@angular/common";
-import {LoginUserData} from "../../../interfaces/components/login/loginUserData.interface";
 import {ThemeColors} from "../../../shared/const/colors/general/themeColors";
 import {HeaderDescriptionComponent} from "../../components/text/header-description/header-description.component";
 import {InputComponent} from "../../components/inputs/input/input.component";
@@ -18,21 +17,24 @@ import {TextLinkComponent} from "../../components/links/text-link/text-link.comp
 import {HintService} from "../../../services/routes/hint/hint.service";
 import {RequestHintResponse} from "../../../interfaces/data/hint.interface";
 import {HintModes} from "../../../shared/enums/modes/hint.modes.enum";
+import {LoginModes} from "../../../shared/enums/modes/login.modes.enum";
+import {TwoFaPageComponent} from "../two-fa-page/two-fa-page.component";
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-    imports: [
-        HttpClientModule,
-        StepComponent,
-        NgComponentOutlet,
-        NgIf,
-        HeaderDescriptionComponent,
-        InputComponent,
-        RoundButtonComponent,
-        SolidButtonComponent,
-        TextLinkComponent
-    ],
+  imports: [
+    HttpClientModule,
+    StepComponent,
+    NgComponentOutlet,
+    NgIf,
+    HeaderDescriptionComponent,
+    InputComponent,
+    RoundButtonComponent,
+    SolidButtonComponent,
+    TextLinkComponent,
+    TwoFaPageComponent
+  ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
 })
@@ -60,6 +62,9 @@ export class LoginPageComponent {
     uuid: ''
   };
 
+  mode: LoginModes = LoginModes.LOGIN;
+  userID: string = '';
+
   private loginService = new LoginService(this.http)
   private hintService = new HintService(this.http);
 
@@ -82,7 +87,11 @@ export class LoginPageComponent {
 
   async onLogin() {
     if (this.validateLoginData.isEmailValid && this.validateLoginData.isPasswordValid) {
-      await this.loginService.login(this.loginUserData.email, this.loginUserData.masterPassword);
+      const loginResponse = await this.loginService.login(this.loginUserData.email, this.loginUserData.masterPassword);
+      if(loginResponse.userID && loginResponse.message === '2FA code sent to email'){
+        this.userID = loginResponse.userID;
+        this.mode = LoginModes.TWO_FA;
+      }
     } else {
       ToastService.danger('Проверьте введённые данные!')
     }
@@ -109,4 +118,5 @@ export class LoginPageComponent {
   protected readonly ThemeColors = ThemeColors;
     protected readonly WindowService = WindowService;
   protected readonly HintModes = HintModes;
+  protected readonly LoginModes = LoginModes;
 }
