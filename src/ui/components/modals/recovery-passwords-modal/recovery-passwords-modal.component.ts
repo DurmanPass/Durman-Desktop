@@ -8,6 +8,8 @@ import {ToastService} from "../../../../services/notification/toast.service";
 import {open} from "@tauri-apps/plugin-dialog";
 import {DecimalPipe, NgIf} from "@angular/common";
 import {SolidButtonComponent} from "../../buttons/solid-button/solid-button.component";
+import {StoreService} from "../../../../services/vault/store.service";
+import {StoreKeys} from "../../../../shared/const/vault/store.keys";
 
 @Component({
   selector: 'app-recovery-passwords-modal',

@@ -5,6 +5,7 @@ export const ButtonSizes = {
     MediumLong: { width: '250px', height: '40px' },
     Large: { width: '160px', height: '50px' },
     Long: {width: '400px', height: '60px'},
+    LongWidth: {width: '350px', height: '45px'},
     RoundSmall: {width: '25px', height: '25px'}
 };
 

@@ -55,8 +55,10 @@ async fn create_vault_window(handle: AppHandle) {
 
     // Получаем размер экрана
     let size = monitor.size();
-    let width = size.width as f64 * 0.5; // 50% от ширины
-    let height = size.height as f64 * 0.5; // 50% от высоты
+    // let width = size.width as f64 * 0.5; // 50% от ширины
+    // let height = size.height as f64 * 0.5; // 50% от высоты
+    let width = size.width as f64;
+    let height = size.height as f64;
 
     let new_window = WebviewWindowBuilder::new(
         &handle,
@@ -65,6 +67,7 @@ async fn create_vault_window(handle: AppHandle) {
     )
         .title("DurmanPass - Менеджер паролей")
         .maximized(true)
+        .resizable(false)
         .min_inner_size(width, height) // Устанавливаем минимальный размер
         .build()
         .expect("Ошибка при создании окна");

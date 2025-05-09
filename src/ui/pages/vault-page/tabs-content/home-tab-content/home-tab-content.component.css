@@ -5,7 +5,8 @@
     align-content: center;
     flex-direction: column;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    position: relative;
 }
 
 .home-tab-top-widgets{
@@ -53,5 +54,31 @@
 }
 
 .home-tab-header{
+    width: 100%;
     text-align: center;
+}
+
+@media screen and (max-width: 1000px) {
+    .home-tab-top-widgets{
+        align-content: start;
+        justify-content: start;
+        align-items: start;
+        gap: 10px;
+    }
+
+    .home-tab-middle-widgets{
+        align-content: start;
+        justify-content: start;
+        align-items: start;
+        flex-wrap: nowrap;
+    }
+
+    .middle-widgets{
+        width: 60px;
+        height: 30px;
+    }
+
+    .flower-top-widget {
+        width: 100px!important;
+    }
 }
