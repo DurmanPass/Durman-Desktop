@@ -46,17 +46,36 @@ export class BackupService {
                 )
             );
 
+            // const timestamp2 = new Date().toISOString().replace(/[:.]/g, '-');
+            // const originalFileName = `passwords-backup-original-${timestamp2}.json`;
+            //
+            // const originalFilePath = await save({
+            //     defaultPath: originalFileName,
+            //     filters: [{ name: 'JSON Files', extensions: ['json'] }]
+            // });
+            //
+            // if (originalFilePath) {
+            //     const arrayBuffer = await fileBlob.arrayBuffer();
+            //     await writeFile(originalFilePath, new Uint8Array(arrayBuffer));
+            //     console.log('Исходный файл сохранён:', originalFilePath);
+            //     ToastService.success('Исходный файл успешно сохранён для тестирования!');
+            // } else {
+            //     console.warn('Сохранение исходного файла отменено пользователем');
+            // }
+
+            // console.log(fileBlob);
+
             // Шифруем файл
             const encryptedBlob = await this.cryptoService.encryptFile(fileBlob, masterPassword);
 
             // Генерируем имя файла с временной меткой
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const defaultFileName = `passwords-backup-${timestamp}.encrypted`;
+            const defaultFileName = `passwords-backup-${timestamp}`;
 
             // Открываем диалоговое окно для выбора пути сохранения
             const filePath = await save({
                 defaultPath: defaultFileName,
-                filters: [{ name: 'Encrypted Files', extensions: ['encrypted'] }]
+                filters: [{ name: 'Encrypted Files', extensions: ['durmanpass'] }]
             });
 
             if (!filePath) {
