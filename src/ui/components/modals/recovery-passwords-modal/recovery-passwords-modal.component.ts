@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {EncryptValue} from "../../../../utils/crypto.utils";
 import {PasswordEntryInterface} from "../../../../interfaces/data/passwordEntry.interface";
-import {readFile, readTextFile, stat} from "@tauri-apps/plugin-fs";
+import {readFile, readTextFile, stat, writeFile} from "@tauri-apps/plugin-fs";
 import {HashService} from "../../../../services/hash/hash.service";
 import {JsonParserService} from "../../../../services/json/json-parser.service";
 import {ToastService} from "../../../../services/notification/toast.service";
-import {open} from "@tauri-apps/plugin-dialog";
+import {open, save} from "@tauri-apps/plugin-dialog";
 import {DecimalPipe, NgIf} from "@angular/common";
 import {SolidButtonComponent} from "../../buttons/solid-button/solid-button.component";
 import {BackupService} from "../../../../services/routes/backup/backup.service";
@@ -13,6 +13,10 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {CryptoFileService} from "../../../../services/crypto/crypto-file.service";
 import {StoreService} from "../../../../services/vault/store.service";
 import {StoreKeys} from "../../../../shared/const/vault/store.keys";
+import {PasswordService} from "../../../../services/routes/password/password.service";
+import {PasswordManagerService} from "../../../../services/password/password-manager.service";
+import {CategoryService} from "../../../../services/routes/category/category.service";
+import {CategoryLocalService} from "../../../../services/category/category-local.service";
 
 @Component({
   selector: 'app-recovery-passwords-modal',
@@ -33,6 +37,7 @@ export class RecoveryPasswordsModalComponent {
   filePath: string | null = null;
   isProcessing: boolean = false;
   @Output() closed = new EventEmitter<void>();
+  @Output() recovery = new EventEmitter<void>();
 
   constructor(
       private hashService: HashService,
@@ -42,6 +47,11 @@ export class RecoveryPasswordsModalComponent {
   ) {}
 
   private backupService = new BackupService(this.http, this.cryptoFileService);
+
+  protected categoryService = new CategoryService(this.http)
+  protected categoryLocalService = new CategoryLocalService(this.categoryService);
+  protected serverPasswordService = new PasswordService(this.http);
+  protected passwordManagerService = new PasswordManagerService(this.serverPasswordService);
 
 
   async selectFile(): Promise<void> {
@@ -85,7 +95,7 @@ export class RecoveryPasswordsModalComponent {
   // Получение пути к файлу через Tauri dialog
   private async getFilePath(): Promise<string> {
     const filePath = await open({
-      filters: [{ name: 'backup', extensions: ['durmanpass'] }],
+      filters: [{ name: 'Durman backup passwords', extensions: ['durman'] }],
       multiple: false
     });
     if (!filePath || typeof filePath !== 'string') {
@@ -93,41 +103,6 @@ export class RecoveryPasswordsModalComponent {
     }
     return filePath;
   }
-
-  // Восстановление паролей
-  // async restorePasswords(): Promise<void> {
-  //   if (!this.selectedFile || !this.fileHash || !this.filePath) {
-  //     ToastService.warning('Выберите JSON-файл для восстановления');
-  //     return;
-  //   }
-  //
-  //   this.isProcessing = true;
-  //   try {
-  //     const jsonContent = await readTextFile(this.filePath);
-  //     const entries = this.jsonParserService.parseJsonToPasswordEntries(jsonContent);
-  //
-  //     // Шифрование паролей
-  //     const encryptedEntries = await Promise.all(
-  //         entries.map(async (entry: PasswordEntryInterface) => {
-  //           if (entry.credentials.password) {
-  //             const iv = entry.credentials.encryption_iv;
-  //             entry.credentials.password = await EncryptValue(entry.credentials.password, iv);
-  //           }
-  //           return entry;
-  //         })
-  //     );
-  //
-  //     // Сохранение записей
-  //     // await this.passwordManagerService.saveEntries(encryptedEntries);
-  //     ToastService.success('Пароли успешно восстановлены!');
-  //     this.closeModal();
-  //   } catch (err) {
-  //     ToastService.danger('Ошибка при восстановлении паролей');
-  //     console.error('Error restoring passwords:', err);
-  //   } finally {
-  //     this.isProcessing = false;
-  //   }
-  // }
 
   // Сброс выбранного файла
   private resetFile(): void {
@@ -143,14 +118,15 @@ export class RecoveryPasswordsModalComponent {
 
   async createBackup(){
     await this.backupService.backupPasswords();
+    this.closeModal();
   }
 
   async restorePasswords(){
     await this.selectFile();
     // const decryptBackup = await this.cryptoFileService.decryptFile(encryptBackup, StoreService.get(StoreKeys.MASTER_PASSWORD));
 
-    if (!this.selectedFile || !this.fileHash || !this.filePath) {
-      ToastService.warning('Выберите файл для восстановления (.durmanpass)');
+    if (!this.filePath) {
+      ToastService.warning('Выберите файл для восстановления (.durman)');
       return;
     }
 
@@ -168,11 +144,9 @@ export class RecoveryPasswordsModalComponent {
 
       // Расшифровываем файл
       const decryptBackup = await this.cryptoFileService.decryptFile(encryptBackup, masterPassword);
+      await this.backupService.restorePasswords(decryptBackup);
 
-
-      // Здесь можно добавить сохранение записей, например:
-      // await this.passwordManagerService.saveEntries(entries);
-
+      this.recovery.emit();
       ToastService.success('Пароли успешно восстановлены!');
       this.closeModal();
     } catch (err) {

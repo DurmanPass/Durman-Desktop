@@ -48,6 +48,7 @@ export const ApiRoutes = {
         VERIFY_2FA: ApiSettings.apiUrl + '/verify-2fa'
     },
     BACKUPS: {
-        PASSWORDS_BACKUPS: ApiSettings.apiUrl + '/passwords/backup'
+        PASSWORDS_BACKUPS: ApiSettings.apiUrl + '/passwords/backup',
+        PASSWORDS_RESTORE: ApiSettings.apiUrl + '/passwords/restore'
     }
 };

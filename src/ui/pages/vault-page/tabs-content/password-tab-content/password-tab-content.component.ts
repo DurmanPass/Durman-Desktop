@@ -215,7 +215,7 @@ export class PasswordTabContentComponent {
     this.PasswordManagerState.viewMode = mode;
   }
 
-  private async updateEntries() {
+  protected async updateEntries() {
     let entries = PasswordManagerService.getEntriesSortedBy(
         this.PasswordManagerState.sortCriterion,
         this.PasswordManagerState.sortOrder
@@ -394,7 +394,7 @@ export class PasswordTabContentComponent {
     this.modalsControls.createOrEditPassword.isModalOpen = false;
     this.selectedPasswordEntry = null;
     await this.updateEntries();
-    this.updateStats();
+    await this.updateStats();
   }
 
   openCategoryModal(mode: CategoryModalModes) {
@@ -413,6 +413,12 @@ export class PasswordTabContentComponent {
 
   openRecoveryModal(){
     this.modalsControls.recoveryPasswords.isModalOpen = true;
+  }
+
+  async recoveryPasswords(){
+    await this.categoryLocalService.syncCategories();
+    await this.passwordManagerService.syncPasswords();
+    await this.updateCategories();
   }
 
 

@@ -72,7 +72,7 @@ export class CryptoFileService {
                 data
             );
 
-            return new Blob([decryptedBuffer], { type: 'application/json' });
+            return new Blob([decryptedBuffer]);
         } catch (error) {
             throw new Error(`Ошибка расшифрования: ${error}`);
         }
