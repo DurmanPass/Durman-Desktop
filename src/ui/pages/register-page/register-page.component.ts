@@ -79,8 +79,8 @@ export class RegisterPageComponent {
       maxLength: 200
     },
     emailCode: {
-      maxLength: 5,
-      max: 99999
+      maxLength: 6,
+      max: 999999
     },
     password: {
       minLength: 8,

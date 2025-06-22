@@ -29,7 +29,8 @@ export const ApiRoutes = {
     },
     USER: {
         GET_PROFILE: ApiSettings.apiUrl + '/user',
-        DELETE_PROFILE: ApiSettings.apiUrl + '/user'
+        DELETE_PROFILE: ApiSettings.apiUrl + '/user',
+        DELETE_DATA: ApiSettings.apiUrl + '/passwords/user/data'
     },
     SETTINGS: {
         GET_SETTINGS: ApiSettings.apiUrl + '/settings',

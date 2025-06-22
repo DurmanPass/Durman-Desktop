@@ -67,5 +67,20 @@ export class AccountTabContentComponent {
     }, 1500)
   }
 
+  async deleteData(){
+    const result = await ConfirmModalService.createConfirmModal(
+        this.injector,
+        ModalsConfig.ConfirmModal.deleteData.title,
+        ModalsConfig.ConfirmModal.deleteData.description,
+        {requirePassword: true}
+    );
+
+    if (!result) {
+      return;
+    }
+    await this.profileLocalService.deleteData();
+    await WindowService.restartApp();
+  }
+
   protected readonly ThemeColors = ThemeColors;
 }

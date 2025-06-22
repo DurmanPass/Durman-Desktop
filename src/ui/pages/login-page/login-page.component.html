@@ -36,7 +36,7 @@
                 >
                 </app-input>
                 <app-text-link *ngIf="loginUserData.masterPassword.length === 0 && hint.mode == HintModes.NONE" (click)="getHint()" text="Получить подсказку"/>
-                <ng-container *ngIf="hint.mode == HintModes.REQUEST">
+                <ng-container *ngIf="hint.mode == HintModes.REQUEST && loginUserData.masterPassword.length === 0">
                     <app-input
                             type="number"
                             [borderColor]="validateLoginData.isPasswordValid ? 'DarkGreen' : 'White'"

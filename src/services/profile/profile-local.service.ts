@@ -56,6 +56,13 @@ export class ProfileLocalService {
         }
     }
 
+    async deleteData(){
+        try {
+            await this.profileService.deleteProfileData();
+        } catch (e) {
+        }
+    }
+
     /**
      * Возвращает локальный профиль
      * @returns Локальный профиль или null

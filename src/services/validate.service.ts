@@ -35,7 +35,7 @@ export class ValidateService {
     }
 
     static validateEmailCode(code: string): boolean {
-        return /^[0-9]{5}$/.test(code);
+        return /^[0-9]{6}$/.test(code);
     }
 
     static validatePasswordHint(hint: string): boolean {

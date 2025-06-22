@@ -1,4 +1,7 @@
-<div class="version-container" [style.background]="ThemeColors.Transparent" (click)="openVersionModal()">
+<div class="version-container" [ngClass]="{
+    'version-up-to-date': !updateStatus?.available && !isChecking,
+    'version-outdated': updateStatus?.available
+  }" [style.background]="ThemeColors.Transparent" (click)="openVersionModal()">
   <span class="version-text" [ngClass]="{
     'version-up-to-date': !updateStatus?.available && !isChecking,
     'version-outdated': updateStatus?.available

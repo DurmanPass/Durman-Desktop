@@ -421,6 +421,11 @@ export class PasswordTabContentComponent {
     await this.updateCategories();
   }
 
+  async updatePass(category: string){
+    this.selectedCategory = category;
+    await this.updateCategories();
+  }
+
 
   protected readonly VIEW_MANAGER_MODES = VIEW_MANAGER_MODES;
   protected readonly ThemeColors = ThemeColors;

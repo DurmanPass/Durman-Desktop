@@ -1,3 +1,197 @@
+<!--<div class="settings-page">-->
+<!--    <header class="settings-page-header">-->
+<!--        <app-header-description-->
+<!--                title="Настройки"-->
+<!--                description="Персонализируйте приложение и управляйте параметрами безопасности."-->
+<!--        />-->
+<!--    </header>-->
+
+<!--    <main class="settings-page-main">-->
+<!--        <div class="settings-categories-chips">-->
+<!--            <app-chips-->
+<!--                    [chips]="settingCategories"-->
+<!--                    (chipsSelected)="onCategoryChange($event)"-->
+<!--                    [selectedChips]="selectedCategory"-->
+<!--                    [hideAllChip]="true"-->
+<!--                    [hideAddChip]="true"-->
+<!--            />-->
+<!--        </div>-->
+<!--        <div class="settings-categories-tabs">-->
+<!--            &lt;!&ndash; Общие настройки &ndash;&gt;-->
+<!--            <div class="settings-section" *ngIf="selectedCategory === SETTINGS_MODES.GENERAL.label">-->
+<!--                <div class="setting">-->
+<!--                    <app-checkbox-->
+<!--                            [checked]="appSettings.general.hideFlowerStrengthWidget"-->
+<!--                            (checkedChange)="toggleHideFlowerStrengthWidget($event)"-->
+<!--                            label="Скрыть виджет силы пароля"-->
+<!--                    />-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Настройки безопасности &ndash;&gt;-->
+<!--            <div class="settings-section" *ngIf="selectedCategory === SETTINGS_MODES.SECURITY.label">-->
+<!--                <div class="setting">-->
+<!--                    <app-checkbox-->
+<!--                            [checked]="appSettings.security.hidePasswords"-->
+<!--                            (checkedChange)="toggleHidePasswords($event)"-->
+<!--                            label="Скрывать пароли"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="setting">-->
+<!--                    <app-checkbox-->
+<!--                            [checked]="appSettings.security.buffer.clearBuffer"-->
+<!--                            (checkedChange)="toggleClearBuffer($event)"-->
+<!--                            label="Очищать буфер через 20сек после копирования пароля"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="setting">-->
+<!--                    <app-input-->
+<!--                            type="number"-->
+<!--                            [value]="appSettings.security.lockTimeout.toString()"-->
+<!--                            label="Тайм-аут блокировки (минуты)"-->
+<!--                            [minValue]="1"-->
+<!--                            [maxValue]="99"-->
+<!--                            [maxLength]="2"-->
+<!--                            (valueChange)="updateLockTimeout($event)"-->
+<!--                            size="Small"-->
+<!--                            borderColor="White"-->
+<!--                            labelSide="Left"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="setting">-->
+<!--                    <ng-container *ngIf="twoFa.mode == TwoFaModes.NONE">-->
+<!--                        <span>Двухфакторная аутентификация</span>-->
+<!--                        <app-solid-button-->
+<!--                                *ngIf="!appSettings.security.twoFactorEnabled"-->
+<!--                                text="Включить"-->
+<!--                                bgColor="DarkGreen"-->
+<!--                                size="SmallLong"-->
+<!--                                (click)="enable2FA()"-->
+<!--                        />-->
+<!--                        <app-solid-button-->
+<!--                                *ngIf="appSettings.security.twoFactorEnabled"-->
+<!--                                text="Отключить"-->
+<!--                                bgColor="DarkRed"-->
+<!--                                size="SmallLong"-->
+<!--                                (click)="disable2FA()"-->
+<!--                        />-->
+<!--                    </ng-container>-->
+<!--                    <ng-container *ngIf="twoFa.mode != TwoFaModes.NONE">-->
+<!--                        <app-input-->
+<!--                                type="number"-->
+<!--                                [borderColor]="'White'"-->
+<!--                                backgroundColor="Transparent"-->
+<!--                                placeholder="Введите код с почты..."-->
+<!--                                size="Medium"-->
+<!--                                (valueChange)="onTwoFaCodeChange($event)"-->
+<!--                                [value]="twoFa.code"-->
+<!--                        >-->
+<!--                        </app-input>-->
+<!--                        <app-solid-button (click)="onConfirm2FA()" text="Подтвердить код" bgColor="DarkGreen" size="MediumLong"/>-->
+<!--                    </ng-container>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </main>-->
+<!--</div>-->
+
+<!--<div class="settings-page">-->
+<!--    <header class="settings-page-header">-->
+<!--        <app-header-description-->
+<!--                title="Настройки"-->
+<!--                description="Персонализируйте приложение и управляйте параметрами безопасности."-->
+<!--        />-->
+<!--    </header>-->
+
+<!--    <main class="settings-page-main">-->
+<!--        <div class="settings-categories-chips">-->
+<!--            <app-chips-->
+<!--                    [chips]="settingCategories"-->
+<!--                    (chipsSelected)="onCategoryChange($event)"-->
+<!--                    [selectedChips]="selectedCategory"-->
+<!--                    [hideAllChip]="true"-->
+<!--                    [hideAddChip]="true"-->
+<!--            />-->
+<!--        </div>-->
+<!--        <div class="settings-categories-tabs">-->
+<!--            &lt;!&ndash; Общие настройки &ndash;&gt;-->
+<!--            <div class="settings-section" *ngIf="selectedCategory === SETTINGS_MODES.GENERAL.label">-->
+<!--                <div class="setting">-->
+<!--                    <app-checkbox-->
+<!--                            [checked]="appSettings.general.hideFlowerStrengthWidget"-->
+<!--                            (checkedChange)="toggleHideFlowerStrengthWidget($event)"-->
+<!--                            label="Скрыть виджет силы пароля"-->
+<!--                    />-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Настройки безопасности &ndash;&gt;-->
+<!--            <div class="settings-section" *ngIf="selectedCategory === SETTINGS_MODES.SECURITY.label">-->
+<!--                <div class="setting">-->
+<!--                    <app-checkbox-->
+<!--                            [checked]="appSettings.security.hidePasswords"-->
+<!--                            (checkedChange)="toggleHidePasswords($event)"-->
+<!--                            label="Скрывать пароли"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="setting">-->
+<!--                    <app-checkbox-->
+<!--                            [checked]="appSettings.security.buffer.clearBuffer"-->
+<!--                            (checkedChange)="toggleClearBuffer($event)"-->
+<!--                            label="Очищать буфер через 20сек после копирования пароля"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="setting">-->
+<!--                    <app-input-->
+<!--                            type="number"-->
+<!--                            [value]="appSettings.security.lockTimeout.toString()"-->
+<!--                            label="Тайм-аут блокировки (минуты)"-->
+<!--                            [minValue]="1"-->
+<!--                            [maxValue]="99"-->
+<!--                            [maxLength]="2"-->
+<!--                            (valueChange)="updateLockTimeout($event)"-->
+<!--                            size="Small"-->
+<!--                            borderColor="White"-->
+<!--                            labelSide="Left"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="setting">-->
+<!--                    <ng-container *ngIf="twoFa.mode == TwoFaModes.NONE">-->
+<!--                        <span>Двухфакторная аутентификация</span>-->
+<!--                        <app-solid-button-->
+<!--                                *ngIf="!appSettings.security.twoFactorEnabled"-->
+<!--                                text="Включить"-->
+<!--                                bgColor="DarkGreen"-->
+<!--                                size="SmallLong"-->
+<!--                                (click)="enable2FA()"-->
+<!--                        />-->
+<!--                        <app-solid-button-->
+<!--                                *ngIf="appSettings.security.twoFactorEnabled"-->
+<!--                                text="Отключить"-->
+<!--                                bgColor="DarkRed"-->
+<!--                                size="SmallLong"-->
+<!--                                (click)="disable2FA()"-->
+<!--                        />-->
+<!--                    </ng-container>-->
+<!--                    <ng-container *ngIf="twoFa.mode != TwoFaModes.NONE">-->
+<!--                        <app-input-->
+<!--                                type="number"-->
+<!--                                [borderColor]="'White'"-->
+<!--                                backgroundColor="Transparent"-->
+<!--                                placeholder="Введите код с почты..."-->
+<!--                                size="Medium"-->
+<!--                                (valueChange)="onTwoFaCodeChange($event)"-->
+<!--                                [value]="twoFa.code"-->
+<!--                        >-->
+<!--                        </app-input>-->
+<!--                        <app-solid-button (click)="onConfirm2FA()" text="Подтвердить код" bgColor="DarkGreen" size="MediumLong"/>-->
+<!--                    </ng-container>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </main>-->
+<!--</div>-->
+
 <div class="settings-page">
     <header class="settings-page-header">
         <app-header-description
@@ -62,14 +256,14 @@
                     <ng-container *ngIf="twoFa.mode == TwoFaModes.NONE">
                         <span>Двухфакторная аутентификация</span>
                         <app-solid-button
-                                *ngIf="!appSettings.security.twoFactorEnabled"
+                                *ngIf="appSettings.security.twoFactorEnabled === false"
                                 text="Включить"
                                 bgColor="DarkGreen"
                                 size="SmallLong"
                                 (click)="enable2FA()"
                         />
                         <app-solid-button
-                                *ngIf="appSettings.security.twoFactorEnabled"
+                                *ngIf="appSettings.security.twoFactorEnabled === true"
                                 text="Отключить"
                                 bgColor="DarkRed"
                                 size="SmallLong"

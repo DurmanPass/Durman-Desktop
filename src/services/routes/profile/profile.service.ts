@@ -55,4 +55,24 @@ export class ProfileService {
             )
         );
     }
+
+    /**
+     * Удаляет данные пользователя
+     */
+    async deleteProfileData(): Promise<string> {
+        return withTokenRefresh(this.http, this.refreshTokenService, headers =>
+            this.http.delete(ApiRoutes.USER.DELETE_DATA, { headers }).pipe(
+                map((response: any) => {
+                    if (response.message) {
+                        ToastService.success('Ваши данные успешно удалены!');
+                        return response.message as string;
+                    } else if (response.error) {
+                        throw new Error(response.error);
+                    } else {
+                        throw new Error('Некорректный ответ сервера');
+                    }
+                })
+            )
+        );
+    }
 }

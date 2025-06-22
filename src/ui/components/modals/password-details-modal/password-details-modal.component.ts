@@ -48,7 +48,10 @@ export class PasswordDetailsModalComponent {
   isEditLocalEntry: boolean = false;
   categoryOptions: { label: string; value: string }[] = [];
   @Input() categories: Category[] = []
-  @Input() selectedCategory: string = 'All';
+  // @Input() selectedCategory: string = 'All';
+  selectedCategory: string = 'All';
+  @Output() updatePass = new EventEmitter<string>();
+
   constructor(private http: HttpClient) {
     this.localEntry = this.createEmptyEntry();
     this.updateCategories();
@@ -59,6 +62,7 @@ export class PasswordDetailsModalComponent {
   protected ivService = new IvService(this.http);
   @Input() categoryService: CategoryService = new CategoryService(this.http);
   @Input() categoryLocalService: CategoryLocalService = new CategoryLocalService(this.categoryService);
+  cat = 'All';
 
   protected settingsService = new SettingsService(this.http);
   protected settingsLocalService = new SettingsLocalService(this.settingsService);
@@ -222,6 +226,7 @@ export class PasswordDetailsModalComponent {
       case 'category_field':
         this.localEntry.metadata.category = event;
         this.selectedCategory = event;
+        this.cat = this.categoryOptions.find(opt => opt.value === event)?.label || '';
         break;
       default:
         console.warn(`Unknown field: ${fieldId}`);
@@ -243,10 +248,12 @@ export class PasswordDetailsModalComponent {
     const iv = await this.ivService.generateIv();
     this.localEntry.credentials.password =  await EncryptValue(this.localEntry.credentials.password, iv);
     this.localEntry.credentials.encryption_iv = iv;
-    const selectedOption = this.categoryOptions.find(option => option.label === this.selectedCategory);
-    this.localEntry.metadata.category = selectedOption ? selectedOption.value : '';
+    // const selectedOption = this.categoryOptions.find(option => option.label === this.selectedCategory);
+    // console.log(selectedOption?.value);
+    // this.localEntry.metadata.category = selectedOption ? selectedOption.value : '';
     await this.passwordManagerService.createPassword(this.localEntry);
     this.closed.emit();
+    this.updatePass.emit(this.cat);
     this.clearData();
     ToastService.success("Запись была успешно создана!");
   }

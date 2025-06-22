@@ -1,14 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ToastService } from '../notification/toast.service';
 import { CreatePasswordResponse, PasswordBackendEntry } from '../../interfaces/data/passwordEntry.interface';
 import { PasswordEntryInterface } from '../../interfaces/data/passwordEntry.interface';
 import {PasswordService} from "../routes/password/password.service";
 import {StoreService} from "../vault/store.service";
 import {StoreKeys} from "../../shared/const/vault/store.keys";
-import {CryptoAesGcmService} from "../crypto/crypto-aes-gcm.service";
-import {CategoryService} from "../routes/category/category.service";
-import {CategoryLocalService} from "../category/category-local.service";
-import {HttpClient} from "@angular/common/http";
 import {SORT_PASSWORD_ENTRY} from "../../shared/enums/modes/sort-password-entry.enum";
 
 @Injectable({
