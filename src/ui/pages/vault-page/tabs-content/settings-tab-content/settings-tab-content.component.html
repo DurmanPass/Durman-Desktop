@@ -271,14 +271,14 @@
 <!--                        />-->
 
                         <app-solid-button
-                                *ngIf="!twoFaSka"
+                                *ngIf="twoFaSka === false"
                                 text="Включить"
                                 bgColor="DarkGreen"
                                 size="SmallLong"
                                 (click)="enable2FA()"
                         />
                         <app-solid-button
-                                *ngIf="twoFaSka"
+                                *ngIf="twoFaSka === true"
                                 text="Отключить"
                                 bgColor="DarkRed"
                                 size="SmallLong"

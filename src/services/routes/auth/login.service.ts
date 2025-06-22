@@ -37,6 +37,7 @@ export class LoginService {
                 await StoreService.save(StoreKeys.ACCESS_TOKEN, response.accessToken);
                 await StoreService.save(StoreKeys.USER_ID, response.userId);
                 await StoreService.save(StoreKeys.MASTER_PASSWORD, password);
+                await StoreService.save(StoreKeys.ENABLE_TWOFA, 'false');
                 await WindowService.openVaultWindow();
                 setTimeout(async () => {
                     await WindowService.closeAllWindowsExVault();
@@ -44,6 +45,7 @@ export class LoginService {
                 ToastService.success('Вход выполнен успешно!');
             } else if (response.message === '2FA code sent to email') {
                 ToastService.success('Код 2FA отправлен на ваш email!');
+                await StoreService.save(StoreKeys.ENABLE_TWOFA, 'true');
             } else {
                 ToastService.danger('Неизвестный ответ сервера');
             }

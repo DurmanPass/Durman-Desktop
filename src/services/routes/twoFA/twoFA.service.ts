@@ -207,7 +207,7 @@ export class TwoFAService {
         const payload: Confirm2FAPayload = {uuid, code};
         return withTokenRefresh(this.http, this.refreshTokenService, headers =>
             this.http.post(ApiRoutes.TWO_FA.CONFIRM_ENABLE_2FA, payload, {headers}).pipe(
-                map((response: any) => {
+                map(async (response: any) => {
                     if (response.message) {
                         ToastService.success('Двухфакторная аутентификация успешно включена!');
                         return response as Confirm2FAResponse;
@@ -256,7 +256,7 @@ export class TwoFAService {
         const payload: Confirm2FAPayload = {uuid, code};
         return withTokenRefresh(this.http, this.refreshTokenService, headers =>
             this.http.post(ApiRoutes.TWO_FA.CONFIRM_DISABLE_2FA, payload, {headers}).pipe(
-                map((response: any) => {
+                map(async (response: any) => {
                     if (response.message) {
                         ToastService.success('Двухфакторная аутентификация успешно отключена!');
                         return response as Confirm2FAResponse;
@@ -289,7 +289,6 @@ export class TwoFAService {
                     await StoreService.save(StoreKeys.ACCESS_TOKEN, response.accessToken);
                     await StoreService.save(StoreKeys.USER_ID, userID);
                     await StoreService.save(StoreKeys.MASTER_PASSWORD, password);
-                    await StoreService.save(StoreKeys.ENABLE_TWOFA, 'true');
                     await WindowService.openVaultWindow();
                     setTimeout(async () => {
                         await WindowService.closeAllWindowsExVault();

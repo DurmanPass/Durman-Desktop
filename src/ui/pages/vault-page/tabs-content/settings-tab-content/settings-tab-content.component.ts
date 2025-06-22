@@ -481,6 +481,8 @@ export class SettingsTabContentComponent {
   async ngOnInit(){
     await this.settingsLocalService.syncSettings();
     this.appSettings = await this.settingsLocalService.getSettings();
+    const e = await StoreService.get(StoreKeys.ENABLE_TWOFA);
+    console.log(e);
     this.twoFaSka = await StoreService.get(StoreKeys.ENABLE_TWOFA) === 'true' ? true : false;
   }
 
