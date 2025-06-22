@@ -434,6 +434,8 @@ import {HintModes} from "../../../../../shared/enums/modes/hint.modes.enum";
 import {TwoFAService} from "../../../../../services/routes/twoFA/twoFA.service";
 import {TwoFaModes} from "../../../../../shared/enums/modes/twoFa.modes.enum";
 import {Disable2FAResponse, Enable2FAResponse} from "../../../../../interfaces/data/twoFA.interface";
+import {StoreService} from "../../../../../services/vault/store.service";
+import {StoreKeys} from "../../../../../shared/const/vault/store.keys";
 
 @Component({
   selector: 'app-settings-tab-content',
@@ -474,9 +476,12 @@ export class SettingsTabContentComponent {
   settingCategories: string[] = [SETTINGS_MODES.GENERAL.label, SETTINGS_MODES.SECURITY.label];
   selectedCategory: string = SETTINGS_MODES.GENERAL.label;
 
+  twoFaSka: boolean = false;
+
   async ngOnInit(){
     await this.settingsLocalService.syncSettings();
     this.appSettings = await this.settingsLocalService.getSettings();
+    this.twoFaSka = await StoreService.get(StoreKeys.ENABLE_TWOFA) === 'true' ? true : false;
   }
 
   async updateLockTimeout(event: string) {
@@ -534,6 +539,8 @@ export class SettingsTabContentComponent {
     await this.twoFaService.confirmDisable2FA(this.twoFaResponse.uuid, this.twoFa.code);
     await this.toggleTwoFactorEnabled(false);
     this.twoFa.mode = TwoFaModes.NONE;
+    this.twoFaSka = false;
+    await StoreService.save(StoreKeys.ENABLE_TWOFA, 'false');
   }
 
   async onConfirm2FA(){
@@ -553,4 +560,5 @@ export class SettingsTabContentComponent {
   protected readonly SettingsService = SettingsLocalService;
   protected readonly HintModes = HintModes;
   protected readonly TwoFaModes = TwoFaModes;
+  protected readonly StoreService = StoreService;
 }

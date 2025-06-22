@@ -519,6 +519,7 @@ export class SettingsLocalService {
      * Преобразует серверные настройки в локальный формат
      */
     private toLocalSettings(serverSettings: ServerSettings): AppSettings {
+
         return {
             general: {
                 ...this.settings.general,

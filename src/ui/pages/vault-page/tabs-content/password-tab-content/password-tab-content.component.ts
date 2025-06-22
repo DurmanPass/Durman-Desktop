@@ -276,8 +276,6 @@ export class PasswordTabContentComponent {
       const decrypted = await DecryptValue(entry.credentials.password, entry.credentials.encryption_iv ? entry.credentials.encryption_iv : '');
       copyToClipboard(
           decrypted,
-          this.settingsLocalService.getClearBuffer(),
-          this.settingsLocalService.getClearBufferTimeout()
       );
       ToastService.success('Пароль был успешно скопирован в буфер обмена!');
     }

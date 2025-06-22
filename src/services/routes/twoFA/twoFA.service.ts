@@ -289,6 +289,7 @@ export class TwoFAService {
                     await StoreService.save(StoreKeys.ACCESS_TOKEN, response.accessToken);
                     await StoreService.save(StoreKeys.USER_ID, userID);
                     await StoreService.save(StoreKeys.MASTER_PASSWORD, password);
+                    await StoreService.save(StoreKeys.ENABLE_TWOFA, 'true');
                     await WindowService.openVaultWindow();
                     setTimeout(async () => {
                         await WindowService.closeAllWindowsExVault();
