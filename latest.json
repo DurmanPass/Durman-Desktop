@@ -1,11 +1,11 @@
 {
-  "version": "0.1.42",
-  "notes": "Release notes for 0.1.42",
-  "pub_date": "2025-05-02T11:35:55Z",
+  "version": "0.2.1",
+  "notes": "Release notes for 0.2.1",
+  "pub_date": "2025-06-22T23:14:04Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "Signature not found",
-      "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/v0.1.42/DurmanPass_0.1.42_x64_en-US.msi"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTYVNWbXc3TE12SUNVbWw4dGlGME83b2tYTnlCTjJzSjFQeDUxLzV0OXJlTjZCODBzS1g5TFZzZXJvckRNSmt4ZlZoRk8wdXVpQzh4UUJSNGF4NDdEQll4KzhIL0ZWY0FRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUwNjM0MDMwCWZpbGU6RHVybWFuUGFzc18wLjIuMV94NjRfZW4tVVMubXNpCjdvQm5lMktXV0FETmIrcDVmRUNQVytjaGZZYkhCVmZLREVvWGFJNkQwZmpaYTNwLzRYYXZBYWdvV01FZVp0QUxpMWk1LzFvOVJodW9zd0VwNTVDbENnPT0K",
+      "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/v0.2.1/DurmanPass_0.2.1_x64_en-US.msi"
     }
   }
 }
