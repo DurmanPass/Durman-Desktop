@@ -238,20 +238,20 @@
                             label="Очищать буфер через 20сек после копирования пароля"
                     />
                 </div>
-<!--                <div class="setting">-->
-<!--                    <app-input-->
-<!--                            type="number"-->
-<!--                            [value]="appSettings.security.lockTimeout.toString()"-->
-<!--                            label="Тайм-аут блокировки (минуты)"-->
-<!--                            [minValue]="1"-->
-<!--                            [maxValue]="99"-->
-<!--                            [maxLength]="2"-->
-<!--                            (valueChange)="updateLockTimeout($event)"-->
-<!--                            size="Small"-->
-<!--                            borderColor="White"-->
-<!--                            labelSide="Left"-->
-<!--                    />-->
-<!--                </div>-->
+                <div class="setting">
+                    <app-input
+                            type="number"
+                            [value]="appSettings.security.lockTimeout.toString()"
+                            label="Тайм-аут блокировки (минуты)"
+                            [minValue]="1"
+                            [maxValue]="99"
+                            [maxLength]="2"
+                            (valueChange)="updateLockTimeout($event)"
+                            size="Small"
+                            borderColor="White"
+                            labelSide="Left"
+                    />
+                </div>
                 <div class="setting">
                     <ng-container *ngIf="twoFa.mode == TwoFaModes.NONE">
                         <span>Двухфакторная аутентификация</span>
