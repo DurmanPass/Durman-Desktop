@@ -28,7 +28,7 @@
 
 <app-preloader *ngIf="isLoading"/>
 <ng-container *ngIf="!isLoading">
-    <ng-container *ngIf="isOnline$ | async; else networkLost">
+    <ng-container>
         <ng-container *ngIf="showWelcomeAnimation && windowLabel === WINDOWS_LABELS.MAIN">
             <app-welcome-animation (animationComplete)="onAnimationComplete()" />
         </ng-container>
@@ -52,7 +52,7 @@
         </ng-container>
     </ng-container>
 
-    <ng-template #networkLost>
-        <app-network-lost />
-    </ng-template>
+<!--    <ng-template #networkLost>-->
+<!--        <app-network-lost />-->
+<!--    </ng-template>-->
 </ng-container>
